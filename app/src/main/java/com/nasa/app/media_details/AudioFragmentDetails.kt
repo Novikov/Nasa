@@ -14,10 +14,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [MediaDetailsFragment.newInstance] factory method to
+ * Use the [AudioFragmentDetails.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MediaDetailsFragment : Fragment() {
+class AudioFragmentDetails : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -35,7 +35,7 @@ class MediaDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_media_details, container, false)
+        return inflater.inflate(R.layout.fragment_audio_details, container, false)
     }
 
     companion object {
@@ -45,12 +45,12 @@ class MediaDetailsFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment MediaDetailsFragment.
+         * @return A new instance of fragment AudioFragmentDetails.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            MediaDetailsFragment().apply {
+            AudioFragmentDetails().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
