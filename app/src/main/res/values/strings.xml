@@ -2,4 +2,15 @@
     <string name="app_name">Nasa</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_template">Astronauts and Consonants sightseeing at Red Square in Moscow</string>
+    <string name="original_size_image_url">Original size image (URL):</string>
+    <string name="file_size">File size:</string>
+    <string name="file_format">File format:</string>
+    <string name="nasa_id">NASA ID:</string>
+    <string name="keywords">Keywords:</string>
+    <string name="center">Center:</string>
+    <string name="date_created">Date created:</string>
+    <string name="acting_nasa_administrator_steve_jurczyk_places_a_wreath_at_the_space_shuttle_challenger_memorial_during_a_ceremony_that_was_part_of_nasa_s_day_of_remembrance_thursday_jan_28_2021_at_arlington_national_cemetery_in_arlington_va_wreaths_were_laid_in_memory_of_those_men_and_women_who_lost_their_lives_in_the_quest_for_space_exploration_photo_credit_nasa_bill_ingalls">Acting NASA Administrator Steve Jurczyk places a wreath at the Space Shuttle Challenger Memorial during a ceremony that was part of NASA\'s Day of Remembrance, Thursday, Jan. 28, 2021, at Arlington National Cemetery in Arlington, Va. Wreaths were laid in memory of those men and women who lost their lives in the quest for space exploration. Photo Credit: (NASA/Bill Ingalls)</string>
+    <string name="edit_text_temporary_text">images-assets.nasa.gov/image/NHQ202101280006/NHQ202101280006~orig.jpg</string>
+    <string name="Nasa_id_template">NHQ202101280006NHQ20210128NHQ2021012800060006</string>
 </resources>
