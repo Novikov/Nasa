@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_navigation"
+    app:startDestination="@id/mediaFragment">
+    <fragment
+        android:id="@+id/mediaFragment"
+        android:name="com.nasa.app.media.MediaFragment"
+        android:label="fragment_media"
+        tools:layout="@layout/fragment_media" >
+        <action
+            android:id="@+id/action_mediaFragment_to_imageFragmentDetails"
+            app:destination="@id/imageFragmentDetails" />
+        <action
+            android:id="@+id/action_mediaFragment_to_audioFragmentDetails"
+            app:destination="@id/audioFragmentDetails" />
+        <action
+            android:id="@+id/action_mediaFragment_to_videoFragmentDetails"
+            app:destination="@id/videoFragmentDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageFragmentDetails"
+        android:name="com.nasa.app.media_details.ImageFragmentDetails"
+        android:label="fragment_image_details"
+        tools:layout="@layout/fragment_image_details" />
+    <fragment
+        android:id="@+id/audioFragmentDetails"
+        android:name="com.nasa.app.media_details.AudioFragmentDetails"
+        android:label="fragment_audio_details"
+        tools:layout="@layout/fragment_audio_details" />
+    <fragment
+        android:id="@+id/videoFragmentDetails"
+        android:name="com.nasa.app.media_details.VideoFragmentDetails"
+        android:label="fragment_video_details"
+        tools:layout="@layout/fragment_video_details" />
+</navigation>
