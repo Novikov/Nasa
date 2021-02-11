@@ -1,4 +1,4 @@
-package com.nasa.app.media_details
+package com.nasa.app.media_detail
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -14,10 +14,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [ImageFragmentDetails.newInstance] factory method to
+ * Use the [VideoFragmentDetails.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ImageFragmentDetails : Fragment() {
+class VideoFragmentDetails : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -35,7 +35,7 @@ class ImageFragmentDetails : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_image_details, container, false)
+        return inflater.inflate(R.layout.fragment_video_details, container, false)
     }
 
     companion object {
@@ -45,12 +45,12 @@ class ImageFragmentDetails : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment ImageFragmentDetails.
+         * @return A new instance of fragment VideoFragmentDetails.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            ImageFragmentDetails().apply {
+            VideoFragmentDetails().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

@@ -1,4 +1,4 @@
-package com.nasa.app.media_details
+package com.nasa.app.media_detail
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

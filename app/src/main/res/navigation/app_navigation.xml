@@ -6,9 +6,9 @@
     app:startDestination="@id/mediaFragment">
     <fragment
         android:id="@+id/mediaFragment"
-        android:name="com.nasa.app.media.MediaFragment"
+        android:name="com.nasa.app.media.MediaPreviewFragment"
         android:label="fragment_media"
-        tools:layout="@layout/fragment_media" >
+        tools:layout="@layout/fragment_media_preview" >
         <action
             android:id="@+id/action_mediaFragment_to_imageFragmentDetails"
             app:destination="@id/imageFragmentDetails" />
@@ -18,20 +18,27 @@
         <action
             android:id="@+id/action_mediaFragment_to_videoFragmentDetails"
             app:destination="@id/videoFragmentDetails" />
+        <action
+            android:id="@+id/action_mediaFragment_to_detailMediaFragment"
+            app:destination="@id/detailMediaFragment" />
     </fragment>
     <fragment
         android:id="@+id/imageFragmentDetails"
-        android:name="com.nasa.app.media_details.ImageFragmentDetails"
+        android:name="com.nasa.app.media_detail.ImageFragmentDetails"
         android:label="fragment_image_details"
         tools:layout="@layout/fragment_image_details" />
     <fragment
         android:id="@+id/audioFragmentDetails"
-        android:name="com.nasa.app.media_details.AudioFragmentDetails"
+        android:name="com.nasa.app.media_detail.AudioFragmentDetails"
         android:label="fragment_audio_details"
         tools:layout="@layout/fragment_audio_details" />
     <fragment
         android:id="@+id/videoFragmentDetails"
-        android:name="com.nasa.app.media_details.VideoFragmentDetails"
+        android:name="com.nasa.app.media_detail.VideoFragmentDetails"
         android:label="fragment_video_details"
         tools:layout="@layout/fragment_video_details" />
+    <fragment
+        android:id="@+id/detailMediaFragment"
+        android:name="com.nasa.app.media_detail.DetailMediaFragment"
+        android:label="DetailMediaFragment" />
 </navigation>
