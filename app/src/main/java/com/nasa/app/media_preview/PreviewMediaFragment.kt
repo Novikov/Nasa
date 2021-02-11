@@ -1,4 +1,4 @@
-package com.nasa.app.media
+package com.nasa.app.media_preview
 
 
 import android.os.Bundle
@@ -11,7 +11,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.nasa.app.R
 
-class MediaPreviewFragment : Fragment() {
+class PreviewMediaFragment : Fragment() {
     lateinit var navController: NavController
 
 

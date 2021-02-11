@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
 import com.google.android.exoplayer2.MediaItem
@@ -22,7 +23,7 @@ class DetailMediaFragment : Fragment() {
     ): View? {
         val view =  inflater.inflate(R.layout.fragment_media_detail, container, false)
 
-//        val container = view.findViewById<RelativeLayout>(R.id.media_container)
+        val container = view.findViewById<LinearLayout>(R.id.media_container)
 
 //        val img = ImageView(requireContext())
 //
@@ -41,11 +42,11 @@ class DetailMediaFragment : Fragment() {
         player.setMediaItem(mediaItem)
         player.prepare()
 
-        val playerView = view.findViewById<PlayerView>(R.id.media_container)
+        val playerView = PlayerView(requireContext())
 
         playerView.player = player
 
-//        container.addView(playerView)
+        container.addView(playerView)
 
         return view
     }
