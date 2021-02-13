@@ -1,5 +1,6 @@
 package com.nasa.app.media_detail
 
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,10 @@ class DetailMediaFragment : Fragment() {
     ): View? {
         val view =  inflater.inflate(R.layout.fragment_media_detail, container, false)
 
+//        val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
+//
+//        playerView.visibility = View.GONE
+//
 //        val img = view.findViewById<ImageView>(R.id.image_media)
 //
 //        Picasso
@@ -46,7 +51,6 @@ class DetailMediaFragment : Fragment() {
         player.prepare()
         player.play()
 
-//
         return view
     }
 
