@@ -7,20 +7,13 @@
     android:background="@color/detail_fragments_bcg"
     tools:context=".media_detail.DetailMediaFragment">
 
-    <FrameLayout
-        android:id="@+id/exo_player_view_container"
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/exo_player_video_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.exoplayer2.ui.PlayerView
-            android:id="@+id/exo_player_video_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </FrameLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
         android:layout_width="0dp"
@@ -28,20 +21,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exo_player_view_container">
+        app:layout_constraintTop_toBottomOf="@+id/exo_player_video_view">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@+id/exo_player_view_container">
+            app:layout_constraintTop_toTopOf="@+id/exo_player_video_view">
 
             <ImageView
                 android:id="@+id/image_media_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -50,9 +40,9 @@
                 android:id="@+id/image_title_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:text="@string/title_template"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
@@ -60,33 +50,31 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/image_media_view" />
 
-<!--            <Button-->
-<!--                android:id="@+id/download_button"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="8dp"-->
-<!--                android:layout_marginTop="8dp"-->
-<!--                android:layout_marginEnd="8dp"-->
-<!--                android:background="#15418C"-->
-<!--                android:text="Download"-->
-<!--                android:textColor="#FFFFFF"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/image_title_text_view" />-->
-
-            <Spinner
-                android:id="@+id/download_button"
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/download_string_text_view"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:background="@android:color/holo_blue_light"
+                android:text="Download:"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image_title_text_view" />
+
+
+            <Spinner
+                android:id="@+id/download_spinner"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="#15418C"
                 android:entries="@array/list"
                 android:paddingRight="10dp"
                 android:spinnerMode="dialog"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/download_string_text_view"
                 app:layout_constraintTop_toBottomOf="@+id/image_title_text_view" />
 
             <ImageView
@@ -97,7 +85,7 @@
                 android:layout_marginTop="8dp"
                 android:src="@drawable/link_img"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/download_button" />
+                app:layout_constraintTop_toBottomOf="@+id/download_spinner" />
 
             <TextView
                 android:id="@+id/original_size_url_string_text_view"
@@ -110,7 +98,8 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/link_image_view"
-                app:layout_constraintTop_toBottomOf="@+id/download_button" />
+                app:layout_constraintTop_toBottomOf="@+id/download_spinner" />
+
 
             <EditText
                 android:id="@+id/url_edit_text"

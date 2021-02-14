@@ -15,7 +15,6 @@
     <string name="Nasa_id_template">NHQ202101280006NHQ</string>
 
     <string-array name="list">
-        <item>Download</item>
         <item>Small</item>
         <item>Medium</item>
         <item>Large</item>
