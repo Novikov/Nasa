@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 object NasaApiClient {
     private const val NASA_BASE_URL="https://images-api.nasa.gov/"
 
-    fun getClient():NasaApiClient{
+    fun getClient(): NasaApiService {
 
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.BODY
@@ -21,12 +21,15 @@ object NasaApiClient {
             .readTimeout(20, TimeUnit.SECONDS)
             .build()
 
+        val gson = GsonBuilder().create()
+
         val retrofit = Retrofit.Builder()
             .baseUrl(NASA_BASE_URL)
             .client(okHttpClient)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
-        return retrofit.create(NasaApiClient::class.java)
+        return retrofit.create(NasaApiService::class.java)
     }
 }
