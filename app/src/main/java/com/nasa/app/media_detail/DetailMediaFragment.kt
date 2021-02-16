@@ -31,7 +31,7 @@ class DetailMediaFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.e("VideoPlayerFragment", "onAttach is called")
+        Log.i("VideoPlayerFragment", "onAttach is called")
         try {
             activityContract = context as IActivity
         } catch (e: ClassCastException) {

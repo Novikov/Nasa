@@ -27,8 +27,7 @@ class DetailMediaDataSource(private val apiService : NasaApiService, private val
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .subscribe ({
-                    Log.e("MediaDetail",it.toString())
-                    _downloadedMediaDetailsResponse.postValue(it)
+                    _downloadedMediaDetailsResponse.postValue(it.item)
                     _networkState.postValue(NetworkState.LOADED)
                 },{
                     _networkState.postValue(NetworkState.ERROR)

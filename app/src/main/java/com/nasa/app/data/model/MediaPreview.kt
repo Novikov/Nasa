@@ -1,8 +1,8 @@
 package com.nasa.app.data.model
 
 data class MediaPreview(
-    val nasa_id:String,
-    val preview_url:String?,
-    val media_type:String,
-    val date_created:String
+    val nasaId:String,
+    val previewUrl:String?,
+    val mediaType:String,
+    val dateCreated:String
 )

@@ -1,10 +1,10 @@
 package com.nasa.app.data.model
 
 data class MediaDetail(
-   val date_created:String,
-   val nasa_id:String,
+   val dateCreated:String,
+   val nasaId:String,
    val keywords:List<String>,
-   val media_type:String,
+   val mediaType:String,
    val center:String,
    val title:String,
    val description:String,

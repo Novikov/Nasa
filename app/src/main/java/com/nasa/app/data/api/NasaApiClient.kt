@@ -1,5 +1,8 @@
 package com.nasa.app.data.api
 
+import com.google.gson.GsonBuilder
+import com.nasa.app.data.api.json.MediaDetailDeserializer
+import com.nasa.app.data.api.json.MediaDetailResponse
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -18,11 +21,18 @@ object NasaApiClient {
             .addInterceptor(interceptor)
             .build()
 
+        val gson = GsonBuilder()
+            .registerTypeAdapter(
+                MediaDetailResponse::class.java,
+                MediaDetailDeserializer()
+            )
+            .create()
+
         val retrofit = Retrofit.Builder()
             .baseUrl(NASA_BASE_URL)
             .client(client)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
         return retrofit.create(NasaApiService::class.java)
