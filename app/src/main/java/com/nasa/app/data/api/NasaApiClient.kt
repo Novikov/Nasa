@@ -1,33 +1,28 @@
 package com.nasa.app.data.api
 
-import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 object NasaApiClient {
     private const val NASA_BASE_URL="https://images-api.nasa.gov/"
 
     fun getClient(): NasaApiService {
 
-        val logging = HttpLoggingInterceptor()
-        logging.level = HttpLoggingInterceptor.Level.BODY
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
 
-        val okHttpClient =  OkHttpClient.Builder()
-            .addInterceptor(logging)
-            .readTimeout(20, TimeUnit.SECONDS)
+        val client =  OkHttpClient.Builder()
+            .addInterceptor(interceptor)
             .build()
-
-        val gson = GsonBuilder().create()
 
         val retrofit = Retrofit.Builder()
             .baseUrl(NASA_BASE_URL)
-            .client(okHttpClient)
+            .client(client)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         return retrofit.create(NasaApiService::class.java)
