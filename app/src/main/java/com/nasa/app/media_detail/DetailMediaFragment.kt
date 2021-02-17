@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Spinner
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
@@ -20,6 +21,7 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.nasa.app.IActivity
 import com.nasa.app.R
 import com.nasa.app.data.api.NasaApiClient
+import com.nasa.app.databinding.FragmentMediaDetailBinding
 import com.squareup.picasso.Picasso
 
 
@@ -45,12 +47,8 @@ class DetailMediaFragment : Fragment() {
 
         val apiService = NasaApiClient.getClient()
         detailMediaRepository = DetailMediaRepository(apiService)
-        val nasaId = "GRC-2019-C-09936"
+        val nasaId = "201210220003HQ"
         viewModel = getViewModel(nasaId)
-
-        viewModel.mediaDetails.observe(this, Observer {
-            Log.e("MediaDetail",it.toString())
-        })
 
     }
 
@@ -60,7 +58,15 @@ class DetailMediaFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view =  inflater.inflate(R.layout.fragment_media_detail, container, false)
+
+        val binding = DataBindingUtil.inflate<FragmentMediaDetailBinding>(
+            inflater,
+            R.layout.fragment_media_detail,
+            container,
+            false
+        )
+
+        val view =  binding.root
 
 //Spinner
         val spinner: Spinner = view.findViewById(R.id.download_spinner)
@@ -75,21 +81,24 @@ class DetailMediaFragment : Fragment() {
 
 
 
+        val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
+
+        playerView.visibility = View.GONE
+
+        val img = view.findViewById<ImageView>(R.id.image_media_view)
+
+        img.adjustViewBounds = true
 
 
 
-//        val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
-//
-//        playerView.visibility = View.GONE
-//
-//        val img = view.findViewById<ImageView>(R.id.image_media_view)
-//
-//        Picasso
-//            .get()
-//            .load("https://images-assets.nasa.gov/image/MSFC-202100007/MSFC-202100007~medium.jpg")
-//            .into(img);
-//
-//        img.adjustViewBounds = true
+        viewModel.mediaDetails.observe(viewLifecycleOwner, Observer {
+            binding.mediaDetail = it
+
+            Picasso
+                .get()
+                .load(it.assets?.get("medium.jpg"))
+                .into(img);
+        })
 
 
 
