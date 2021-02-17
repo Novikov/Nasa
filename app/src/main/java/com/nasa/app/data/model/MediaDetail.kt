@@ -8,5 +8,6 @@ data class MediaDetail(
    val center:String,
    val title:String,
    val description:String,
-   val location:String
+   val location:String,
+   var assets:Map<String,String>?
 )

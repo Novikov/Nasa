@@ -1,6 +1,8 @@
 package com.nasa.app.data.api
 
 import com.google.gson.GsonBuilder
+import com.nasa.app.data.api.json.MediaAssetDeserializer
+import com.nasa.app.data.api.json.MediaAssetResponse
 import com.nasa.app.data.api.json.MediaDetailDeserializer
 import com.nasa.app.data.api.json.MediaDetailResponse
 import okhttp3.OkHttpClient
@@ -25,6 +27,10 @@ object NasaApiClient {
             .registerTypeAdapter(
                 MediaDetailResponse::class.java,
                 MediaDetailDeserializer()
+            )
+            .registerTypeAdapter(
+                MediaAssetResponse::class.java,
+                MediaAssetDeserializer()
             )
             .create()
 

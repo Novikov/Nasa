@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.model.MediaDetail
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
@@ -27,12 +29,31 @@ class DetailMediaDataSource(private val apiService : NasaApiService, private val
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .subscribe ({
-                    _downloadedMediaDetailsResponse.postValue(it.item)
-                    _networkState.postValue(NetworkState.LOADED)
+                fetchMediaAsset(it.item)
                 },{
                     _networkState.postValue(NetworkState.ERROR)
-                    Log.e("MovieDetailsDataSource", it.message.toString())
+                    Log.e("MediaDetailsDataSource", it.message.toString())
                 })
+            )
+        }
+        catch (e: Exception){
+            Log.e("MediaDetailsDataSource", e.message.toString())
+        }
+    }
+
+    fun fetchMediaAsset(mediaDetail: MediaDetail){
+        try {
+            compositeDisposable.add(
+                apiService.mediaAsset(mediaDetail.nasaId)
+                    .observeOn(Schedulers.io())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({
+                        mediaDetail.assets = it.item
+                        _downloadedMediaDetailsResponse.postValue(mediaDetail)
+                        _networkState.postValue(NetworkState.LOADED)
+                    }, {
+                        Log.e("MediaDetailsDataSource", it.message.toString())
+                    })
             )
         }
         catch (e: Exception){

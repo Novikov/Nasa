@@ -46,7 +46,9 @@ class MediaDetailDeserializer : JsonDeserializer<MediaDetailResponse> {
                                 dataValue.entrySet()?.forEach {
                                     if (it.key == "date_created") {
                                         Log.i(TAG, "date_created exists")
-                                        dateCreated = it.value.asString
+                                        val tmpDateCreated = it.value.asString
+                                        val endStringPosition = tmpDateCreated.indexOf('T')
+                                        dateCreated = tmpDateCreated.subSequence(0,endStringPosition).toString()
                                     }
 
                                     if (it.key == "nasa_id") {
@@ -102,7 +104,8 @@ class MediaDetailDeserializer : JsonDeserializer<MediaDetailResponse> {
             center,
             title,
             description,
-            location
+            location,
+            null
         )
 
         return MediaDetailResponse(mediaDetail)
