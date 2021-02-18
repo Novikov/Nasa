@@ -21,6 +21,7 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.nasa.app.IActivity
 import com.nasa.app.R
 import com.nasa.app.data.api.NasaApiClient
+import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.databinding.FragmentMediaDetailBinding
 import com.squareup.picasso.Picasso
 
@@ -98,6 +99,13 @@ class DetailMediaFragment : Fragment() {
                 .get()
                 .load(it.assets?.get("medium.jpg"))
                 .into(img);
+        })
+
+        viewModel.networkState.observe(viewLifecycleOwner, Observer {
+            when(it){
+                NetworkState.LOADING -> activityContract?.showProgressBar()
+                NetworkState.LOADED -> activityContract?.hideProgressBar()
+            }
         })
 
 

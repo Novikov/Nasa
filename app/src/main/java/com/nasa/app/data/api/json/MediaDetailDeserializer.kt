@@ -105,6 +105,9 @@ class MediaDetailDeserializer : JsonDeserializer<MediaDetailResponse> {
             title,
             description,
             location,
+            null,
+            null,
+            null,
             null
         )
 

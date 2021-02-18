@@ -7,16 +7,17 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import java.lang.reflect.Type
 
-class MediaAssetDeserializer: JsonDeserializer<MediaAssetResponse> {
+class MediaAssetDeserializer: JsonDeserializer<MediaDetailAssetResponse> {
     private val TAG: String = "MediaAssetDeserialization"
     lateinit var assetType:AssetType
+    var metadataUrl:String? = null
     var assetMap = mapOf<String,String>()
 
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,
         context: JsonDeserializationContext?
-    ): MediaAssetResponse {
+    ): MediaDetailAssetResponse {
 
         json?.asJsonObject?.entrySet()?.forEach {
             Log.i(TAG, "Deserialization of MediaDetail begins")
@@ -31,6 +32,9 @@ class MediaAssetDeserializer: JsonDeserializer<MediaAssetResponse> {
 
                         assetType = getAssetType(items)
 
+                        metadataUrl = getMetadataUrl(items)
+
+
                         when(assetType){
                             AssetType.AUDIO -> assetMap = getAudioAsset(items)
                             AssetType.VIDEO -> assetMap = getVideoAsset(items)
@@ -43,7 +47,18 @@ class MediaAssetDeserializer: JsonDeserializer<MediaAssetResponse> {
             }
         }
 
-        return MediaAssetResponse(assetMap)
+        return MediaDetailAssetResponse(assetMap,metadataUrl!!)
+    }
+
+    private fun getMetadataUrl(items: JsonArray): String? {
+        var tmpUrl:String? = null
+        for (element in items) {
+            var href = element.asJsonObject.get("href").asString
+            if (href.contains("metadata.json")) {
+                tmpUrl = href
+            }
+        }
+        return tmpUrl
     }
 
     private fun getAudioAsset(items: JsonArray): Map<String, String> {
@@ -76,7 +91,7 @@ class MediaAssetDeserializer: JsonDeserializer<MediaAssetResponse> {
         val tmpMap = mutableMapOf<String, String>()
         for (element in items) {
             var href = element.asJsonObject.get("href").asString
-            if (href.contains("jpg").and(!href.contains("thumb"))) {
+            if ((href.contains("jpg").or(href.contains("tif"))).and(!href.contains("thumb"))) {
                 val startStringPosition = href.indexOf('~') + 1
                 val assetName = href.subSequence(startStringPosition, href.length).toString()
                 tmpMap.put(assetName, href)

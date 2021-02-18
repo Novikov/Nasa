@@ -9,5 +9,8 @@ data class MediaDetail(
    val title:String,
    val description:String,
    val location:String,
-   var assets:Map<String,String>?
+   val assets:Map<String,String>?,
+   val metadataUrl:String?,
+   val fileSize:String?,
+   val fileFormat:String?
 )
