@@ -17,5 +17,12 @@
     <fragment
         android:id="@+id/detailMediaFragment"
         android:name="com.nasa.app.media_detail.DetailMediaFragment"
-        android:label="DetailMediaFragment" />
+        android:label="DetailMediaFragment" >
+        <argument
+            android:name="nasaId"
+            app:argType="string" />
+        <argument
+            android:name="contentType"
+            app:argType="com.nasa.app.data.model.ContentType" />
+    </fragment>
 </navigation>

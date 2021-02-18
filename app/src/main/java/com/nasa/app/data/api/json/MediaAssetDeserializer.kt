@@ -5,11 +5,12 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
+import com.nasa.app.data.model.ContentType
 import java.lang.reflect.Type
 
 class MediaAssetDeserializer: JsonDeserializer<MediaDetailAssetResponse> {
     private val TAG: String = "MediaAssetDeserialization"
-    lateinit var assetType:AssetType
+    lateinit var contentType: ContentType
     var metadataUrl:String? = null
     var assetMap = mapOf<String,String>()
 
@@ -30,15 +31,15 @@ class MediaAssetDeserializer: JsonDeserializer<MediaDetailAssetResponse> {
                         Log.i(TAG, "inside items object")
                         val items = it.value.asJsonArray
 
-                        assetType = getAssetType(items)
+                        contentType = getAssetType(items)
 
                         metadataUrl = getMetadataUrl(items)
 
 
-                        when(assetType){
-                            AssetType.AUDIO -> assetMap = getAudioAsset(items)
-                            AssetType.VIDEO -> assetMap = getVideoAsset(items)
-                            AssetType.IMAGE -> assetMap = getImageAsset(items)
+                        when(contentType){
+                            ContentType.AUDIO -> assetMap = getAudioAsset(items)
+                            ContentType.VIDEO -> assetMap = getVideoAsset(items)
+                            ContentType.IMAGE -> assetMap = getImageAsset(items)
                         }
 
                         Log.i(TAG, "$assetMap")
@@ -61,11 +62,11 @@ class MediaAssetDeserializer: JsonDeserializer<MediaDetailAssetResponse> {
         return tmpUrl
     }
 
-    private fun getAudioAsset(items: JsonArray): Map<String, String> {
-        val tmpMap = mutableMapOf<String, String>()
+    private fun getAudioAsset(items: JsonArray): LinkedHashMap<String, String>  {
+        val tmpMap = linkedMapOf<String, String>()
         for (element in items) {
             var href = element.asJsonObject.get("href").asString
-            if (href.contains("mp3").or(href.contains("m4a"))) {
+            if (href.contains("mp3").or(href.contains("m4a").or(href.contains("wav")))) {
                 val startStringPosition = href.indexOf('~') + 1
                 val assetName = href.subSequence(startStringPosition, href.length).toString()
                 tmpMap.put(assetName, href)
@@ -74,11 +75,11 @@ class MediaAssetDeserializer: JsonDeserializer<MediaDetailAssetResponse> {
         return tmpMap
     }
 
-    private fun getVideoAsset(items: JsonArray): Map<String, String> {
-        val tmpMap = mutableMapOf<String, String>()
+    private fun getVideoAsset(items: JsonArray): LinkedHashMap<String, String> {
+        val tmpMap = linkedMapOf<String, String>()
         for (element in items) {
             var href = element.asJsonObject.get("href").asString
-            if (href.contains("mp4")) {
+            if (href.contains("mp4").or(href.contains("mov"))) {
                 val startStringPosition = href.indexOf('~') + 1
                 val assetName = href.subSequence(startStringPosition, href.length).toString()
                 tmpMap.put(assetName, href)
@@ -87,8 +88,8 @@ class MediaAssetDeserializer: JsonDeserializer<MediaDetailAssetResponse> {
         return tmpMap
     }
 
-    private fun getImageAsset(items: JsonArray): Map<String, String> {
-        val tmpMap = mutableMapOf<String, String>()
+    private fun getImageAsset(items: JsonArray): LinkedHashMap<String, String>  {
+        val tmpMap = linkedMapOf<String, String>()
         for (element in items) {
             var href = element.asJsonObject.get("href").asString
             if ((href.contains("jpg").or(href.contains("tif"))).and(!href.contains("thumb"))) {
@@ -100,20 +101,20 @@ class MediaAssetDeserializer: JsonDeserializer<MediaDetailAssetResponse> {
         return tmpMap
     }
 
-    private fun getAssetType(items: JsonArray) : AssetType {
-        var assetType:AssetType? = null
+    private fun getAssetType(items: JsonArray) : ContentType {
+        var contentType: ContentType? = null
 
         for (element in items) {
             var href = element.asJsonObject.get("href").asString
 
-            if (href.contains("mp3").or(href.contains("m4a"))) {
-                assetType =  AssetType.AUDIO
+            if (href.contains("mp3").or(href.contains("m4a").or(href.contains("wav")))) {
+                contentType =  ContentType.AUDIO
                 break
             } else if (href.contains("mp4")) {
-                assetType = AssetType.VIDEO
+                contentType = ContentType.VIDEO
                 break
             }
         }
-        return assetType?:AssetType.IMAGE
+        return contentType?: ContentType.IMAGE
     }
 }

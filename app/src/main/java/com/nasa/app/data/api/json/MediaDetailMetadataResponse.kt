@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 class MediaDetailMetadataResponse(
     @SerializedName("File:FileSize")
     val fileSize:String,
-    @SerializedName("XMP:Format")
+    @SerializedName("File:FileType")
     val fileFormat:String)
