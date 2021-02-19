@@ -82,6 +82,15 @@ class DetailMediaFragment : Fragment() {
         val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
         contentLayout.visibility = View.INVISIBLE
 
+        when(contentType){
+            ContentType.IMAGE -> {
+                createViewForImageContent(playerView,view)
+            }
+            ContentType.AUDIO -> {
+                createViewForAudioContent(view)
+            }
+        }
+
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetail ->
 
@@ -166,7 +175,6 @@ class DetailMediaFragment : Fragment() {
         Log.e("AudioUrl", "audioUrl ${audioUrl!!}")
 
         val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
-        playerView.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT,450)
         val player = SimpleExoPlayer.Builder(requireContext()).build()
 
         val mediaItem: MediaItem = MediaItem.fromUri(audioUrl!!)
@@ -174,6 +182,20 @@ class DetailMediaFragment : Fragment() {
         playerView.player = player
         player.prepare()
         player.play()
+    }
+
+    private fun createViewForAudioContent(view: View) {
+        val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
+        val orientation = getResources().getConfiguration().orientation
+        Log.e("Device orientation", orientation.toString() )
+        when(orientation)
+        {
+            1 -> {playerView.layoutParams =
+                ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, 450)}
+            2 -> {playerView.layoutParams =
+                ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT)}
+        }
+
     }
 
     private fun initViewByVideoContent(
@@ -207,15 +229,15 @@ class DetailMediaFragment : Fragment() {
         player.play()
     }
 
+
+
+
     private fun initViewByImageContent(
         playerView: PlayerView,
         view: View,
         it: MediaDetail,
         assets: Map<String, String>
     ) {
-        playerView.visibility = View.GONE
-        val img = view.findViewById<ImageView>(R.id.image_media_view)
-        img.adjustViewBounds = true
 
         var imageUrl: String =
             "https://visualsound.com/wp-content/uploads/2019/05/unavailable-image.jpg"
@@ -231,7 +253,17 @@ class DetailMediaFragment : Fragment() {
         Picasso
             .get()
             .load(imageUrl)
-            .into(img)
+            .into(view.findViewById<ImageView>(R.id.image_media_view))
+    }
+
+    private fun createViewForImageContent(
+        playerView: PlayerView,
+        view: View
+    ): ImageView? {
+        playerView.visibility = View.GONE
+        val img = view.findViewById<ImageView>(R.id.image_media_view)
+        img.adjustViewBounds = true
+        return img
     }
 
     private fun getViewModel(nasaId: String): DetailMediaViewModel {

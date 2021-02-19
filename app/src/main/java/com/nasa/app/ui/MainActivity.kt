@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(), IActivity {
     override fun showErrorDialog(msg: String) {
         try {
             val errorDialogFragment = ErrorDialogFragment.newInstance(msg)
-            errorDialogFragment.show(supportFragmentManager,"")
+            errorDialogFragment.show(supportFragmentManager,"ErrorDialogFragment")
         }
         catch (ex: Exception){
             Log.e("MainActivity", ex.message.toString())
