@@ -18,7 +18,7 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.flexbox.FlexboxLayout
-import com.nasa.app.IActivity
+import com.nasa.app.ui.IActivity
 import com.nasa.app.R
 import com.nasa.app.data.api.NasaApiClient
 import com.nasa.app.data.model.ContentType
@@ -68,8 +68,6 @@ class DetailMediaFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-
 
         val binding = DataBindingUtil.inflate<FragmentMediaDetailBinding>(
             inflater,
@@ -133,10 +131,6 @@ class DetailMediaFragment : Fragment() {
             adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown);
             spinner.adapter = adapter;
 
-
-
-
-
             contentLayout.visibility = View.VISIBLE
 
         })
@@ -147,14 +141,6 @@ class DetailMediaFragment : Fragment() {
                 NetworkState.LOADED -> activityContract?.hideProgressBar()
             }
         })
-
-
-
-
-
-
-
-
 
         return view
     }
@@ -180,6 +166,7 @@ class DetailMediaFragment : Fragment() {
         Log.e("AudioUrl", "audioUrl ${audioUrl!!}")
 
         val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
+        playerView.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT,450)
         val player = SimpleExoPlayer.Builder(requireContext()).build()
 
         val mediaItem: MediaItem = MediaItem.fromUri(audioUrl!!)

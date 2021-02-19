@@ -1,6 +1,7 @@
-package com.nasa.app
+package com.nasa.app.ui
 
 interface IActivity {
     fun showProgressBar()
     fun hideProgressBar()
+    fun showErrorDialog(msg: String)
 }
