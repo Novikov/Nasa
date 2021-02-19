@@ -14,8 +14,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.flexbox.FlexboxLayout
 import com.nasa.app.ui.IActivity
@@ -25,6 +23,8 @@ import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.MediaDetail
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.databinding.FragmentMediaDetailBinding
+import com.nasa.app.ui.ExoMediaPlayer
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
 
@@ -35,10 +35,16 @@ class DetailMediaFragment : Fragment() {
     lateinit var detailMediaRepository: DetailMediaRepository
     lateinit var nasaId: String
     lateinit var contentType:ContentType
+    lateinit var contentLayout:ConstraintLayout
+    lateinit var exoMediaPlayer: ExoMediaPlayer
+    var time:Long? = null
+
+    val TAG = "DetailMediaFragment"
+    val PLAYER_TIME = "PlayerTime"
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.i("VideoPlayerFragment", "onAttach is called")
+        Log.e(TAG, "onAttach: ", )
         try {
             activityContract = context as IActivity
         } catch (e: ClassCastException) {
@@ -48,18 +54,24 @@ class DetailMediaFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.e(TAG, "onCreate: ", )
 
+        //getting fragment params
         if (arguments != null) {
             val args = DetailMediaFragmentArgs.fromBundle(requireArguments())
             nasaId = args.nasaId
             contentType = args.contentType
+
         } else {
             throw Exception("arguments can't be null")
         }
 
+        time = savedInstanceState?.getLong(PLAYER_TIME)
+
         val apiService = NasaApiClient.getClient()
         detailMediaRepository = DetailMediaRepository(apiService)
         viewModel = getViewModel(nasaId)
+        exoMediaPlayer = ExoMediaPlayer()
     }
 
 
@@ -68,7 +80,7 @@ class DetailMediaFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        Log.e(TAG, "onCreateView: ", )
         val binding = DataBindingUtil.inflate<FragmentMediaDetailBinding>(
             inflater,
             R.layout.fragment_media_detail,
@@ -78,31 +90,33 @@ class DetailMediaFragment : Fragment() {
 
         val view =  binding.root
 
-        val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
-        val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
+        contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
         contentLayout.visibility = View.INVISIBLE
+        val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
+        playerView.player = exoMediaPlayer.getPlayer(requireContext())
+        val imageView = view.findViewById<ImageView>(R.id.image_media_view)
+
 
         when(contentType){
             ContentType.IMAGE -> {
-                createViewForImageContent(playerView,view)
+                prepareViewForImageContent(playerView,imageView)
             }
             ContentType.AUDIO -> {
-                createViewForAudioContent(view)
+                prepareViewForAudioContent(playerView)
             }
         }
-
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetail ->
 
             when(contentType){
                 ContentType.IMAGE -> {
-                    mediaDetail.assets?.let { assets -> initViewByImageContent(playerView, view, mediaDetail, assets) }
+                    mediaDetail.assets?.let { assets -> initViewByImageContent(view, mediaDetail, assets) }
                 }
                 ContentType.VIDEO -> {
-                    mediaDetail.assets?.let { asset -> initViewByVideoContent(mediaDetail, asset, view) }
+                    mediaDetail.assets?.let { asset -> initViewByVideoContent(mediaDetail, asset) }
                 }
                 ContentType.AUDIO -> {
-                    mediaDetail.assets?.let { asset -> initViewByAudioContent(mediaDetail, asset, view) }
+                    mediaDetail.assets?.let { asset -> initViewByAudioContent(mediaDetail, asset) }
                 }
             }
 
@@ -140,8 +154,6 @@ class DetailMediaFragment : Fragment() {
             adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown);
             spinner.adapter = adapter;
 
-            contentLayout.visibility = View.VISIBLE
-
         })
 
         viewModel.networkState.observe(viewLifecycleOwner, Observer {
@@ -151,13 +163,13 @@ class DetailMediaFragment : Fragment() {
             }
         })
 
+
         return view
     }
 
     private fun initViewByAudioContent(
         mediaDetail: MediaDetail,
         assets: Map<String, String>,
-        view: View
     ) {
         var audioUrl: String? = null
 
@@ -174,18 +186,11 @@ class DetailMediaFragment : Fragment() {
 
         Log.e("AudioUrl", "audioUrl ${audioUrl!!}")
 
-        val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
-        val player = SimpleExoPlayer.Builder(requireContext()).build()
-
-        val mediaItem: MediaItem = MediaItem.fromUri(audioUrl!!)
-        player.setMediaItem(mediaItem)
-        playerView.player = player
-        player.prepare()
-        player.play()
+        exoMediaPlayer.playPlayer(audioUrl!!,time?:0)
+        contentLayout.visibility = View.VISIBLE
     }
 
-    private fun createViewForAudioContent(view: View) {
-        val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
+    private fun prepareViewForAudioContent(playerView: PlayerView) {
         val orientation = getResources().getConfiguration().orientation
         Log.e("Device orientation", orientation.toString() )
         when(orientation)
@@ -201,7 +206,6 @@ class DetailMediaFragment : Fragment() {
     private fun initViewByVideoContent(
         mediaDetail: MediaDetail,
         assets: Map<String, String>,
-        view: View
     ) {
         var videoUrl: String? = null
 
@@ -218,29 +222,20 @@ class DetailMediaFragment : Fragment() {
 
         Log.e("VideoUrl", "videoUrl ${videoUrl!!}")
 
-        val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
-        val player = SimpleExoPlayer.Builder(requireContext()).build()
+        exoMediaPlayer.playPlayer(videoUrl!!,time?:0)
 
-        val mediaItem: MediaItem =
-            MediaItem.fromUri(videoUrl!!)
-        player.setMediaItem(mediaItem)
-        playerView.player = player
-        player.prepare()
-        player.play()
+        contentLayout.visibility = View.VISIBLE
     }
 
 
 
 
     private fun initViewByImageContent(
-        playerView: PlayerView,
         view: View,
         it: MediaDetail,
         assets: Map<String, String>
     ) {
-
-        var imageUrl: String =
-            "https://visualsound.com/wp-content/uploads/2019/05/unavailable-image.jpg"
+        var imageUrl = "https://visualsound.com/wp-content/uploads/2019/05/unavailable-image.jpg"
 
         for (key in it.assets?.keys!!) {
             if (key.contains("jpg")) {
@@ -250,20 +245,25 @@ class DetailMediaFragment : Fragment() {
             }
         }
 
-        Picasso
-            .get()
-            .load(imageUrl)
-            .into(view.findViewById<ImageView>(R.id.image_media_view))
+        Picasso.get().load(imageUrl).into(view.findViewById<ImageView>(R.id.image_media_view), object :
+            Callback{
+            override fun onSuccess() {
+                contentLayout.visibility = View.VISIBLE
+            }
+
+            override fun onError(e: java.lang.Exception?) {
+                TODO("Not yet implemented")
+            }
+        })
+
     }
 
-    private fun createViewForImageContent(
+    private fun prepareViewForImageContent(
         playerView: PlayerView,
-        view: View
-    ): ImageView? {
+        imageView: ImageView
+    ) {
         playerView.visibility = View.GONE
-        val img = view.findViewById<ImageView>(R.id.image_media_view)
-        img.adjustViewBounds = true
-        return img
+        imageView.adjustViewBounds = true
     }
 
     private fun getViewModel(nasaId: String): DetailMediaViewModel {
@@ -274,4 +274,51 @@ class DetailMediaFragment : Fragment() {
             }
         })[DetailMediaViewModel::class.java]
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.e(TAG, "onSaveInstanceState: ", )
+        outState.putLong(PLAYER_TIME,exoMediaPlayer.getPlayerTime())
+        Log.e(TAG, "time onSavedInstanceState ${exoMediaPlayer.getPlayerTime()}")
+
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        Log.e(TAG, "onActivityCreated: ", )
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.e(TAG, "onStart: ", )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.e(TAG, "onResume: ", )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.e(TAG, "onPause: ", )
+        exoMediaPlayer.pausePlayer()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.e(TAG, "onDestroyView: ", )
+        exoMediaPlayer.releasePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.e(TAG, "onDestroy: ", )
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.e(TAG, "onDetach: ", )
+    }
+
+
 }
