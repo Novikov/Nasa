@@ -2,7 +2,8 @@
 <resources>
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+<!--    <color name="colorAccent">#03DAC5</color>-->
+    <color name="colorAccent">#FFFFFF</color>
     <color name="detail_fragments_bcg">#26272f</color>
     <color name="horisontal_divider_color">#484953</color>
 </resources>

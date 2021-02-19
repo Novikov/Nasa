@@ -34,4 +34,6 @@ class MainActivity : AppCompatActivity(), IActivity {
             Log.e("MainActivity", ex.message.toString())
         }
     }
+
+
 }

@@ -1,11 +1,11 @@
 package com.nasa.app.ui.media_detail
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
@@ -16,14 +16,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.flexbox.FlexboxLayout
-import com.nasa.app.ui.IActivity
 import com.nasa.app.R
 import com.nasa.app.data.api.NasaApiClient
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.MediaDetail
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.databinding.FragmentMediaDetailBinding
+import com.nasa.app.ui.DownloadDialogFragment
 import com.nasa.app.ui.ExoMediaPlayer
+import com.nasa.app.ui.IActivity
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
@@ -44,7 +45,7 @@ class DetailMediaFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.e(TAG, "onAttach: ", )
+        Log.e(TAG, "onAttach: ")
         try {
             activityContract = context as IActivity
         } catch (e: ClassCastException) {
@@ -54,7 +55,7 @@ class DetailMediaFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.e(TAG, "onCreate: ", )
+        Log.e(TAG, "onCreate: ")
 
         //getting fragment params
         if (arguments != null) {
@@ -72,6 +73,7 @@ class DetailMediaFragment : Fragment() {
         detailMediaRepository = DetailMediaRepository(apiService)
         viewModel = getViewModel(nasaId)
         exoMediaPlayer = ExoMediaPlayer()
+
     }
 
 
@@ -80,7 +82,7 @@ class DetailMediaFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.e(TAG, "onCreateView: ", )
+        Log.e(TAG, "onCreateView: ")
         val binding = DataBindingUtil.inflate<FragmentMediaDetailBinding>(
             inflater,
             R.layout.fragment_media_detail,
@@ -96,10 +98,13 @@ class DetailMediaFragment : Fragment() {
         playerView.player = exoMediaPlayer.getPlayer(requireContext())
         val imageView = view.findViewById<ImageView>(R.id.image_media_view)
 
+        val button = view.findViewById<Button>(R.id.download_button)
+
+
 
         when(contentType){
             ContentType.IMAGE -> {
-                prepareViewForImageContent(playerView,imageView)
+                prepareViewForImageContent(playerView, imageView)
             }
             ContentType.AUDIO -> {
                 prepareViewForAudioContent(playerView)
@@ -108,9 +113,15 @@ class DetailMediaFragment : Fragment() {
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetail ->
 
-            when(contentType){
+            when (contentType) {
                 ContentType.IMAGE -> {
-                    mediaDetail.assets?.let { assets -> initViewByImageContent(view, mediaDetail, assets) }
+                    mediaDetail.assets?.let { assets ->
+                        initViewByImageContent(
+                            view,
+                            mediaDetail,
+                            assets
+                        )
+                    }
                 }
                 ContentType.VIDEO -> {
                     mediaDetail.assets?.let { asset -> initViewByVideoContent(mediaDetail, asset) }
@@ -123,7 +134,8 @@ class DetailMediaFragment : Fragment() {
 
             binding.mediaDetail = mediaDetail
 
-            //keywords initializing
+
+            //keywords initialization
             val keyWordFlexBox = view.findViewById<FlexboxLayout>(R.id.key_word_flex_box_container)
             for (i in mediaDetail.keywords.indices) {
                 var keywordTextView =
@@ -136,7 +148,7 @@ class DetailMediaFragment : Fragment() {
                 keyWordFlexBox.addView(keywordTextView)
             }
 
-            //EditText initializing
+            //EditText initialization
             val keyToOriginalAsset = mediaDetail.assets?.keys?.first().toString()
             val editText = view.findViewById<EditText>(R.id.url_edit_text)
             editText.setText(
@@ -144,15 +156,54 @@ class DetailMediaFragment : Fragment() {
                 TextView.BufferType.EDITABLE
             )
 
-            //Spinner initializing
-            val spinner: Spinner = view.findViewById(R.id.download_spinner)
-            val adapter = ArrayAdapter(
-                requireContext(),
-                R.layout.custom_spinner,
-                mediaDetail.assets?.keys?.toTypedArray()!!
-            )
-            adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown);
-            spinner.adapter = adapter;
+            //LinkImageView initialization
+            val linkImageView = view.findViewById<ImageView>(R.id.link_image_view)
+            linkImageView.setOnClickListener {
+                val address: Uri = Uri.parse(mediaDetail.assets?.get(keyToOriginalAsset))
+                val intent = Intent(Intent.ACTION_VIEW, address)
+                startActivity(intent)
+            }
+
+//            //Spinner initialization
+//            val spinner: Spinner = view.findViewById(R.id.download_spinner)
+//            val adapter = ArrayAdapter(
+//                requireContext(),
+//                R.layout.custom_spinner,
+//                mediaDetail.assets?.keys?.toTypedArray()!!
+//            )
+//            adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown);
+//            spinner.adapter = adapter
+//
+//            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long
+//                ) {
+////                    Toast.makeText(requireContext(), spinner.selectedItem.toString(), Toast.LENGTH_SHORT).show()
+////                    val address: Uri = Uri.parse(mediaDetail.assets?.get(spinner.selectedItem.toString()))
+////                    val intent = Intent(Intent.ACTION_VIEW, address)
+////                    startActivity(intent)
+//                }
+//
+//                override fun onNothingSelected(parent: AdapterView<*>?) {
+//
+//                }
+//
+//            }
+
+            button.setOnClickListener {
+                val urlList = mutableListOf<String>()
+                mediaDetail.assets?.keys?.forEach {
+                    urlList.add(it)
+                }
+
+                try {
+                    val downloadDialogFragment = DownloadDialogFragment.newInstance(urlList as ArrayList<String>)
+                    downloadDialogFragment.show(parentFragmentManager,"ErrorDialogFragment")
+                }
+                catch (ex: Exception){
+                    Log.e("MainActivity", ex.message.toString())
+                }
+            }
+
 
         })
 
@@ -186,19 +237,26 @@ class DetailMediaFragment : Fragment() {
 
         Log.e("AudioUrl", "audioUrl ${audioUrl!!}")
 
-        exoMediaPlayer.playPlayer(audioUrl!!,time?:0)
+        exoMediaPlayer.playPlayer(audioUrl!!, time ?: 0)
         contentLayout.visibility = View.VISIBLE
     }
 
     private fun prepareViewForAudioContent(playerView: PlayerView) {
         val orientation = getResources().getConfiguration().orientation
-        Log.e("Device orientation", orientation.toString() )
+        Log.e("Device orientation", orientation.toString())
         when(orientation)
         {
-            1 -> {playerView.layoutParams =
-                ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, 450)}
-            2 -> {playerView.layoutParams =
-                ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT)}
+            1 -> {
+                playerView.layoutParams =
+                    ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, 450)
+            }
+            2 -> {
+                playerView.layoutParams =
+                    ConstraintLayout.LayoutParams(
+                        ConstraintLayout.LayoutParams.MATCH_PARENT,
+                        ConstraintLayout.LayoutParams.MATCH_PARENT
+                    )
+            }
         }
 
     }
@@ -222,7 +280,7 @@ class DetailMediaFragment : Fragment() {
 
         Log.e("VideoUrl", "videoUrl ${videoUrl!!}")
 
-        exoMediaPlayer.playPlayer(videoUrl!!,time?:0)
+        exoMediaPlayer.playPlayer(videoUrl!!, time ?: 0)
 
         contentLayout.visibility = View.VISIBLE
     }
@@ -245,16 +303,18 @@ class DetailMediaFragment : Fragment() {
             }
         }
 
-        Picasso.get().load(imageUrl).into(view.findViewById<ImageView>(R.id.image_media_view), object :
-            Callback{
-            override fun onSuccess() {
-                contentLayout.visibility = View.VISIBLE
-            }
+        Picasso.get().load(imageUrl).into(
+            view.findViewById<ImageView>(R.id.image_media_view),
+            object :
+                Callback {
+                override fun onSuccess() {
+                    contentLayout.visibility = View.VISIBLE
+                }
 
-            override fun onError(e: java.lang.Exception?) {
-                TODO("Not yet implemented")
-            }
-        })
+                override fun onError(e: java.lang.Exception?) {
+                    TODO("Not yet implemented")
+                }
+            })
 
     }
 
@@ -277,47 +337,47 @@ class DetailMediaFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        Log.e(TAG, "onSaveInstanceState: ", )
-        outState.putLong(PLAYER_TIME,exoMediaPlayer.getPlayerTime())
+        Log.e(TAG, "onSaveInstanceState: ")
+        outState.putLong(PLAYER_TIME, exoMediaPlayer.getPlayerTime())
         Log.e(TAG, "time onSavedInstanceState ${exoMediaPlayer.getPlayerTime()}")
 
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        Log.e(TAG, "onActivityCreated: ", )
+        Log.e(TAG, "onActivityCreated: ")
     }
 
     override fun onStart() {
         super.onStart()
-        Log.e(TAG, "onStart: ", )
+        Log.e(TAG, "onStart: ")
     }
 
     override fun onResume() {
         super.onResume()
-        Log.e(TAG, "onResume: ", )
+        Log.e(TAG, "onResume: ")
     }
 
     override fun onPause() {
         super.onPause()
-        Log.e(TAG, "onPause: ", )
+        Log.e(TAG, "onPause: ")
         exoMediaPlayer.pausePlayer()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.e(TAG, "onDestroyView: ", )
+        Log.e(TAG, "onDestroyView: ")
         exoMediaPlayer.releasePlayer()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.e(TAG, "onDestroy: ", )
+        Log.e(TAG, "onDestroy: ")
     }
 
     override fun onDetach() {
         super.onDetach()
-        Log.e(TAG, "onDetach: ", )
+        Log.e(TAG, "onDetach: ")
     }
 
 
