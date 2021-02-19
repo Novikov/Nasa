@@ -1,4 +1,4 @@
-package com.nasa.app.media_preview
+package com.nasa.app.ui.media_preview
 
 
 import android.os.Bundle

@@ -1,6 +1,5 @@
-package com.nasa.app.media_detail
+package com.nasa.app.ui.media_detail
 
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.nasa.app.data.model.MediaDetail

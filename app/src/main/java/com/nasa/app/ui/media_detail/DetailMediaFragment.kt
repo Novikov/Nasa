@@ -1,4 +1,4 @@
-package com.nasa.app.media_detail
+package com.nasa.app.ui.media_detail
 
 import android.content.Context
 import android.os.Bundle

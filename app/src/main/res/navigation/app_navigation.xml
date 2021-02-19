@@ -6,7 +6,7 @@
     app:startDestination="@id/mediaFragment">
     <fragment
         android:id="@+id/mediaFragment"
-        android:name="com.nasa.app.media_preview.PreviewMediaFragment"
+        android:name="com.nasa.app.ui.media_preview.PreviewMediaFragment"
         android:label="fragment_media"
         tools:layout="@layout/fragment_media_preview" >
         <action
@@ -16,7 +16,7 @@
 
     <fragment
         android:id="@+id/detailMediaFragment"
-        android:name="com.nasa.app.media_detail.DetailMediaFragment"
+        android:name="com.nasa.app.ui.media_detail.DetailMediaFragment"
         android:label="DetailMediaFragment" >
         <argument
             android:name="nasaId"
