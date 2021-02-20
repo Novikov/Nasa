@@ -64,16 +64,13 @@ class PreviewMediaFragment : Fragment() {
 
         val mediaPreviewRecyclerView = view.findViewById<RecyclerView>(R.id.media_preview_recycler_view)
         mediaPreviewRecyclerView.layoutManager = LinearLayoutManager(context)
-        val adapter = MediaPreviewAdapter(
-            listOf(MediaPreview("201210220003HQ",
-                "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                "image",
-                "21:21:21",
-                "Hello")
-            )
-        )
 
-        mediaPreviewRecyclerView.adapter = adapter
+
+        viewModel.mediaPreviews.observe(viewLifecycleOwner, {
+            val adapter = MediaPreviewAdapter(it)
+            mediaPreviewRecyclerView.adapter = adapter
+        })
+
         return view
     }
 

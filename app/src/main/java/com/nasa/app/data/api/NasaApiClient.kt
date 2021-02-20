@@ -1,10 +1,7 @@
 package com.nasa.app.data.api
 
 import com.google.gson.GsonBuilder
-import com.nasa.app.data.api.json.MediaAssetDeserializer
-import com.nasa.app.data.api.json.MediaDetailAssetResponse
-import com.nasa.app.data.api.json.MediaDetailDeserializer
-import com.nasa.app.data.api.json.MediaDetailResponse
+import com.nasa.app.data.api.json.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -31,6 +28,10 @@ object NasaApiClient {
             .registerTypeAdapter(
                 MediaDetailAssetResponse::class.java,
                 MediaAssetDeserializer()
+            )
+            .registerTypeAdapter(
+                MediaPreviewResponse::class.java,
+                MediaPreviewDeserializer()
             )
             .create()
 

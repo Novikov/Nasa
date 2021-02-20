@@ -43,11 +43,23 @@ class MediaPreviewAdapter(val dataSource: List<MediaPreview> ):RecyclerView.Adap
         val mediaPreviewImageView: ImageView = itemView.findViewById(R.id.media_preview_recycler_view_image)
 
         fun bind(mediaPreview: MediaPreview){
-            Picasso
-                .get()
-                .load(mediaPreview.previewUrl!!)
-                .fit()
-                .into(mediaPreviewImageView);
+
+            var unvaliableImgUrl = "https://visualsound.com/wp-content/uploads/2019/05/unavailable-image.jpg"
+
+            if (mediaPreview.mediaType!="audio"){
+                Picasso
+                    .get()
+                    .load(mediaPreview.previewUrl?:unvaliableImgUrl)
+                    .fit()
+                    .into(mediaPreviewImageView);
+            }
+            else {
+                Picasso
+                    .get()
+                    .load(R.drawable.audio_item)
+                    .fit()
+                    .into(mediaPreviewImageView);
+            }
         }
     }
 }
