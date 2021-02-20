@@ -28,8 +28,8 @@ class MediaPreviewAdapter(val dataSource: List<MediaPreview> ):RecyclerView.Adap
         val mediaPreview = dataSource[position]
         holder.binding.mediaPreview = mediaPreview
         holder.itemView.setOnClickListener {
-           val action = PreviewMediaFragmentDirections.actionMediaFragmentToDetailMediaFragment(mediaPreview.nasaId,mediaPreview.mediaType)
-           navController?.navigate(action)
+//           val action = PreviewMediaFragmentDirections.actionMediaFragmentToDetailMediaFragment(mediaPreview.nasaId,mediaPreview.mediaType)
+//           navController?.navigate(action)
         }
 
         holder.bind(mediaPreview)

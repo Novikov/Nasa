@@ -1,23 +1,56 @@
 package com.nasa.app.ui.media_preview
 
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.nasa.app.R
+import com.nasa.app.data.api.NasaApiClient
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.MediaPreview
+import com.nasa.app.ui.IActivity
+import com.nasa.app.ui.media_detail.DetailMediaRepository
+import com.nasa.app.ui.media_detail.DetailMediaViewModel
 
 class PreviewMediaFragment : Fragment() {
+    private var activityContract: IActivity? = null
     lateinit var navController: NavController
+    lateinit var previewMediaRepository: PreviewMediaRepository
+    private lateinit var viewModel: PreviewMediaViewModel
+
+    val TAG = "PreviewMediaFragment"
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        Log.i(TAG, "onAttach: ")
+        try {
+            activityContract = context as IActivity
+        } catch (e: ClassCastException) {
+            throw ClassCastException(context.toString() + "Activity have to implement interface IActivityView")
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val apiService = NasaApiClient.getClient()
+        previewMediaRepository = PreviewMediaRepository(apiService)
+        viewModel = getViewModel()
+
+    }
 
 
     override fun onCreateView(
@@ -28,183 +61,29 @@ class PreviewMediaFragment : Fragment() {
 
         val view =  inflater.inflate(R.layout.fragment_media_preview, container, false)
 
+
         val mediaPreviewRecyclerView = view.findViewById<RecyclerView>(R.id.media_preview_recycler_view)
         mediaPreviewRecyclerView.layoutManager = LinearLayoutManager(context)
         val adapter = MediaPreviewAdapter(
             listOf(MediaPreview("201210220003HQ",
                 "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                ContentType.IMAGE,
+                "image",
                 "21:21:21",
-                "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello"),
-                MediaPreview("201210220003HQ",
-                    "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg",
-                    ContentType.IMAGE,
-                    "21:21:21",
-                    "Hello")
+                "Hello")
             )
         )
+
         mediaPreviewRecyclerView.adapter = adapter
         return view
+    }
+
+    private fun getViewModel(): PreviewMediaViewModel {
+        return ViewModelProviders.of(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return PreviewMediaViewModel(previewMediaRepository) as T
+            }
+        })[PreviewMediaViewModel::class.java]
     }
 
 

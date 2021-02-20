@@ -1,7 +1,5 @@
 package com.nasa.app.ui.media_detail
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.nasa.app.data.model.MediaDetail
@@ -16,7 +14,7 @@ class DetailMediaViewModel(private val mediaRepository : DetailMediaRepository, 
     }
 
     val networkState : LiveData<NetworkState> by lazy {
-        mediaRepository.getMovieDetailsNetworkState()
+        mediaRepository.getMediaDetailsNetworkState()
     }
 
     override fun onCleared() {

@@ -67,7 +67,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:background="#15418C"
+                    android:background="@color/colorPrimary"
                     android:text="Download"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
