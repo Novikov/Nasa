@@ -191,7 +191,7 @@ class DetailMediaFragment : Fragment() {
 
             button.setOnClickListener {
                 val urlList = mutableListOf<String>()
-                mediaDetail.assets?.keys?.forEach {
+                mediaDetail.assets?.values?.forEach {
                     urlList.add(it)
                 }
 
