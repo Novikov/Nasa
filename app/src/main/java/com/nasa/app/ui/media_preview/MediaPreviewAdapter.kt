@@ -8,6 +8,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.nasa.app.R
+import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.MediaPreview
 import com.nasa.app.databinding.MediaPreviewViewHolderBinding
 import com.squareup.picasso.Picasso
@@ -28,8 +29,8 @@ class MediaPreviewAdapter(val dataSource: List<MediaPreview> ):RecyclerView.Adap
         val mediaPreview = dataSource[position]
         holder.binding.mediaPreview = mediaPreview
         holder.itemView.setOnClickListener {
-//           val action = PreviewMediaFragmentDirections.actionMediaFragmentToDetailMediaFragment(mediaPreview.nasaId,mediaPreview.mediaType)
-//           navController?.navigate(action)
+           val action = PreviewMediaFragmentDirections.actionMediaFragmentToDetailMediaFragment(mediaPreview.nasaId,mediaPreview.mediaType)
+           navController?.navigate(action)
         }
 
         holder.bind(mediaPreview)
@@ -46,7 +47,7 @@ class MediaPreviewAdapter(val dataSource: List<MediaPreview> ):RecyclerView.Adap
 
             var unvaliableImgUrl = "https://visualsound.com/wp-content/uploads/2019/05/unavailable-image.jpg"
 
-            if (mediaPreview.mediaType!="audio"){
+            if (mediaPreview.mediaType!=ContentType.AUDIO){
                 Picasso
                     .get()
                     .load(mediaPreview.previewUrl?:unvaliableImgUrl)

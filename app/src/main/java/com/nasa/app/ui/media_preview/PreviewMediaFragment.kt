@@ -21,6 +21,7 @@ import com.nasa.app.R
 import com.nasa.app.data.api.NasaApiClient
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.MediaPreview
+import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.ui.IActivity
 import com.nasa.app.ui.media_detail.DetailMediaRepository
 import com.nasa.app.ui.media_detail.DetailMediaViewModel
@@ -69,6 +70,14 @@ class PreviewMediaFragment : Fragment() {
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
             val adapter = MediaPreviewAdapter(it)
             mediaPreviewRecyclerView.adapter = adapter
+        })
+
+        //network state status obqserving
+        viewModel.networkState.observe(viewLifecycleOwner, {
+            when (it) {
+                NetworkState.LOADING -> activityContract?.showProgressBar()
+                NetworkState.LOADED -> activityContract?.hideProgressBar()
+            }
         })
 
         return view

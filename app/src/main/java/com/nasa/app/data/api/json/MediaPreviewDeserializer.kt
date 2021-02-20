@@ -19,11 +19,11 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
     ): MediaPreviewResponse {
         val previewsList = ArrayList<MediaPreview>()
 
-        var dateCreated: String = ""
+        var dateCreated = ""
         var previewUrl:String? = null
-        var mediaType: String = ""
-        var nasaId: String = ""
-        var description:String = ""
+        var mediaType: ContentType = ContentType.UNKNOWN
+        var nasaId = ""
+        var description = ""
 
         json?.asJsonObject?.entrySet()?.forEach {
             Log.i(TAG, "Deserialization of MediaDetail begins")
@@ -78,7 +78,12 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
 
                                     if (it.key == "media_type") {
                                         Log.i(TAG, "media_type exists")
-                                        mediaType = it.value.asString
+                                        val tmpMediaType = it.value.asString
+                                        when(tmpMediaType){
+                                            "image" -> {mediaType = ContentType.IMAGE}
+                                            "audio" -> {mediaType = ContentType.AUDIO}
+                                            "video" -> {mediaType = ContentType.VIDEO}
+                                        }
                                     }
 
                                     if (it.key == "description") {
@@ -93,7 +98,7 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
                             //variables clearing for next iteration
                             dateCreated= ""
                             previewUrl= null
-                            mediaType=""
+                            mediaType=ContentType.UNKNOWN
                             nasaId= ""
                             description=""
                         }
