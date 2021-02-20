@@ -74,6 +74,12 @@ class PreviewMediaFragment : Fragment() {
         )
 
         mediaPreviewRecyclerView.adapter = adapter
+
+
+        viewModel.mediaPreviews.observe(viewLifecycleOwner, {
+
+        })
+
         return view
     }
 

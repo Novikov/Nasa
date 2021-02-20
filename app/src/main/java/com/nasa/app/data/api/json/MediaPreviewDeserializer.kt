@@ -21,9 +21,9 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
 
         var dateCreated: String = ""
         var previewUrl:String? = null
-        var mediaType: String
+        var mediaType: String = ""
         var nasaId: String = ""
-        var description:String
+        var description:String = ""
 
         json?.asJsonObject?.entrySet()?.forEach {
             Log.i(TAG, "Deserialization of MediaDetail begins")
@@ -37,6 +37,8 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
 
                         val items = it.value.asJsonArray
                         items.forEach {
+
+
                             //getting preview url
                             if (it.asJsonObject.has("links")){
                                 Log.i(TAG, "inside links array")
@@ -86,11 +88,21 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
 
                                 }
                             }
+                            previewsList.add(MediaPreview(nasaId,previewUrl,mediaType,dateCreated,description))
+
+                            //variables clearing for next iteration
+                            dateCreated= ""
+                            previewUrl= null
+                            mediaType=""
+                            nasaId= ""
+                            description=""
                         }
                     }
                 }
             }
         }
+
+        Log.e("DeserializationResult", previewsList.toString())
 
         return MediaPreviewResponse(previewsList)
     }
