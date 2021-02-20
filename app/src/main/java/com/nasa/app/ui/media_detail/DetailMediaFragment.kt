@@ -35,17 +35,16 @@ class DetailMediaFragment : Fragment() {
     private lateinit var viewModel: DetailMediaViewModel
     lateinit var detailMediaRepository: DetailMediaRepository
     lateinit var nasaId: String
-    lateinit var contentType:ContentType
-    lateinit var contentLayout:ConstraintLayout
+    lateinit var contentType: ContentType
     lateinit var exoMediaPlayer: ExoMediaPlayer
-    var time:Long? = null
+    var time: Long? = null
 
     val TAG = "DetailMediaFragment"
     val PLAYER_TIME = "PlayerTime"
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.e(TAG, "onAttach: ")
+        Log.i(TAG, "onAttach: ")
         try {
             activityContract = context as IActivity
         } catch (e: ClassCastException) {
@@ -55,7 +54,7 @@ class DetailMediaFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.e(TAG, "onCreate: ")
+        Log.i(TAG, "onCreate: ")
 
         //getting fragment params
         if (arguments != null) {
@@ -73,7 +72,6 @@ class DetailMediaFragment : Fragment() {
         detailMediaRepository = DetailMediaRepository(apiService)
         viewModel = getViewModel(nasaId)
         exoMediaPlayer = ExoMediaPlayer()
-
     }
 
 
@@ -82,7 +80,7 @@ class DetailMediaFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.e(TAG, "onCreateView: ")
+        Log.i(TAG, "onCreateView: ")
         val binding = DataBindingUtil.inflate<FragmentMediaDetailBinding>(
             inflater,
             R.layout.fragment_media_detail,
@@ -90,19 +88,17 @@ class DetailMediaFragment : Fragment() {
             false
         )
 
-        val view =  binding.root
+        val view = binding.root
 
-        contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
+        val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
         contentLayout.visibility = View.INVISIBLE
         val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
         playerView.player = exoMediaPlayer.getPlayer(requireContext())
         val imageView = view.findViewById<ImageView>(R.id.image_media_view)
-
         val button = view.findViewById<Button>(R.id.download_button)
 
-
-
-        when(contentType){
+        //media content view preparation
+        when (contentType) {
             ContentType.IMAGE -> {
                 prepareViewForImageContent(playerView, imageView)
             }
@@ -113,29 +109,40 @@ class DetailMediaFragment : Fragment() {
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetail ->
 
+            //view media content initialization
             when (contentType) {
                 ContentType.IMAGE -> {
-                    mediaDetail.assets?.let { assets ->
+                    mediaDetail.assets?.let {
                         initViewByImageContent(
-                            view,
+                            imageView,
                             mediaDetail,
-                            assets
+                            contentLayout
                         )
                     }
                 }
                 ContentType.VIDEO -> {
-                    mediaDetail.assets?.let { asset -> initViewByVideoContent(mediaDetail, asset) }
+                    mediaDetail.assets?.let {
+                        initViewByVideoContent(
+                            exoMediaPlayer,
+                            mediaDetail,
+                            contentLayout
+                        )
+                    }
                 }
                 ContentType.AUDIO -> {
-                    mediaDetail.assets?.let { asset -> initViewByAudioContent(mediaDetail, asset) }
+                    mediaDetail.assets?.let {
+                        initViewByAudioContent(
+                            exoMediaPlayer,
+                            mediaDetail,
+                            contentLayout
+                        )
+                    }
                 }
             }
 
-
             binding.mediaDetail = mediaDetail
 
-
-            //keywords initialization
+            //Keywords initialization
             val keyWordFlexBox = view.findViewById<FlexboxLayout>(R.id.key_word_flex_box_container)
             for (i in mediaDetail.keywords.indices) {
                 var keywordTextView =
@@ -148,7 +155,7 @@ class DetailMediaFragment : Fragment() {
                 keyWordFlexBox.addView(keywordTextView)
             }
 
-            //EditText initialization
+            //editText initialization
             val keyToOriginalAsset = mediaDetail.assets?.keys?.first().toString()
             val editText = view.findViewById<EditText>(R.id.url_edit_text)
             editText.setText(
@@ -156,7 +163,7 @@ class DetailMediaFragment : Fragment() {
                 TextView.BufferType.EDITABLE
             )
 
-            //LinkImageView initialization
+            //linkImageView initialization
             val linkImageView = view.findViewById<ImageView>(R.id.link_image_view)
             linkImageView.setOnClickListener {
                 val address: Uri = Uri.parse(mediaDetail.assets?.get(keyToOriginalAsset))
@@ -164,31 +171,7 @@ class DetailMediaFragment : Fragment() {
                 startActivity(intent)
             }
 
-//            //Spinner initialization
-//            val spinner: Spinner = view.findViewById(R.id.download_spinner)
-//            val adapter = ArrayAdapter(
-//                requireContext(),
-//                R.layout.custom_spinner,
-//                mediaDetail.assets?.keys?.toTypedArray()!!
-//            )
-//            adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown);
-//            spinner.adapter = adapter
-//
-//            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long
-//                ) {
-////                    Toast.makeText(requireContext(), spinner.selectedItem.toString(), Toast.LENGTH_SHORT).show()
-////                    val address: Uri = Uri.parse(mediaDetail.assets?.get(spinner.selectedItem.toString()))
-////                    val intent = Intent(Intent.ACTION_VIEW, address)
-////                    startActivity(intent)
-//                }
-//
-//                override fun onNothingSelected(parent: AdapterView<*>?) {
-//
-//                }
-//
-//            }
-
+            //download button initialization
             button.setOnClickListener {
                 val urlList = mutableListOf<String>()
                 mediaDetail.assets?.values?.forEach {
@@ -196,17 +179,16 @@ class DetailMediaFragment : Fragment() {
                 }
 
                 try {
-                    val downloadDialogFragment = DownloadDialogFragment.newInstance(urlList as ArrayList<String>)
-                    downloadDialogFragment.show(parentFragmentManager,"ErrorDialogFragment")
-                }
-                catch (ex: Exception){
-                    Log.e("MainActivity", ex.message.toString())
+                    val downloadDialogFragment =
+                        DownloadDialogFragment.newInstance(urlList as ArrayList<String>)
+                    downloadDialogFragment.show(parentFragmentManager, "ErrorDialogFragment")
+                } catch (ex: Exception) {
+                    Log.i("MainActivity", ex.message.toString())
                 }
             }
-
-
         })
 
+        //network state status observing
         viewModel.networkState.observe(viewLifecycleOwner, Observer {
             when (it) {
                 NetworkState.LOADING -> activityContract?.showProgressBar()
@@ -214,19 +196,19 @@ class DetailMediaFragment : Fragment() {
             }
         })
 
-
         return view
     }
 
     private fun initViewByAudioContent(
+        exoMediaPlayer: ExoMediaPlayer,
         mediaDetail: MediaDetail,
-        assets: Map<String, String>,
+        contentLayout: ConstraintLayout
     ) {
         var audioUrl: String? = null
 
         for (key in mediaDetail.assets?.keys!!) {
             if (key.contains("mp3")) {
-                audioUrl = assets[key].toString()
+                audioUrl = mediaDetail.assets[key].toString()
                 break
             }
             break
@@ -235,7 +217,7 @@ class DetailMediaFragment : Fragment() {
         val substring = audioUrl!!.substringAfter("//")
         audioUrl = "https://$substring"
 
-        Log.e("AudioUrl", "audioUrl ${audioUrl!!}")
+        Log.i("AudioUrl", "audioUrl ${audioUrl!!}")
 
         exoMediaPlayer.playPlayer(audioUrl!!, time ?: 0)
         contentLayout.visibility = View.VISIBLE
@@ -243,9 +225,8 @@ class DetailMediaFragment : Fragment() {
 
     private fun prepareViewForAudioContent(playerView: PlayerView) {
         val orientation = getResources().getConfiguration().orientation
-        Log.e("Device orientation", orientation.toString())
-        when(orientation)
-        {
+        Log.i("Device orientation", orientation.toString())
+        when (orientation) {
             1 -> {
                 playerView.layoutParams =
                     ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, 450)
@@ -258,18 +239,18 @@ class DetailMediaFragment : Fragment() {
                     )
             }
         }
-
     }
 
     private fun initViewByVideoContent(
+        exoMediaPlayer: ExoMediaPlayer,
         mediaDetail: MediaDetail,
-        assets: Map<String, String>,
+        contentLayout: ConstraintLayout
     ) {
         var videoUrl: String? = null
 
         for (key in mediaDetail.assets?.keys!!) {
             if (key.contains("mp4")) {
-                videoUrl = assets[key].toString()
+                videoUrl = mediaDetail.assets[key].toString()
                 break
             }
             break
@@ -278,7 +259,7 @@ class DetailMediaFragment : Fragment() {
         val substring = videoUrl!!.substringAfter("//")
         videoUrl = "https://$substring"
 
-        Log.e("VideoUrl", "videoUrl ${videoUrl!!}")
+        Log.i("VideoUrl", "videoUrl ${videoUrl!!}")
 
         exoMediaPlayer.playPlayer(videoUrl!!, time ?: 0)
 
@@ -286,25 +267,23 @@ class DetailMediaFragment : Fragment() {
     }
 
 
-
-
     private fun initViewByImageContent(
-        view: View,
-        it: MediaDetail,
-        assets: Map<String, String>
+        imageView: ImageView,
+        mediaDetail: MediaDetail,
+        contentLayout: ConstraintLayout
     ) {
         var imageUrl = "https://visualsound.com/wp-content/uploads/2019/05/unavailable-image.jpg"
 
-        for (key in it.assets?.keys!!) {
+        for (key in mediaDetail.assets?.keys!!) {
             if (key.contains("jpg")) {
-                imageUrl = assets[key].toString()
-                Log.e("ImageUrl", imageUrl)
+                imageUrl = mediaDetail.assets[key].toString()
+                Log.i("ImageUrl", imageUrl)
                 break
             }
         }
 
         Picasso.get().load(imageUrl).into(
-            view.findViewById<ImageView>(R.id.image_media_view),
+            imageView,
             object :
                 Callback {
                 override fun onSuccess() {
@@ -315,7 +294,6 @@ class DetailMediaFragment : Fragment() {
                     TODO("Not yet implemented")
                 }
             })
-
     }
 
     private fun prepareViewForImageContent(
@@ -337,48 +315,20 @@ class DetailMediaFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        Log.e(TAG, "onSaveInstanceState: ")
+        Log.i(TAG, "onSaveInstanceState: ")
         outState.putLong(PLAYER_TIME, exoMediaPlayer.getPlayerTime())
-        Log.e(TAG, "time onSavedInstanceState ${exoMediaPlayer.getPlayerTime()}")
-
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        Log.e(TAG, "onActivityCreated: ")
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.e(TAG, "onStart: ")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.e(TAG, "onResume: ")
+        Log.i(TAG, "time onSavedInstanceState ${exoMediaPlayer.getPlayerTime()}")
     }
 
     override fun onPause() {
         super.onPause()
-        Log.e(TAG, "onPause: ")
+        Log.i(TAG, "onPause: ")
         exoMediaPlayer.pausePlayer()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.e(TAG, "onDestroyView: ")
+        Log.i(TAG, "onDestroyView: ")
         exoMediaPlayer.releasePlayer()
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.e(TAG, "onDestroy: ")
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        Log.e(TAG, "onDetach: ")
-    }
-
-
 }
