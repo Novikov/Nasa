@@ -14,6 +14,7 @@
     <string name="edit_text_temporary_text">images-assets.nasa.gov/image/NHQ202101280006/NHQ202101280006~orig.jpg</string>
     <string name="Nasa_id_template">NHQ202101280006NHQ</string>
     <string name="original_size_file_url">Original size file (URL):</string>
+    <string name="nothing_found">oops! nothing found</string>
 
     <string-array name="list">
         <item>Small</item>

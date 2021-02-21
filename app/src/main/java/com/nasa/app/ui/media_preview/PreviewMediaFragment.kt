@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -25,6 +26,7 @@ import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.ui.IActivity
 import com.nasa.app.ui.media_detail.DetailMediaRepository
 import com.nasa.app.ui.media_detail.DetailMediaViewModel
+import org.w3c.dom.Text
 
 class PreviewMediaFragment : Fragment() {
     private var activityContract: IActivity? = null
@@ -60,13 +62,23 @@ class PreviewMediaFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_media_preview, container, false)
 
+        val nothingFoundTextView = view.findViewById<TextView>(R.id.no_results_were_found_text_view)
+
         val mediaPreviewRecyclerView =
             view.findViewById<RecyclerView>(R.id.media_preview_recycler_view)
         mediaPreviewRecyclerView.layoutManager = LinearLayoutManager(context)
 
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
-            val adapter = MediaPreviewAdapter(it)
-            mediaPreviewRecyclerView.adapter = adapter
+            if(it.isNotEmpty()) {
+                val adapter = MediaPreviewAdapter(it)
+                mediaPreviewRecyclerView.adapter = adapter
+                mediaPreviewRecyclerView.visibility = View.VISIBLE
+                nothingFoundTextView.visibility = View.GONE
+            }
+            else {
+                mediaPreviewRecyclerView.visibility = View.GONE
+                nothingFoundTextView.visibility = View.VISIBLE
+            }
         })
 
         //network state status obqserving
