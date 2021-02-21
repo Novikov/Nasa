@@ -25,6 +25,7 @@ import com.nasa.app.databinding.FragmentMediaDetailBinding
 import com.nasa.app.ui.DownloadDialogFragment
 import com.nasa.app.ui.ExoMediaPlayer
 import com.nasa.app.ui.IActivity
+import com.nasa.app.ui.UNREACHABLE_IMAGE_URL
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
@@ -272,7 +273,7 @@ class DetailMediaFragment : Fragment() {
         mediaDetail: MediaDetail,
         contentLayout: ConstraintLayout
     ) {
-        var imageUrl = "https://visualsound.com/wp-content/uploads/2019/05/unavailable-image.jpg"
+        var imageUrl:String? = null
 
         for (asset in mediaDetail.assets!!) {
             if (asset.value.contains("jpg")) {
@@ -282,7 +283,7 @@ class DetailMediaFragment : Fragment() {
             }
         }
 
-        Picasso.get().load(imageUrl).into(
+        Picasso.get().load(imageUrl?: UNREACHABLE_IMAGE_URL).into(
             imageView,
             object :
                 Callback {

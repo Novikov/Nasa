@@ -7,7 +7,8 @@ import com.google.gson.JsonElement
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.MediaPreview
 import java.lang.reflect.Type
-import java.util.ArrayList
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
     private val TAG: String = "MediaPreviewDeserialization"
@@ -64,9 +65,22 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
 
                                     if (it.key == "date_created") {
                                         Log.i(TAG, "date_created exists")
-                                        val tmpDateCreated = it.value.asString
-                                        val endStringPosition = tmpDateCreated.indexOf('T')
-                                        dateCreated = tmpDateCreated.subSequence(0,endStringPosition).toString()
+
+                                        val dateStr: String = it.value.asString
+                                        val parsedDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+
+                                        val parsedDate: Date = parsedDateFormat.parse(dateStr)
+
+                                        val dayDateFormat = SimpleDateFormat("dd")
+                                        val day = dayDateFormat.format(parsedDate)
+
+                                        val monthDateFormat = SimpleDateFormat("MMMM")
+                                        val month = monthDateFormat.format(parsedDate)
+
+                                        val yearDateFormat = SimpleDateFormat("yyyy")
+                                        val year = yearDateFormat.format(parsedDate)
+
+                                        dateCreated = "$month $day, $year"
                                     }
 
                                     if (it.key == "nasa_id") {
@@ -79,9 +93,15 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
                                         Log.i(TAG, "media_type exists")
                                         val tmpMediaType = it.value.asString
                                         when(tmpMediaType){
-                                            "image" -> {mediaType = ContentType.IMAGE}
-                                            "audio" -> {mediaType = ContentType.AUDIO}
-                                            "video" -> {mediaType = ContentType.VIDEO}
+                                            "image" -> {
+                                                mediaType = ContentType.IMAGE
+                                            }
+                                            "audio" -> {
+                                                mediaType = ContentType.AUDIO
+                                            }
+                                            "video" -> {
+                                                mediaType = ContentType.VIDEO
+                                            }
                                         }
                                     }
 
@@ -92,7 +112,15 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
 
                                 }
                             }
-                            previewsList.add(MediaPreview(nasaId,previewUrl,mediaType,dateCreated,description))
+                            previewsList.add(
+                                MediaPreview(
+                                    nasaId,
+                                    previewUrl,
+                                    mediaType,
+                                    dateCreated,
+                                    description
+                                )
+                            )
 
                             //variables clearing for next iteration
                             dateCreated= ""

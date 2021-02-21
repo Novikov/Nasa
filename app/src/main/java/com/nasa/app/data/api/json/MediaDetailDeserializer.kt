@@ -6,6 +6,8 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.nasa.app.data.model.MediaDetail
 import java.lang.reflect.Type
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MediaDetailDeserializer : JsonDeserializer<MediaDetailResponse> {
     private val TAG: String = "MediaDetailDeserialization"
@@ -46,9 +48,21 @@ class MediaDetailDeserializer : JsonDeserializer<MediaDetailResponse> {
                                 dataValue.entrySet()?.forEach {
                                     if (it.key == "date_created") {
                                         Log.i(TAG, "date_created exists")
-                                        val tmpDateCreated = it.value.asString
-                                        val endStringPosition = tmpDateCreated.indexOf('T')
-                                        dateCreated = tmpDateCreated.subSequence(0,endStringPosition).toString()
+                                        val dateStr: String = it.value.asString
+                                        val parsedDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+
+                                        val parsedDate: Date = parsedDateFormat.parse(dateStr)
+
+                                        val dayDateFormat = SimpleDateFormat("dd")
+                                        val day = dayDateFormat.format(parsedDate)
+
+                                        val monthDateFormat = SimpleDateFormat("MM")
+                                        val month = monthDateFormat.format(parsedDate)
+
+                                        val yearDateFormat = SimpleDateFormat("yyyy")
+                                        val year = yearDateFormat.format(parsedDate)
+
+                                        dateCreated = "$day-$month-$year"
                                     }
 
                                     if (it.key == "nasa_id") {

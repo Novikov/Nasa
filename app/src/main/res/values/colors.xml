@@ -5,6 +5,7 @@
     <color name="colorAccent">#FFFFFF</color>
     <color name="detail_fragments_bcg">#26272f</color>
     <color name="horisontal_divider_color">#484953</color>
+    <color name="audio_media_item">#1D1D23</color>
 </resources>
 
 <!--<resources>-->

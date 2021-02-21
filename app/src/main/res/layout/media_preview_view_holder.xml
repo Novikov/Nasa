@@ -20,7 +20,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                android:adjustViewBounds="true"
+                android:background="#1D1D23"
+                android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -63,6 +64,28 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:id="@+id/play_video_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/media_preview_recycler_view_image"
+                app:layout_constraintEnd_toEndOf="@+id/media_preview_recycler_view_image"
+                app:layout_constraintStart_toStartOf="@+id/media_preview_recycler_view_image"
+                app:layout_constraintTop_toTopOf="@+id/media_preview_recycler_view_image"
+                app:srcCompat="@drawable/ic_play_video"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/play_audio_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/media_preview_recycler_view_image"
+                app:layout_constraintEnd_toEndOf="@+id/media_preview_recycler_view_image"
+                app:layout_constraintStart_toStartOf="@+id/media_preview_recycler_view_image"
+                app:layout_constraintTop_toTopOf="@+id/media_preview_recycler_view_image"
+                app:srcCompat="@drawable/ic_play_audio"
+                android:visibility="gone"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
