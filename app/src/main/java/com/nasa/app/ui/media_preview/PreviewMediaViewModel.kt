@@ -12,7 +12,7 @@ class PreviewMediaViewModel(private val mediaRepository : PreviewMediaRepository
     private val compositeDisposable = CompositeDisposable()
 
     val mediaPreviews:LiveData<List<MediaPreview>> by lazy {
-        mediaRepository.fetchMultipleMediaPreview(compositeDisposable, SEARCH_REQUEST_QUERY)
+        mediaRepository.fetchMultipleMediaPreview(compositeDisposable)
     }
 
     val networkState : LiveData<NetworkState> by lazy {

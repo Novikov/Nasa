@@ -11,9 +11,9 @@ import io.reactivex.disposables.CompositeDisposable
 class PreviewMediaRepository(private val apiService : NasaApiService) {
     lateinit var previewMediaDataSource: PreviewsMediaDataSource
 
-    fun fetchMultipleMediaPreview(compositeDisposable: CompositeDisposable, query:String): LiveData<List<MediaPreview>>{
+    fun fetchMultipleMediaPreview(compositeDisposable: CompositeDisposable): LiveData<List<MediaPreview>>{
         previewMediaDataSource = PreviewsMediaDataSource(apiService,compositeDisposable)
-        previewMediaDataSource.fetchMediaPreviews(query)
+        previewMediaDataSource.fetchMediaPreviews()
         return previewMediaDataSource.downloadedMediaPreviewsResponse
     }
 
