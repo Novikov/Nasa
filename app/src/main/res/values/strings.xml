@@ -13,6 +13,7 @@
     <string name="large_text">Acting NASA Administrator Steve Jurczyk places a wreath at the Space Shuttle Challenger Memorial during a ceremony that was part of NASA\'s Day of Remembrance, Thursday, Jan. 28, 2021, at Arlington National Cemetery in Arlington, Va. Wreaths were laid in memory of those men and women who lost their lives in the quest for space exploration. Photo Credit: (NASA/Bill Ingalls)</string>
     <string name="edit_text_temporary_text">images-assets.nasa.gov/image/NHQ202101280006/NHQ202101280006~orig.jpg</string>
     <string name="Nasa_id_template">NHQ202101280006NHQ</string>
+    <string name="original_size_file_url">Original size file (URL):</string>
 
     <string-array name="list">
         <item>Small</item>

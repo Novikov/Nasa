@@ -1,8 +1,8 @@
 package com.nasa.app.data.model
 
-enum class ContentType {
-    AUDIO,
-    VIDEO,
-    IMAGE,
-    UNKNOWN
+enum class ContentType(val contentType: String) {
+    AUDIO("audio"),
+    VIDEO("video"),
+    IMAGE("image"),
+    UNKNOWN("unknown")
 }

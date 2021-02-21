@@ -143,6 +143,11 @@ class DetailMediaFragment : Fragment() {
 
             binding.mediaDetail = mediaDetail
 
+            if (mediaDetail.description==""){
+                val secondDivider = view.findViewById<View>(R.id.second_divider)
+                secondDivider.visibility = View.INVISIBLE
+            }
+
             //Keywords initialization
             val keyWordFlexBox = view.findViewById<FlexboxLayout>(R.id.key_word_flex_box_container)
             for (i in mediaDetail.keywords.indices) {
@@ -276,14 +281,33 @@ class DetailMediaFragment : Fragment() {
         var imageUrl:String? = null
 
         for (asset in mediaDetail.assets!!) {
-            if (asset.value.contains("jpg")) {
+            if (asset.value.contains("jpg").and(asset.value.contains("small"))) {
                 imageUrl = asset.value
                 Log.i("ImageUrl", imageUrl)
                 break
             }
         }
 
-        Picasso.get().load(imageUrl?: UNREACHABLE_IMAGE_URL).into(
+        if (imageUrl==null){
+            for (asset in mediaDetail.assets!!) {
+                if (asset.value.contains("jpg").and(asset.value.contains("medium"))) {
+                    imageUrl = asset.value
+                    Log.i("ImageUrl", imageUrl)
+                    break
+                }
+            }
+        }
+        else if (imageUrl==null) {
+            for (asset in mediaDetail.assets!!) {
+                if (asset.value.contains("jpg").and(asset.value.contains("large"))) {
+                    imageUrl = asset.value
+                    Log.i("ImageUrl", imageUrl)
+                    break
+                }
+            }
+        }
+
+        Picasso.get().load(imageUrl).into(
             imageView,
             object :
                 Callback {
@@ -292,7 +316,7 @@ class DetailMediaFragment : Fragment() {
                 }
 
                 override fun onError(e: java.lang.Exception?) {
-                    TODO("Not yet implemented")
+                    Log.e(TAG, "error loading image ${e!!.message}" )
                 }
             })
     }
