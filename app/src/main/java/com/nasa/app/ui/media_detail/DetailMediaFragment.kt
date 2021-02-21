@@ -204,14 +204,15 @@ class DetailMediaFragment : Fragment() {
         mediaDetail: MediaDetail,
         contentLayout: ConstraintLayout
     ) {
+
+
         var audioUrl: String? = null
 
-        for (key in mediaDetail.assets?.keys!!) {
-            if (key.contains("mp3")) {
-                audioUrl = mediaDetail.assets[key].toString()
+        for (asset in mediaDetail.assets!!) {
+            if (asset.value.contains("mp3")) {
+                audioUrl = asset.value
                 break
             }
-            break
         }
 
         val substring = audioUrl!!.substringAfter("//")
@@ -248,12 +249,11 @@ class DetailMediaFragment : Fragment() {
     ) {
         var videoUrl: String? = null
 
-        for (key in mediaDetail.assets?.keys!!) {
-            if (key.contains("mp4")) {
-                videoUrl = mediaDetail.assets[key].toString()
+        for (asset in mediaDetail.assets!!) {
+            if (asset.value.contains("mp4")) {
+                videoUrl = asset.value
                 break
             }
-            break
         }
 
         val substring = videoUrl!!.substringAfter("//")
@@ -274,9 +274,9 @@ class DetailMediaFragment : Fragment() {
     ) {
         var imageUrl = "https://visualsound.com/wp-content/uploads/2019/05/unavailable-image.jpg"
 
-        for (key in mediaDetail.assets?.keys!!) {
-            if (key.contains("jpg")) {
-                imageUrl = mediaDetail.assets[key].toString()
+        for (asset in mediaDetail.assets!!) {
+            if (asset.value.contains("jpg")) {
+                imageUrl = asset.value
                 Log.i("ImageUrl", imageUrl)
                 break
             }
