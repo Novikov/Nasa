@@ -50,7 +50,6 @@ class PreviewMediaFragment : Fragment() {
         val apiService = NasaApiClient.getClient()
         previewMediaRepository = PreviewMediaRepository(apiService)
         viewModel = getViewModel()
-
     }
 
 
@@ -59,13 +58,11 @@ class PreviewMediaFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_media_preview, container, false)
 
-        val view =  inflater.inflate(R.layout.fragment_media_preview, container, false)
-
-
-        val mediaPreviewRecyclerView = view.findViewById<RecyclerView>(R.id.media_preview_recycler_view)
+        val mediaPreviewRecyclerView =
+            view.findViewById<RecyclerView>(R.id.media_preview_recycler_view)
         mediaPreviewRecyclerView.layoutManager = LinearLayoutManager(context)
-
 
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
             val adapter = MediaPreviewAdapter(it)
@@ -91,6 +88,4 @@ class PreviewMediaFragment : Fragment() {
             }
         })[PreviewMediaViewModel::class.java]
     }
-
-
 }
