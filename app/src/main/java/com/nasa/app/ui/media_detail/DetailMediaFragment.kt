@@ -307,7 +307,7 @@ class DetailMediaFragment : Fragment() {
             }
         }
 
-        Picasso.get().load(imageUrl).into(
+        Picasso.get().load(imageUrl?: UNREACHABLE_IMAGE_URL).into(
             imageView,
             object :
                 Callback {
