@@ -24,7 +24,6 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
         var mediaType: ContentType = ContentType.UNKNOWN
         var nasaId = ""
         var description = ""
-
         json?.asJsonObject?.entrySet()?.forEach {
             Log.i(TAG, "Deserialization of MediaDetail begins")
 
