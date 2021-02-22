@@ -282,36 +282,7 @@ class DetailMediaFragment : Fragment() {
         mediaDetail: MediaDetail,
         contentLayout: ConstraintLayout
     ) {
-        var imageUrl:String? = null
-
-        for (asset in mediaDetail.assets!!) {
-            if (asset.value.contains("jpg").and(asset.value.contains("small"))) {
-                imageUrl = asset.value
-                Log.i("ImageUrl", imageUrl)
-                break
-            }
-        }
-
-        if (imageUrl==null){
-            for (asset in mediaDetail.assets!!) {
-                if (asset.value.contains("jpg").and(asset.value.contains("medium"))) {
-                    imageUrl = asset.value
-                    Log.i("ImageUrl", imageUrl)
-                    break
-                }
-            }
-        }
-        else if (imageUrl==null) {
-            for (asset in mediaDetail.assets!!) {
-                if (asset.value.contains("jpg").and(asset.value.contains("large"))) {
-                    imageUrl = asset.value
-                    Log.i("ImageUrl", imageUrl)
-                    break
-                }
-            }
-        }
-
-        Picasso.get().load(imageUrl?: UNREACHABLE_IMAGE_URL).into(
+        Picasso.get().load(mediaDetail.previewUrl?: UNREACHABLE_IMAGE_URL).into(
             imageView,
             object :
                 Callback {

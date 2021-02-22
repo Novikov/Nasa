@@ -20,6 +20,7 @@ class MediaDetailDeserializer : JsonDeserializer<MediaDetailResponse> {
 
         var dateCreated: String = ""
         var nasaId: String = ""
+        var previewUrl:String? = null
         var mediaType: String = ""
         var center: String = ""
         var title: String = ""
@@ -39,6 +40,21 @@ class MediaDetailDeserializer : JsonDeserializer<MediaDetailResponse> {
 
                         val items = it.value.asJsonArray
                         items.forEach {
+                            //getting preview url
+                            if (it.asJsonObject.has("links")){
+                                Log.i(TAG, "inside links array")
+
+                                val links = it.asJsonObject.get("links")
+                                val linksValue = links.asJsonArray.get(0).asJsonObject
+
+                                linksValue.entrySet()?.forEach {
+                                    if (it.key == "href"&&it.value.toString().contains("thumb")) {
+                                        Log.i(TAG, "preview url exists")
+                                        previewUrl = it.value.asString
+                                    }
+                                }
+                            }
+
                             if (it.asJsonObject.has("data")) {
                                 Log.i(TAG, "inside data array")
 
@@ -113,6 +129,7 @@ class MediaDetailDeserializer : JsonDeserializer<MediaDetailResponse> {
         val mediaDetail = MediaDetail(
             dateCreated,
             nasaId,
+            previewUrl,
             keywordList,
             mediaType,
             center,
