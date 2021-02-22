@@ -3,6 +3,7 @@ package com.nasa.app.ui
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.nasa.app.R
+
 
 class MainActivity : AppCompatActivity(), IActivity {
     lateinit var mProgress: ProgressBar
@@ -31,12 +33,7 @@ class MainActivity : AppCompatActivity(), IActivity {
                 query.let {
                     SEARCH_REQUEST_QUERY = it!!
                 }
-                val navController = findNavController(R.id.nav_host_fragment)
-                val navHostFragment =supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-                val inflater = navHostFragment.navController.navInflater
-                val graph = inflater.inflate(R.navigation.app_navigation)
-                graph.startDestination = R.id.mediaFragment
-                navController.graph = graph
+                searchRequest()
                 return true
             }
 
@@ -45,6 +42,22 @@ class MainActivity : AppCompatActivity(), IActivity {
             }
         })
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+
+        if (id == R.id.search_settings) {
+            try {
+                val errorDialogFragment = SearchSettingsFragment.newInstance("Hello")
+                errorDialogFragment.show(supportFragmentManager, "ErrorDialogFragment")
+            }
+            catch (ex: Exception){
+                Log.e("MainActivity", ex.message.toString())
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun showProgressBar() {
@@ -67,5 +80,12 @@ class MainActivity : AppCompatActivity(), IActivity {
         }
     }
 
-
+    override fun searchRequest() {
+        val navController = findNavController(R.id.nav_host_fragment)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val inflater = navHostFragment.navController.navInflater
+        val graph = inflater.inflate(R.navigation.app_navigation)
+        graph.startDestination = R.id.mediaFragment
+        navController.graph = graph
+    }
 }

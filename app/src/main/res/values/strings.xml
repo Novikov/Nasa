@@ -21,4 +21,9 @@
         <item>Medium</item>
         <item>Large</item>
     </string-array>
+
+    <string-array name="rangeSliderValues">
+        <item>1920</item>
+        <item>2021</item>
+    </string-array>
 </resources>

@@ -62,7 +62,7 @@
 
 
                 <Button
-                    android:id="@+id/download_button"
+                    android:id="@+id/update_results_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -85,7 +85,7 @@
                     android:layout_marginTop="8dp"
                     android:src="@drawable/link_img"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/download_button" />
+                    app:layout_constraintTop_toBottomOf="@+id/update_results_button" />
 
                 <TextView
                     android:id="@+id/original_size_url_string_text_view"
@@ -98,7 +98,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/link_image_view"
-                    app:layout_constraintTop_toBottomOf="@+id/download_button" />
+                    app:layout_constraintTop_toBottomOf="@+id/update_results_button" />
 
 
                 <EditText

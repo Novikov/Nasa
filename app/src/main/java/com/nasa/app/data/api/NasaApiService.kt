@@ -14,7 +14,7 @@ interface NasaApiService {
     //MediaPreview
     @GET("search")
     fun mediaPreview(@Query("q")q:String,
-                     @Query("media_type")mediaType:Array<String>,
+                     @Query("media_type")mediaType:String,
                      @Query("year_start")year_start:String,
                      @Query("year_end")year_end:String): Single<MediaPreviewResponse>
 

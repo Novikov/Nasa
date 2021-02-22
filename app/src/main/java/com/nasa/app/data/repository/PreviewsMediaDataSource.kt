@@ -5,10 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.model.MediaPreview
-import com.nasa.app.ui.SEARCH_MEDIA_TYPES
-import com.nasa.app.ui.SEARCH_REQUEST_QUERY
-import com.nasa.app.ui.SEARCH_YEAR_END
-import com.nasa.app.ui.SEARCH_YEAR_START
+import com.nasa.app.ui.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
@@ -26,7 +23,7 @@ class PreviewsMediaDataSource (private val apiService : NasaApiService, private 
 
         try{
             compositeDisposable.add(
-                apiService.mediaPreview(SEARCH_REQUEST_QUERY, SEARCH_MEDIA_TYPES, SEARCH_YEAR_START, SEARCH_YEAR_END)
+                apiService.mediaPreview(SEARCH_REQUEST_QUERY, getSearchMediaTypes(), SEARCH_YEAR_START, SEARCH_YEAR_END)
                     .observeOn(Schedulers.io())
                     .subscribeOn(Schedulers.io())
                     .subscribe({

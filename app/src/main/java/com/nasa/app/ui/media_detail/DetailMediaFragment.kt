@@ -96,7 +96,7 @@ class DetailMediaFragment : Fragment() {
         val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
         playerView.player = exoMediaPlayer.getPlayer(requireContext())
         val imageView = view.findViewById<ImageView>(R.id.image_media_view)
-        val button = view.findViewById<Button>(R.id.download_button)
+        val button = view.findViewById<Button>(R.id.update_results_button)
 
         //media content view preparation
         when (contentType) {
