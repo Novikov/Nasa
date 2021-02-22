@@ -89,6 +89,7 @@ class DetailMediaFragment : Fragment() {
             false
         )
 
+        activityContract?.clearMsg()
         activityContract?.collapseSearchField()
 
         val view = binding.root
@@ -203,6 +204,14 @@ class DetailMediaFragment : Fragment() {
             when (it) {
                 NetworkState.LOADING -> activityContract?.showProgressBar()
                 NetworkState.LOADED -> activityContract?.hideProgressBar()
+                NetworkState.NO_INTERNET -> {
+                    activityContract?.hideProgressBar()
+                    activityContract?.showMsg(it.msg)
+                }
+                NetworkState.ERROR -> {
+                    activityContract?.hideProgressBar()
+                    activityContract?.showMsg(it.msg)
+                }
             }
         })
 

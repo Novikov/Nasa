@@ -59,10 +59,10 @@ class PreviewMediaFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        activityContract?.clearMsg()
+
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_media_preview, container, false)
-
-        val nothingFoundTextView = view.findViewById<TextView>(R.id.no_results_were_found_text_view)
 
         val mediaPreviewRecyclerView =
             view.findViewById<RecyclerView>(R.id.media_preview_recycler_view)
@@ -72,20 +72,25 @@ class PreviewMediaFragment : Fragment() {
             if(it.isNotEmpty()) {
                 val adapter = MediaPreviewAdapter(it)
                 mediaPreviewRecyclerView.adapter = adapter
-                mediaPreviewRecyclerView.visibility = View.VISIBLE
-                nothingFoundTextView.visibility = View.GONE
             }
             else {
-                mediaPreviewRecyclerView.visibility = View.GONE
-                nothingFoundTextView.visibility = View.VISIBLE
+                activityContract?.showMsg("Nothing found")
             }
         })
 
-        //network state status obqserving
+        //network state status observing
         viewModel.networkState.observe(viewLifecycleOwner, {
             when (it) {
                 NetworkState.LOADING -> activityContract?.showProgressBar()
                 NetworkState.LOADED -> activityContract?.hideProgressBar()
+                NetworkState.NO_INTERNET -> {
+                    activityContract?.hideProgressBar()
+                    activityContract?.showMsg(it.msg)
+                }
+                NetworkState.ERROR -> {
+                    activityContract?.hideProgressBar()
+                    activityContract?.showMsg(it.msg)
+                }
             }
         })
 

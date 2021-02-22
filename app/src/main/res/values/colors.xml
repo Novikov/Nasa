@@ -7,4 +7,5 @@
 <color name="app_gray">#C8D0E4</color>
 <color name="horisontal_divider_color">#484953</color>
 <color name="audio_media_item">#1D1D23</color>
+<color name="error_msg">#F44336</color>
 </resources>

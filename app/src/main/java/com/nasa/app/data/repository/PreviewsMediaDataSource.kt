@@ -31,8 +31,11 @@ class PreviewsMediaDataSource (private val apiService : NasaApiService, private 
                         _downloadedMediaPreviewsResponse.postValue(it.item)
                         _networkState.postValue(NetworkState.LOADED)
                     },{
-                        _networkState.postValue(NetworkState.ERROR)
-                        Log.e("MediaPreviewsDataSource", it.message.toString())
+                        if (it.message?.contains("Unable to resolve host")!!) {
+                            _networkState.postValue(NetworkState.NO_INTERNET)
+                        } else {
+                            _networkState.postValue(NetworkState.ERROR)
+                        }
                     })
             )
         }

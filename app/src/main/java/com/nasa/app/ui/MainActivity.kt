@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.navigation.findNavController
@@ -15,17 +16,18 @@ import com.nasa.app.R
 
 class MainActivity : AppCompatActivity(), IActivity {
     lateinit var mProgress: ProgressBar
+    lateinit var msgTextView: TextView
     var menuItem: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mProgress = findViewById(R.id.progressBar)
+        msgTextView = findViewById(R.id.msg_text_view)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.search_menu, menu)
-
 
         menuItem = menu?.findItem(R.id.action_search)
 
@@ -58,7 +60,6 @@ class MainActivity : AppCompatActivity(), IActivity {
                 Log.e("MainActivity", ex.message.toString())
             }
         }
-
         return super.onOptionsItemSelected(item)
     }
 
@@ -72,17 +73,8 @@ class MainActivity : AppCompatActivity(), IActivity {
         mProgress.visibility = ProgressBar.INVISIBLE
     }
 
-    override fun showErrorDialog(msg: String) {
-        try {
-            val errorDialogFragment = ErrorDialogFragment.newInstance(msg)
-            errorDialogFragment.show(supportFragmentManager, "ErrorDialogFragment")
-        }
-        catch (ex: Exception){
-            Log.e("MainActivity", ex.message.toString())
-        }
-    }
-
     override fun searchRequest(query:String) {
+        clearMsg()
         SEARCH_REQUEST_QUERY = query
         val navController = findNavController(R.id.nav_host_fragment)
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -98,8 +90,13 @@ class MainActivity : AppCompatActivity(), IActivity {
         }
     }
 
-    fun ooo (){
-        menuItem?.collapseActionView()
+    override fun showMsg(msg: String) {
+        msgTextView.setText(msg)
+        msgTextView.visibility = View.VISIBLE
     }
 
+    override fun clearMsg(){
+        msgTextView.setText("")
+        msgTextView.visibility = View.INVISIBLE
+    }
 }
