@@ -4,5 +4,6 @@ interface IActivity {
     fun showProgressBar()
     fun hideProgressBar()
     fun showErrorDialog(msg: String)
-    fun searchRequest()
+    fun searchRequest(query:String)
+    fun collapseSearchField()
 }

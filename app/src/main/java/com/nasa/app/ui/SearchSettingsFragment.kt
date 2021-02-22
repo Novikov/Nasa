@@ -107,7 +107,7 @@ class SearchSettingsFragment : DialogFragment() {
         val updateResultsButton = view.findViewById<Button>(R.id.update_results_button)
         updateResultsButton.setOnClickListener {
             this.dismiss()
-            activityContract?.searchRequest()
+            activityContract?.searchRequest(SEARCH_REQUEST_QUERY)
             SEARCH_YEAR_START = tmpBeginSearchDateValue
             SEARCH_YEAR_END = tmpEndSearchDateValue
             SEARCH_IMAGE = tmpIsCheckedImageCheckBox

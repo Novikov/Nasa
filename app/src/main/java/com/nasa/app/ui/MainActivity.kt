@@ -15,6 +15,7 @@ import com.nasa.app.R
 
 class MainActivity : AppCompatActivity(), IActivity {
     lateinit var mProgress: ProgressBar
+    var menuItem: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,16 +25,16 @@ class MainActivity : AppCompatActivity(), IActivity {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.search_menu, menu)
-        val menuItem = menu?.findItem(R.id.action_search)
+
+
+        menuItem = menu?.findItem(R.id.action_search)
+
         val searchView = menuItem?.actionView as SearchView
         searchView.queryHint = "Type here to search"
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                menuItem.collapseActionView()
-                query.let {
-                    SEARCH_REQUEST_QUERY = it!!
-                }
-                searchRequest()
+                collapseSearchField()
+                searchRequest(query?:"apollo")
                 return true
             }
 
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity(), IActivity {
         val id = item.itemId
 
         if (id == R.id.search_settings) {
+            collapseSearchField()
             try {
                 val errorDialogFragment = SearchSettingsFragment.newInstance("Hello")
                 errorDialogFragment.show(supportFragmentManager, "ErrorDialogFragment")
@@ -80,7 +82,8 @@ class MainActivity : AppCompatActivity(), IActivity {
         }
     }
 
-    override fun searchRequest() {
+    override fun searchRequest(query:String) {
+        SEARCH_REQUEST_QUERY = query
         val navController = findNavController(R.id.nav_host_fragment)
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val inflater = navHostFragment.navController.navInflater
@@ -88,4 +91,15 @@ class MainActivity : AppCompatActivity(), IActivity {
         graph.startDestination = R.id.mediaFragment
         navController.graph = graph
     }
+
+    override fun collapseSearchField() {
+        if (menuItem?.isActionViewExpanded!!){
+            menuItem?.collapseActionView()
+        }
+    }
+
+    fun ooo (){
+        menuItem?.collapseActionView()
+    }
+
 }
