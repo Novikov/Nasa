@@ -85,8 +85,10 @@ class MainActivity : AppCompatActivity(), IActivity {
     }
 
     override fun collapseSearchField() {
-        if (menuItem?.isActionViewExpanded!!){
-            menuItem?.collapseActionView()
+        if (menuItem!=null) {
+            if (menuItem!!.isActionViewExpanded) {
+                menuItem!!.collapseActionView()
+            }
         }
     }
 

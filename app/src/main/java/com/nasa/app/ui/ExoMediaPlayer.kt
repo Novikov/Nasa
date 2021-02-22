@@ -23,10 +23,12 @@
 package com.nasa.app.ui
 
 import android.content.Context
-import android.net.Uri
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.source.TrackGroupArray
+import com.google.android.exoplayer2.trackselection.MappingTrackSelector.MappedTrackInfo
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 
 class ExoMediaPlayer {
 
@@ -67,6 +69,10 @@ class ExoMediaPlayer {
         exoPlayer.release()
     }
 
+    fun addListener(listener: Player.EventListener){
+        exoPlayer.addListener(listener)
+    }
+
     fun setMediaSessionState(isActive: Boolean) {
         mediaSession.isActive = isActive
     }
@@ -76,17 +82,17 @@ class ExoMediaPlayer {
         mediaSession = MediaSessionCompat(context, TAG)
     mediaSession.setFlags(
         MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
-            MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
+                MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
     )
         mediaSession.setMediaButtonReceiver(null)
 
         stateBuilder = PlaybackStateCompat.Builder()
             .setActions(
-              PlaybackStateCompat.ACTION_PLAY or
-                      PlaybackStateCompat.ACTION_PAUSE or
-                      PlaybackStateCompat.ACTION_PLAY_PAUSE or
-                      PlaybackStateCompat.ACTION_FAST_FORWARD or
-                      PlaybackStateCompat.ACTION_REWIND
+                PlaybackStateCompat.ACTION_PLAY or
+                        PlaybackStateCompat.ACTION_PAUSE or
+                        PlaybackStateCompat.ACTION_PLAY_PAUSE or
+                        PlaybackStateCompat.ACTION_FAST_FORWARD or
+                        PlaybackStateCompat.ACTION_REWIND
             )
 
         mediaSession.setPlaybackState(stateBuilder.build())
@@ -117,3 +123,4 @@ class ExoMediaPlayer {
         }
     }
 }
+
