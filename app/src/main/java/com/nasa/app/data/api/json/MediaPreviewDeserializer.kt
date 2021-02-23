@@ -107,7 +107,13 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
 
                                     if (it.key == "description") {
                                         Log.i(TAG, "description exists")
-                                        description = it.value.asString
+                                        val tmpDescription = it.value.asString
+                                        if (tmpDescription.length>200){
+                                            description = tmpDescription.substring(0,200)
+                                        }
+                                        else{
+                                            description = it.value.asString
+                                        }
                                     }
 
                                 }
