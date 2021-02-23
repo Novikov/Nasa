@@ -18,14 +18,14 @@ class MediaDetailDeserializer : JsonDeserializer<MediaDetailResponse> {
         context: JsonDeserializationContext?
     ): MediaDetailResponse {
 
-        var dateCreated: String = ""
-        var nasaId: String = ""
-        var previewUrl:String? = null
-        var mediaType: String = ""
-        var center: String = ""
-        var title: String = ""
-        var description: String = ""
-        var location: String = ""
+        var dateCreated = ""
+        var nasaId = ""
+        var previewUrl =""
+        var mediaType = ""
+        var center = ""
+        var title = ""
+        var description = ""
+        var location = ""
         var keywordList = mutableListOf("")
 
         json?.asJsonObject?.entrySet()?.forEach {

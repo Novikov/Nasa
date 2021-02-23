@@ -52,7 +52,7 @@ class MediaPreviewAdapter(val dataSource: List<MediaPreview> ):RecyclerView.Adap
                 ContentType.IMAGE -> {
                     Picasso
                         .get()
-                        .load(mediaPreview.previewUrl?:UNREACHABLE_IMAGE_URL)
+                        .load(mediaPreview.previewUrl)
                         .fit()
                         .centerCrop()
                         .into(mediaPreviewImageView)
@@ -62,7 +62,7 @@ class MediaPreviewAdapter(val dataSource: List<MediaPreview> ):RecyclerView.Adap
                 ContentType.VIDEO -> {
                     Picasso
                         .get()
-                        .load(mediaPreview.previewUrl?:UNREACHABLE_IMAGE_URL)
+                        .load(mediaPreview.previewUrl)
                         .fit()
                         .centerCrop()
                         .into(mediaPreviewImageView);
@@ -71,12 +71,6 @@ class MediaPreviewAdapter(val dataSource: List<MediaPreview> ):RecyclerView.Adap
 
                 }
                 ContentType.AUDIO -> {
-                    Picasso
-                        .get()
-                        .load(R.color.audio_media_item)
-                        .fit()
-                        .centerCrop()
-                        .into(mediaPreviewImageView)
                     playVideoImageView.visibility = View.GONE
                     playAudioImageView.visibility = View.VISIBLE
                 }

@@ -19,6 +19,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.flexbox.FlexboxLayout
@@ -107,6 +108,27 @@ class DetailMediaFragment : Fragment() {
         val imageView = view.findViewById<ImageView>(R.id.image_media_view)
         val button = view.findViewById<Button>(R.id.update_results_button)
 
+        exoMediaPlayer.addListener(object : Player.EventListener {
+            override fun onPlaybackStateChanged(state: Int) {
+                super.onPlaybackStateChanged(state)
+                if (state == Player.STATE_READY) {
+                    contentLayout.visibility = View.VISIBLE
+                    activityContract?.hideProgressBar()
+                }
+                if (state == Player.STATE_BUFFERING){
+                    contentLayout.visibility = View.INVISIBLE
+                    activityContract?.showProgressBar()
+                }
+            }
+
+            override fun onPlayerError(error: ExoPlaybackException) {
+                super.onPlayerError(error)
+                activityContract?.hideProgressBar()
+                activityContract?.showMsg("ExoPlayer loading error")
+            }
+        })
+
+
         //media content view preparation
         when (contentType) {
             ContentType.IMAGE -> {
@@ -134,18 +156,14 @@ class DetailMediaFragment : Fragment() {
                     mediaDetail.assets?.let {
                         initViewByVideoContent(
                             exoMediaPlayer,
-                            mediaDetail,
-                            contentLayout
-                        )
+                            mediaDetail)
                     }
                 }
                 ContentType.AUDIO -> {
                     mediaDetail.assets?.let {
                         initViewByAudioContent(
                             exoMediaPlayer,
-                            mediaDetail,
-                            contentLayout
-                        )
+                            mediaDetail)
                     }
                 }
             }
@@ -209,7 +227,6 @@ class DetailMediaFragment : Fragment() {
         viewModel.networkState.observe(viewLifecycleOwner, Observer {
             when (it) {
                 NetworkState.LOADING -> activityContract?.showProgressBar()
-//                NetworkState.LOADED -> activityContract?.hideProgressBar()
                 NetworkState.NO_INTERNET -> {
                     activityContract?.hideProgressBar()
                     activityContract?.showMsg(it.msg)
@@ -226,12 +243,8 @@ class DetailMediaFragment : Fragment() {
 
     private fun initViewByAudioContent(
         exoMediaPlayer: ExoMediaPlayer,
-        mediaDetail: MediaDetail,
-        contentLayout: ConstraintLayout
-    ) {
-
-
-        var audioUrl: String? = null
+        mediaDetail: MediaDetail) {
+        var audioUrl = ""
 
         for (asset in mediaDetail.assets!!) {
             if (asset.value.contains("mp3")) {
@@ -239,27 +252,10 @@ class DetailMediaFragment : Fragment() {
                 break
             }
         }
-
-        val substring = audioUrl!!.substringAfter("//")
+        val substring = audioUrl.substringAfter("//")
         audioUrl = "https://$substring"
-
-        Log.i("AudioUrl", "audioUrl ${audioUrl!!}")
-
-        exoMediaPlayer.addListener(object : Player.EventListener {
-            override fun onPlaybackStateChanged(state: Int) {
-                super.onPlaybackStateChanged(state)
-                if (state == Player.STATE_READY) {
-                    contentLayout.visibility = View.VISIBLE
-                    activityContract?.hideProgressBar()
-                }
-                if (state == Player.STATE_BUFFERING){
-                    contentLayout.visibility = View.INVISIBLE
-                    activityContract?.showProgressBar()
-                }
-            }
-        })
-
-        exoMediaPlayer.playPlayer(audioUrl!!, time ?: 0)
+        Log.i("AudioUrl", "audioUrl $audioUrl")
+        exoMediaPlayer.playPlayer(audioUrl, time ?: 0)
     }
 
     private fun prepareViewForAudioContent(playerView: PlayerView) {
@@ -282,10 +278,8 @@ class DetailMediaFragment : Fragment() {
 
     private fun initViewByVideoContent(
         exoMediaPlayer: ExoMediaPlayer,
-        mediaDetail: MediaDetail,
-        contentLayout: ConstraintLayout
-    ) {
-        var videoUrl: String? = null
+        mediaDetail: MediaDetail) {
+        var videoUrl = ""
 
         for (asset in mediaDetail.assets!!) {
             if (asset.value.contains("mp4")) {
@@ -294,26 +288,10 @@ class DetailMediaFragment : Fragment() {
             }
         }
 
-        val substring = videoUrl!!.substringAfter("//")
+        val substring = videoUrl.substringAfter("//")
         videoUrl = "https://$substring"
-
-        Log.i("VideoUrl", "videoUrl ${videoUrl!!}")
-
-        exoMediaPlayer.addListener(object : Player.EventListener {
-            override fun onPlaybackStateChanged(state: Int) {
-                super.onPlaybackStateChanged(state)
-                if (state == Player.STATE_READY) {
-                    contentLayout.visibility = View.VISIBLE
-                    activityContract?.hideProgressBar()
-                }
-                if (state == Player.STATE_BUFFERING){
-                    contentLayout.visibility = View.INVISIBLE
-                    activityContract?.showProgressBar()
-                }
-            }
-        })
-
-        exoMediaPlayer.playPlayer(videoUrl!!, time ?: 0)
+        Log.i("VideoUrl", "videoUrl $videoUrl")
+        exoMediaPlayer.playPlayer(videoUrl, time ?: 0)
     }
 
 
@@ -322,16 +300,18 @@ class DetailMediaFragment : Fragment() {
         mediaDetail: MediaDetail,
         contentLayout: ConstraintLayout
     ) {
-        Picasso.get().load(mediaDetail.previewUrl ?: UNREACHABLE_IMAGE_URL).into(
+        Picasso.get().load(mediaDetail.previewUrl).into(
             imageView,
             object :
                 Callback {
                 override fun onSuccess() {
                     contentLayout.visibility = View.VISIBLE
+                    activityContract?.hideProgressBar()
                 }
 
                 override fun onError(e: java.lang.Exception?) {
-                    Log.e(TAG, "error loading image ${e!!.message}")
+                    activityContract?.hideProgressBar()
+                    activityContract?.showMsg("Image loading error: ${e?.message}")
                 }
             })
     }

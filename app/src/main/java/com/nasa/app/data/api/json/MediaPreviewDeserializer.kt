@@ -21,7 +21,7 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
         val previewsList = ArrayList<MediaPreview>()
 
         var dateCreated = ""
-        var previewUrl:String? = null
+        var previewUrl = ""
         var mediaType: ContentType = ContentType.UNKNOWN
         var nasaId = ""
         var description = ""
@@ -81,6 +81,7 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
                                         val year = yearDateFormat.format(parsedDate)
 
                                         dateCreated = "$month $day, $year"
+
                                     }
 
                                     if (it.key == "nasa_id") {
@@ -118,19 +119,36 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
 
                                 }
                             }
-                            previewsList.add(
-                                MediaPreview(
-                                    nasaId,
-                                    previewUrl,
-                                    mediaType,
-                                    dateCreated,
-                                    description
+
+                            if (mediaType!=ContentType.AUDIO){
+                                if (previewUrl.isNotEmpty()){
+                                    previewsList.add(
+                                        MediaPreview(
+                                            nasaId,
+                                            previewUrl,
+                                            mediaType,
+                                            dateCreated,
+                                            description
+                                        )
+                                    )
+                                }
+                            }
+                            else {
+                                previewsList.add(
+                                    MediaPreview(
+                                        nasaId,
+                                        previewUrl,
+                                        mediaType,
+                                        dateCreated,
+                                        description
+                                    )
                                 )
-                            )
+                            }
+
 
                             //variables clearing for next iteration
                             dateCreated= ""
-                            previewUrl= null
+                            previewUrl = ""
                             mediaType=ContentType.UNKNOWN
                             nasaId= ""
                             description=""

@@ -2,7 +2,7 @@ package com.nasa.app.ui
 
 import com.nasa.app.data.model.ContentType
 
-const val UNREACHABLE_IMAGE_URL = "https://visualsound.com/wp-content/uploads/2019/05/unavailable-image.jpg"
+const val UNREACHABLE_IMAGE_URL = "https://visualsound.com/wp-content/uploads/2019/05/unavfgsdfgsdfgdfsgailable-image.jpg"
 const val EMPTY_SEARCH = "\"\""
 const val BEGIN_DATE = "1920"
 const val END_DATE = "2021"

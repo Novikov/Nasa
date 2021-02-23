@@ -3,7 +3,7 @@ package com.nasa.app.data.model
 data class MediaDetail(
    val dateCreated:String,
    val nasaId:String,
-   val previewUrl:String?,
+   val previewUrl:String,
    val keywords:List<String>,
    val mediaType:String,
    val center:String,
