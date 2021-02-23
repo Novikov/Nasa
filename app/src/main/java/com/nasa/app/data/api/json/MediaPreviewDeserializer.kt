@@ -38,7 +38,7 @@ class MediaPreviewDeserializer : JsonDeserializer<MediaPreviewResponse> {
                     if(it.key.equals("metadata")){
                         val metadata = it.value.asJsonObject
                         totalResults = metadata.get("total_hits").asInt
-                        Log.e(TAG, "total results: $totalResults")
+                        Log.i(TAG, "total results: $totalResults")
                     }
 
                     if (it.key.equals("items")) {
@@ -161,7 +161,7 @@ class MediaPreviewDeserializer : JsonDeserializer<MediaPreviewResponse> {
 
                     if (it.key.equals("href")){
                         page = it.value.asString.substringAfter("page=").toInt()
-                        Log.e(TAG, "current page: $page")
+                        Log.i(TAG, "current page: $page")
                     }
                 }
             }
@@ -175,7 +175,7 @@ class MediaPreviewDeserializer : JsonDeserializer<MediaPreviewResponse> {
             (totalResults/ POST_PER_PAGE)
         }
 
-        Log.e(TAG, "totalPages: $totalPages")
+        Log.i(TAG, "totalPages: $totalPages")
 
         return MediaPreviewResponse(previewsList,page,totalPages,totalResults)
     }
