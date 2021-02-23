@@ -17,7 +17,8 @@ interface NasaApiService {
         @Query("q") q: String,
         @Query("media_type") mediaType: String,
         @Query("year_start") year_start: String,
-        @Query("year_end") year_end: String
+        @Query("year_end") year_end: String,
+        @Query("page")page:Int
     ): Single<MediaPreviewResponse>
 
 

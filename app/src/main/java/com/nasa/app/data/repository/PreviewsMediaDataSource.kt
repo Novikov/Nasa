@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nasa.app.data.api.NasaApiService
+import com.nasa.app.data.api.json.MediaPreviewResponse
 import com.nasa.app.data.model.MediaPreview
 import com.nasa.app.ui.*
 import io.reactivex.disposables.CompositeDisposable
@@ -17,8 +18,8 @@ class PreviewsMediaDataSource(
     val networkState: LiveData<NetworkState>
         get() = _networkState
 
-    private val _downloadedMediaPreviewsResponse = MutableLiveData<List<MediaPreview>>()
-    val downloadedMediaPreviewsResponse: LiveData<List<MediaPreview>>
+    private val _downloadedMediaPreviewsResponse = MutableLiveData<MediaPreviewResponse>()
+    val downloadedMediaPreviewsResponse: LiveData<MediaPreviewResponse>
         get() = _downloadedMediaPreviewsResponse
 
     fun fetchMediaPreviews() {
@@ -30,13 +31,14 @@ class PreviewsMediaDataSource(
                     SEARCH_REQUEST_QUERY,
                     getSearchMediaTypes(),
                     SEARCH_YEAR_START,
-                    SEARCH_YEAR_END
+                    SEARCH_YEAR_END,
+                    SEARCH_PAGE
                 )
                     .observeOn(Schedulers.io())
                     .subscribeOn(Schedulers.io())
                     .subscribe({
-                        Log.i("MediaPreviewsDataSource", it.item.size.toString())
-                        _downloadedMediaPreviewsResponse.postValue(it.item)
+                        Log.i("MediaPreviewsDataSource", it.mediaPreviewList.size.toString())
+                        _downloadedMediaPreviewsResponse.postValue(it)
                         _networkState.postValue(NetworkState.LOADED)
                     }, {
                         if (it.message?.contains("Unable to resolve host")!!) {

@@ -15,6 +15,7 @@
     <string name="Nasa_id_template">NHQ202101280006NHQ</string>
     <string name="original_size_file_url">Original size file (URL):</string>
     <string name="nothing_found">Nothing found!</string>
+    <string name="search_info_text">53 results returned for "Hello":</string>
 
     <string-array name="list">
         <item>Small</item>

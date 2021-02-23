@@ -6,6 +6,7 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.MediaPreview
+import com.nasa.app.ui.POST_PER_PAGE
 import java.lang.reflect.Type
 import java.text.SimpleDateFormat
 import java.util.*
@@ -24,6 +25,9 @@ class MediaPreviewDeserializer : JsonDeserializer<MediaPreviewResponse> {
         var mediaType: ContentType = ContentType.UNKNOWN
         var nasaId = ""
         var description = ""
+        var totalResults = 0
+        var page = 1
+        var totalPages = 1
         json?.asJsonObject?.entrySet()?.forEach {
             Log.i(TAG, "Deserialization of MediaDetail begins")
 
@@ -31,6 +35,12 @@ class MediaPreviewDeserializer : JsonDeserializer<MediaPreviewResponse> {
                 Log.i(TAG, "inside collection object")
 
                 it.value.asJsonObject.entrySet()?.forEach {
+                    if(it.key.equals("metadata")){
+                        val metadata = it.value.asJsonObject
+                        totalResults = metadata.get("total_hits").asInt
+                        Log.e(TAG, "total results: $totalResults")
+                    }
+
                     if (it.key.equals("items")) {
                         Log.i(TAG, "inside items array")
 
@@ -148,11 +158,25 @@ class MediaPreviewDeserializer : JsonDeserializer<MediaPreviewResponse> {
                             description = ""
                         }
                     }
+
+                    if (it.key.equals("href")){
+                        page = it.value.asString.substringAfter("page=").toInt()
+                        Log.e(TAG, "current page: $page")
+                    }
                 }
             }
         }
 
         Log.i("DeserializationResult", previewsList.toString())
-        return MediaPreviewResponse(previewsList)
+
+        totalPages = if ((totalResults % POST_PER_PAGE)!=0){
+            (totalResults/ POST_PER_PAGE) + 1
+        } else {
+            (totalResults/ POST_PER_PAGE)
+        }
+
+        Log.e(TAG, "totalPages: $totalPages")
+
+        return MediaPreviewResponse(previewsList,page,totalPages,totalResults)
     }
 }

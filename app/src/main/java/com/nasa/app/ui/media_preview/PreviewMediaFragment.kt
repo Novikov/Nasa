@@ -68,7 +68,7 @@ class PreviewMediaFragment : Fragment() {
         mediaPreviewRecyclerView.layoutManager = LinearLayoutManager(context)
 
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
-            if (it.isNotEmpty()) {
+            if (it.mediaPreviewList.isNotEmpty()) {
                 val adapter = MediaPreviewAdapter(it)
                 mediaPreviewRecyclerView.adapter = adapter
             } else {
