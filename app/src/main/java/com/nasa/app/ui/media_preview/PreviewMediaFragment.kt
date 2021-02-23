@@ -69,7 +69,7 @@ class PreviewMediaFragment : Fragment() {
 
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
             if (it.mediaPreviewList.isNotEmpty()) {
-                val adapter = MediaPreviewAdapter(it)
+                val adapter = MediaPreviewAdapter(it,previewMediaRepository)
                 mediaPreviewRecyclerView.adapter = adapter
             } else {
                 activityContract?.showMsg("Nothing found")

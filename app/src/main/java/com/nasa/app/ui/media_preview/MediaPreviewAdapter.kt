@@ -1,5 +1,6 @@
 package com.nasa.app.ui.media_preview
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,16 +14,21 @@ import com.nasa.app.R
 import com.nasa.app.data.api.json.MediaPreviewResponse
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.MediaPreview
+import com.nasa.app.ui.POST_PER_PAGE
+import com.nasa.app.ui.SEARCH_PAGE
+import com.nasa.app.ui.SEARCH_REQUEST_QUERY
 import com.squareup.picasso.Picasso
 
 
-class MediaPreviewAdapter(val dataSource: MediaPreviewResponse) :
+class MediaPreviewAdapter(val dataSource: MediaPreviewResponse, val mediaRepository: PreviewMediaRepository) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    val SEARCH_INFO_VIEW = 0
+    val SEARCH_INFO_TEXTVIEW_VIEW = 0
     val MEDIA_PREVIEW_VIEW = 1
-    val NEXT_PAGE_VIEW = 2
-    val PREVIOUS_PAGE_NEXT_PAGE_VIEW = 3
+    val NEXT_BUTTON_VIEW = 2
+    val BACK_AND_NEXT_BUTTON_VIEW = 3
+    val BACK_BUTTON_VIEW = 4
+    val EMPTY_VIEW = 5
 
     var navController: NavController? = null
 
@@ -41,13 +47,24 @@ class MediaPreviewAdapter(val dataSource: MediaPreviewResponse) :
             }
             2 -> {
                 val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.one_navigation_button_item, parent, false)
-                OneButtonNavigationViewHolder(view)
+                    .inflate(R.layout.next_navigation_button_item, parent, false)
+                NextButtonNavigationViewHolder(view)
             }
-            else -> {
+            3 -> {
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.two_navigation_button_item, parent, false)
                 TwoButtonNavigationViewHolder(view)
+            }
+
+            4 -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.back_navigation_button_item, parent, false)
+                BackButtonNavigationViewHolder(view)
+            }
+            else -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.empty_view_item, parent, false)
+                EmptyViewHolder(view)
             }
         }
     }
@@ -55,10 +72,32 @@ class MediaPreviewAdapter(val dataSource: MediaPreviewResponse) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         when(holder.itemViewType){
+            0-> {
+                val result = SEARCH_REQUEST_QUERY.substring(0,1).toUpperCase() + SEARCH_REQUEST_QUERY.substring(1).toLowerCase()
+              val viewHolder = holder as SearchInfoViewHolder
+                if (SEARCH_REQUEST_QUERY=="\"\"") {
+                    viewHolder.searchInfoTextView.text = "Newest uploads"
+                }
+                else if (dataSource.totalResults<100){
+                    viewHolder.searchInfoTextView.text = "${dataSource.totalResults} results returned for \"$result\""
+                }
+                else if (dataSource.totalResults>100){
+                    var endResult = dataSource.page * POST_PER_PAGE
+                    var startResult = endResult - 99
+                    if (endResult>dataSource.totalResults){
+                        endResult = dataSource.totalResults
+                    }
+                    viewHolder.searchInfoTextView.text = "$startResult - $endResult of ${dataSource.totalResults} for \"$result\""
+                }
+                else {
+                    viewHolder.searchInfoTextView.text = ""
+                }
+           }
             1 -> {
                 val viewHolder = holder as MediaPreviewViewHolder
                 val mediaPreview = dataSource.mediaPreviewList[position]
-                viewHolder.bind(mediaPreview)
+                var hideDivider = position == dataSource.mediaPreviewList.size - 1
+                viewHolder.bind(mediaPreview,hideDivider)
                 viewHolder.itemView.setOnClickListener {
             val action = PreviewMediaFragmentDirections.actionMediaFragmentToDetailMediaFragment(
                 mediaPreview.nasaId,
@@ -67,28 +106,82 @@ class MediaPreviewAdapter(val dataSource: MediaPreviewResponse) :
             navController?.navigate(action)
         }
             }
-            2 -> {}
-            3 -> {}
+            2 -> {
+                //next button
+                val viewHolder = holder as NextButtonNavigationViewHolder
+                SEARCH_PAGE = dataSource.page + 1
+                viewHolder.nextButton.setOnClickListener {
+                    mediaRepository.updateMediaPreviews()
+                }
+            }
+            3 -> {
+                //back and next buttons
+                val viewHolder = holder as TwoButtonNavigationViewHolder
+                viewHolder.nextButton.setOnClickListener {
+                    SEARCH_PAGE = dataSource.page + 1
+                    mediaRepository.updateMediaPreviews()
+                }
+
+                viewHolder.previousButton.setOnClickListener {
+                    SEARCH_PAGE = dataSource.page - 1
+                    mediaRepository.updateMediaPreviews()
+                }
+            }
+            4 -> {
+                val viewHolder = holder as BackButtonNavigationViewHolder
+                viewHolder.backButton.setOnClickListener {
+                    SEARCH_PAGE = dataSource.page - 1
+                    mediaRepository.updateMediaPreviews()
+                }
+            }
+            5 -> {
+
+            }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
         return when {
-            position == 0 -> {
+            //search info textView for 0 position
+            (position == 0) -> {
                 0
             }
-            position < dataSource.mediaPreviewList.size -> {
+
+            //mediaPreviewItem for 1 - 100 position
+            (position < dataSource.mediaPreviewList.size) -> {
                 1
             }
-            position == dataSource.mediaPreviewList.size -> {
-                2
+
+            //navigation view or empty view for 101 position
+            (position == dataSource.mediaPreviewList.size) -> {
+                //first page and other doesn't exist
+                if ((dataSource.page==1)&&(dataSource.totalPages-dataSource.page == 0)){
+                    5
+                }
+                //first page and other exists
+                else if (dataSource.page==1&&(dataSource.totalPages-dataSource.page > 0)){
+                    2
+                }
+                //middle
+                else if (dataSource.page>1&&(dataSource.totalPages-dataSource.page > 0)){
+                    3
+                }
+                //end
+                else if (dataSource.page>1&&(dataSource.totalPages-dataSource.page == 0)){
+                    4
+                }
+                //unreachable
+                else {
+                    5
+                }
             }
             else -> {
-                3
+                5
             }
         }
     }
 
+    //0 - searchInfoTV, 1:100 - mediaPreviewItems, 101 - next|prev_and_next|prev buttons
     override fun getItemCount(): Int {
         return dataSource.mediaPreviewList.size + 1
     }
@@ -102,9 +195,12 @@ class MediaPreviewAdapter(val dataSource: MediaPreviewResponse) :
         val dateCreatedTextView: TextView = view.findViewById(R.id.date_created_text_view)
         val divider: View = view.findViewById(R.id.divider)
 
-        fun bind(mediaPreview: MediaPreview) {
+        fun bind(mediaPreview: MediaPreview, hideDivider:Boolean) {
             descriptionTextView.setText(mediaPreview.description)
             dateCreatedTextView.setText(mediaPreview.dateCreated)
+            if (hideDivider){
+                divider.visibility = View.GONE
+            }
             when (mediaPreview.mediaType) {
                 ContentType.IMAGE -> {
                     Picasso
@@ -135,10 +231,14 @@ class MediaPreviewAdapter(val dataSource: MediaPreviewResponse) :
         }
     }
 
-    inner class OneButtonNavigationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class NextButtonNavigationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nextButton: Button = view.findViewById(R.id.next_page_button)
     }
 
+    inner class BackButtonNavigationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val backButton: Button = view.findViewById(R.id.back_page_button)
+    }
+    
     inner class TwoButtonNavigationViewHolder(view: View) : RecyclerView.ViewHolder(view){
         val nextButton: Button = view.findViewById(R.id.next_page_button)
         val previousButton: Button = view.findViewById(R.id.previous_page_button)
@@ -148,4 +248,5 @@ class MediaPreviewAdapter(val dataSource: MediaPreviewResponse) :
         val searchInfoTextView: TextView = view.findViewById(R.id.search_info_ext_view)
     }
 
+    inner class EmptyViewHolder (view : View) : RecyclerView.ViewHolder(view)
 }
