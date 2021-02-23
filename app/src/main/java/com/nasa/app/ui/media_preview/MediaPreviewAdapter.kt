@@ -12,7 +12,6 @@ import com.nasa.app.R
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.MediaPreview
 import com.nasa.app.databinding.MediaPreviewViewHolderBinding
-import com.nasa.app.ui.UNREACHABLE_IMAGE_URL
 import com.squareup.picasso.Picasso
 
 

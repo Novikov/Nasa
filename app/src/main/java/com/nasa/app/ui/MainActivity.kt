@@ -101,4 +101,12 @@ class MainActivity : AppCompatActivity(), IActivity {
         msgTextView.setText("")
         msgTextView.visibility = View.INVISIBLE
     }
+
+    override fun hideActionBar() {
+        supportActionBar?.hide()
+    }
+
+    override fun showActionBar() {
+        supportActionBar?.show()
+    }
 }

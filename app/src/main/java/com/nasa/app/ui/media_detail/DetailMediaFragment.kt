@@ -32,7 +32,6 @@ import com.nasa.app.databinding.FragmentMediaDetailBinding
 import com.nasa.app.ui.DownloadDialogFragment
 import com.nasa.app.ui.ExoMediaPlayer
 import com.nasa.app.ui.IActivity
-import com.nasa.app.ui.UNREACHABLE_IMAGE_URL
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
@@ -136,6 +135,9 @@ class DetailMediaFragment : Fragment() {
             }
             ContentType.AUDIO -> {
                 prepareViewForAudioContent(playerView)
+            }
+            ContentType.VIDEO -> {
+                prepareViewForVideoContent(playerView)
             }
         }
 
@@ -258,6 +260,25 @@ class DetailMediaFragment : Fragment() {
         exoMediaPlayer.playPlayer(audioUrl, time ?: 0)
     }
 
+    private fun prepareViewForVideoContent(playerView: PlayerView) {
+        val orientation = getResources().getConfiguration().orientation
+        Log.i("Device orientation", orientation.toString())
+        when (orientation) {
+            1 -> {
+                playerView.layoutParams =
+                    ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+            }
+            2 -> {
+                playerView.layoutParams =
+                    ConstraintLayout.LayoutParams(
+                        ConstraintLayout.LayoutParams.MATCH_PARENT,
+                        ConstraintLayout.LayoutParams.MATCH_PARENT
+                    )
+                activityContract?.hideActionBar()
+            }
+        }
+    }
+
     private fun prepareViewForAudioContent(playerView: PlayerView) {
         val orientation = getResources().getConfiguration().orientation
         Log.i("Device orientation", orientation.toString())
@@ -272,6 +293,7 @@ class DetailMediaFragment : Fragment() {
                         ConstraintLayout.LayoutParams.MATCH_PARENT,
                         ConstraintLayout.LayoutParams.MATCH_PARENT
                     )
+                activityContract?.hideActionBar()
             }
         }
     }
@@ -320,6 +342,14 @@ class DetailMediaFragment : Fragment() {
         playerView: PlayerView,
         imageView: ImageView
     ) {
+        val orientation = getResources().getConfiguration().orientation
+        Log.i("Device orientation", orientation.toString())
+        when (orientation) {
+            1 -> { }
+            2 -> {
+                activityContract?.hideActionBar()
+            }
+        }
         playerView.visibility = View.GONE
         imageView.adjustViewBounds = true
     }

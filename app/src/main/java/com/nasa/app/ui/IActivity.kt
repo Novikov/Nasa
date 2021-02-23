@@ -7,4 +7,6 @@ interface IActivity {
     fun collapseSearchField()
     fun showMsg(msg:String)
     fun clearMsg()
+    fun hideActionBar()
+    fun showActionBar()
 }
