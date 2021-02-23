@@ -1,6 +1,6 @@
 # Nasa App
 
-[Youtube video url](https://youtu.be/FUchc017RFE)
+[Youtube link](https://youtu.be/FUchc017RFE)
 
 
 
