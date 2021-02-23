@@ -9,17 +9,20 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.exceptions.CompositeException
 import io.reactivex.schedulers.Schedulers
 
-class DetailMediaDataSource(private val apiService : NasaApiService, private val compositeDisposable: CompositeDisposable) {
+class DetailMediaDataSource(
+    private val apiService: NasaApiService,
+    private val compositeDisposable: CompositeDisposable
+) {
 
-    private val _networkState  = MutableLiveData<NetworkState>()
+    private val _networkState = MutableLiveData<NetworkState>()
     val networkState: LiveData<NetworkState>
         get() = _networkState
 
-    private val _downloadedMediaDetailsResponse =  MutableLiveData<MediaDetail>()
+    private val _downloadedMediaDetailsResponse = MutableLiveData<MediaDetail>()
     val downloadedMediaResponse: LiveData<MediaDetail>
         get() = _downloadedMediaDetailsResponse
 
-    fun fetchMediaDetails(nasaId:String){
+    fun fetchMediaDetails(nasaId: String) {
         _networkState.postValue(NetworkState.LOADING)
 
         try {
@@ -61,39 +64,8 @@ class DetailMediaDataSource(private val apiService : NasaApiService, private val
                         }
                     })
             )
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             Log.e("MediaDetailsDataSource", e.message.toString())
         }
     }
-
-//    private fun errorHandle(it: Throwable) {
-//        if (it is CompositeException) {
-//            for (ex in it.exceptions) {
-//                ex.printStackTrace()
-//            }
-//        }
-//        when {
-//            it.message.toString().contains("HTTP 403") -> {
-//                _networkState.set(NetworkState.API_LIMIT_EXCEEDED)
-//                Log.e("NetworkState", networkState.get()?.status.toString())
-//            }
-//            it.message.toString().contains("Unable to resolve host") -> {
-//                _networkState.set(NetworkState.NO_INTERNET)
-//                Log.e("NetworkState", networkState.get()?.status.toString())
-//            }
-//            it.message.toString().contains("HTTP 400") -> {
-//                _networkState.set(NetworkState.BAD_REQUEST)
-//                Log.e("NetworkState", networkState.get()?.status.toString())
-//            }
-//            else -> {
-//                _networkState.set(NetworkState.ERROR)
-//                Log.e("NetworkState", networkState.get()?.status.toString())
-//            }
-//        }
-//        _networkState.set(NetworkState.WAITING)
-//        Log.e("NetworkState", networkState.get()?.status.toString())
-//        Log.e("fetchVideos error", it.message)
-//        it.printStackTrace()
-//    }
 }

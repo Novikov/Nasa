@@ -54,7 +54,6 @@ class PreviewMediaFragment : Fragment() {
         viewModel = getViewModel()
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -69,11 +68,10 @@ class PreviewMediaFragment : Fragment() {
         mediaPreviewRecyclerView.layoutManager = LinearLayoutManager(context)
 
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
-            if(it.isNotEmpty()) {
+            if (it.isNotEmpty()) {
                 val adapter = MediaPreviewAdapter(it)
                 mediaPreviewRecyclerView.adapter = adapter
-            }
-            else {
+            } else {
                 activityContract?.showMsg("Nothing found")
             }
         })

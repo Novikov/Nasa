@@ -20,7 +20,7 @@ class MediaDetailDeserializer : JsonDeserializer<MediaDetailResponse> {
 
         var dateCreated = ""
         var nasaId = ""
-        var previewUrl =""
+        var previewUrl = ""
         var mediaType = ""
         var center = ""
         var title = ""
@@ -41,14 +41,14 @@ class MediaDetailDeserializer : JsonDeserializer<MediaDetailResponse> {
                         val items = it.value.asJsonArray
                         items.forEach {
                             //getting preview url
-                            if (it.asJsonObject.has("links")){
+                            if (it.asJsonObject.has("links")) {
                                 Log.i(TAG, "inside links array")
 
                                 val links = it.asJsonObject.get("links")
                                 val linksValue = links.asJsonArray.get(0).asJsonObject
 
                                 linksValue.entrySet()?.forEach {
-                                    if (it.key == "href"&&it.value.toString().contains("thumb")) {
+                                    if (it.key == "href" && it.value.toString().contains("thumb")) {
                                         Log.i(TAG, "preview url exists")
                                         previewUrl = it.value.asString
                                     }
@@ -65,7 +65,8 @@ class MediaDetailDeserializer : JsonDeserializer<MediaDetailResponse> {
                                     if (it.key == "date_created") {
                                         Log.i(TAG, "date_created exists")
                                         val dateStr: String = it.value.asString
-                                        val parsedDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+                                        val parsedDateFormat =
+                                            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
 
                                         val parsedDate: Date = parsedDateFormat.parse(dateStr)
 
@@ -144,5 +145,4 @@ class MediaDetailDeserializer : JsonDeserializer<MediaDetailResponse> {
 
         return MediaDetailResponse(mediaDetail)
     }
-
 }

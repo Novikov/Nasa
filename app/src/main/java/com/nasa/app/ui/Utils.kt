@@ -14,15 +14,15 @@ var SEARCH_IMAGE = true
 var SEARCH_VIDEO = true
 var SEARCH_AUDIO = true
 
-fun getSearchMediaTypes():String{
+fun getSearchMediaTypes(): String {
     var resultString = ""
-    if (SEARCH_IMAGE){
+    if (SEARCH_IMAGE) {
         resultString = resultString + ContentType.IMAGE.contentType + ","
     }
-    if (SEARCH_VIDEO){
+    if (SEARCH_VIDEO) {
         resultString = resultString + ContentType.VIDEO.contentType + ","
     }
-    if (SEARCH_AUDIO){
+    if (SEARCH_AUDIO) {
         resultString = resultString + ContentType.AUDIO.contentType + ","
     }
     return resultString

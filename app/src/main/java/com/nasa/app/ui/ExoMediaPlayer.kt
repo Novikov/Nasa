@@ -56,11 +56,11 @@ class ExoMediaPlayer {
         return exoPlayer
     }
 
-    fun getPlayerTime():Long{
-       return exoPlayer.contentPosition
+    fun getPlayerTime(): Long {
+        return exoPlayer.contentPosition
     }
 
-    fun pausePlayer(){
+    fun pausePlayer() {
         exoPlayer.pause()
     }
 
@@ -69,21 +69,20 @@ class ExoMediaPlayer {
         exoPlayer.release()
     }
 
-    fun addListener(listener: Player.EventListener){
+    fun addListener(listener: Player.EventListener) {
         exoPlayer.addListener(listener)
     }
 
     fun setMediaSessionState(isActive: Boolean) {
         mediaSession.isActive = isActive
     }
-
-
+    
     private fun initializeMediaSession() {
         mediaSession = MediaSessionCompat(context, TAG)
-    mediaSession.setFlags(
-        MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
-                MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
-    )
+        mediaSession.setFlags(
+            MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
+                    MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
+        )
         mediaSession.setMediaButtonReceiver(null)
 
         stateBuilder = PlaybackStateCompat.Builder()

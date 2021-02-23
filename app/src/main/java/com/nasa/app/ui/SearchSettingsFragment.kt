@@ -17,11 +17,11 @@ class SearchSettingsFragment : DialogFragment() {
     private val TAG = "SearchSettingsFragment"
     private var activityContract: IActivity? = null
     private var sMsg: String? = null
-    lateinit var tmpBeginSearchDateValue:String
-    lateinit var tmpEndSearchDateValue:String
-    var tmpIsCheckedImageCheckBox:Boolean = SEARCH_IMAGE
-    var tmpIsCheckedVideoCheckBox:Boolean = SEARCH_VIDEO
-    var tmpIsCheckedAudioCheckBox:Boolean = SEARCH_AUDIO
+    lateinit var tmpBeginSearchDateValue: String
+    lateinit var tmpEndSearchDateValue: String
+    var tmpIsCheckedImageCheckBox: Boolean = SEARCH_IMAGE
+    var tmpIsCheckedVideoCheckBox: Boolean = SEARCH_VIDEO
+    var tmpIsCheckedAudioCheckBox: Boolean = SEARCH_AUDIO
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -35,10 +35,9 @@ class SearchSettingsFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (arguments!=null && requireArguments().containsKey(ERROR_DIALOG_FRAGMET)){
+        if (arguments != null && requireArguments().containsKey(ERROR_DIALOG_FRAGMET)) {
             sMsg = requireArguments().getString(ERROR_DIALOG_FRAGMET)
-        }
-        else {
+        } else {
             throw IllegalArgumentException("Error message can't be empty")
         }
 
@@ -51,57 +50,53 @@ class SearchSettingsFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view =  inflater.inflate(R.layout.fragment_search_settings, container, false)
+        val view = inflater.inflate(R.layout.fragment_search_settings, container, false)
 
         //checkboxes
         val imageCheckBox = view.findViewById<CheckBox>(R.id.images_check_box)
         val videoCheckBox = view.findViewById<CheckBox>(R.id.videos_check_box)
         val audioCheckBox = view.findViewById<CheckBox>(R.id.audio_check_box)
-            imageCheckBox.isChecked = tmpIsCheckedImageCheckBox
-            videoCheckBox.isChecked = tmpIsCheckedVideoCheckBox
-            audioCheckBox.isChecked = tmpIsCheckedAudioCheckBox
+        imageCheckBox.isChecked = tmpIsCheckedImageCheckBox
+        videoCheckBox.isChecked = tmpIsCheckedVideoCheckBox
+        audioCheckBox.isChecked = tmpIsCheckedAudioCheckBox
 
         //One checkboks have to be enabled
         imageCheckBox.setOnClickListener {
-            if(!(it as CheckBox).isChecked){
+            if (!(it as CheckBox).isChecked) {
                 tmpIsCheckedImageCheckBox = false
                 //return state
-                if (!(videoCheckBox.isChecked.or(audioCheckBox.isChecked))){
+                if (!(videoCheckBox.isChecked.or(audioCheckBox.isChecked))) {
                     (it as CheckBox).isChecked = true
                     tmpIsCheckedImageCheckBox = true
                 }
-            }
-            else {
+            } else {
                 tmpIsCheckedImageCheckBox = true
             }
         }
 
         videoCheckBox.setOnClickListener {
-            if(!(it as CheckBox).isChecked){
+            if (!(it as CheckBox).isChecked) {
                 tmpIsCheckedVideoCheckBox = false
-                if (!(imageCheckBox.isChecked.or(audioCheckBox.isChecked))){
+                if (!(imageCheckBox.isChecked.or(audioCheckBox.isChecked))) {
                     (it as CheckBox).isChecked = true
                     tmpIsCheckedVideoCheckBox = true
                 }
-            }
-            else {
+            } else {
                 tmpIsCheckedVideoCheckBox = true
             }
         }
 
         audioCheckBox.setOnClickListener {
-            if(!(it as CheckBox).isChecked){
+            if (!(it as CheckBox).isChecked) {
                 tmpIsCheckedAudioCheckBox = false
-                if (!(imageCheckBox.isChecked.or(videoCheckBox.isChecked))){
+                if (!(imageCheckBox.isChecked.or(videoCheckBox.isChecked))) {
                     (it as CheckBox).isChecked = true
                     tmpIsCheckedAudioCheckBox = true
                 }
-            }
-            else {
+            } else {
                 tmpIsCheckedAudioCheckBox = true
             }
         }
-
 
         //updateResultButton
         val updateResultsButton = view.findViewById<Button>(R.id.update_results_button)
@@ -146,5 +141,4 @@ class SearchSettingsFragment : DialogFragment() {
             return fragment
         }
     }
-
 }

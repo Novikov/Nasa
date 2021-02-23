@@ -7,11 +7,14 @@ import com.nasa.app.data.repository.DetailMediaDataSource
 import com.nasa.app.data.repository.NetworkState
 import io.reactivex.disposables.CompositeDisposable
 
-class DetailMediaRepository(private val apiService : NasaApiService) {
+class DetailMediaRepository(private val apiService: NasaApiService) {
     lateinit var detailMediaDataSource: DetailMediaDataSource
 
-    fun fetchSingleMediaDetail(compositeDisposable: CompositeDisposable, nasaId: String): LiveData<MediaDetail> {
-        detailMediaDataSource = DetailMediaDataSource(apiService,compositeDisposable)
+    fun fetchSingleMediaDetail(
+        compositeDisposable: CompositeDisposable,
+        nasaId: String
+    ): LiveData<MediaDetail> {
+        detailMediaDataSource = DetailMediaDataSource(apiService, compositeDisposable)
         detailMediaDataSource.fetchMediaDetails(nasaId)
         return detailMediaDataSource.downloadedMediaResponse
     }

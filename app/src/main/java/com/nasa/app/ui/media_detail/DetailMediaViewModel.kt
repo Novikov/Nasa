@@ -6,14 +6,15 @@ import com.nasa.app.data.model.MediaDetail
 import com.nasa.app.data.repository.NetworkState
 import io.reactivex.disposables.CompositeDisposable
 
-class DetailMediaViewModel(private val mediaRepository : DetailMediaRepository, nasaId: String): ViewModel() {
+class DetailMediaViewModel(private val mediaRepository: DetailMediaRepository, nasaId: String) :
+    ViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
-    val  mediaDetails : LiveData<MediaDetail> by lazy {
+    val mediaDetails: LiveData<MediaDetail> by lazy {
         mediaRepository.fetchSingleMediaDetail(compositeDisposable, nasaId)
     }
 
-    val networkState : LiveData<NetworkState> by lazy {
+    val networkState: LiveData<NetworkState> by lazy {
         mediaRepository.getMediaDetailsNetworkState()
     }
 

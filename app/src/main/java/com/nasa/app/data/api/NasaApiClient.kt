@@ -9,14 +9,14 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 object NasaApiClient {
-    private const val NASA_BASE_URL="https://images-api.nasa.gov/"
+    private const val NASA_BASE_URL = "https://images-api.nasa.gov/"
 
     fun getClient(): NasaApiService {
 
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
-        val client =  OkHttpClient.Builder()
+        val client = OkHttpClient.Builder()
             .addInterceptor(interceptor)
             .build()
 

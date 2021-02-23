@@ -10,7 +10,7 @@ import java.lang.reflect.Type
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
+class MediaPreviewDeserializer : JsonDeserializer<MediaPreviewResponse> {
     private val TAG: String = "MediaPreviewDeserialization"
 
     override fun deserialize(
@@ -19,7 +19,6 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
         context: JsonDeserializationContext?
     ): MediaPreviewResponse {
         val previewsList = ArrayList<MediaPreview>()
-
         var dateCreated = ""
         var previewUrl = ""
         var mediaType: ContentType = ContentType.UNKNOWN
@@ -38,16 +37,15 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
                         val items = it.value.asJsonArray
                         items.forEach {
 
-
                             //getting preview url
-                            if (it.asJsonObject.has("links")){
+                            if (it.asJsonObject.has("links")) {
                                 Log.i(TAG, "inside links array")
 
                                 val links = it.asJsonObject.get("links")
                                 val linksValue = links.asJsonArray.get(0).asJsonObject
 
                                 linksValue.entrySet()?.forEach {
-                                    if (it.key == "href"&&it.value.toString().contains("thumb")) {
+                                    if (it.key == "href" && it.value.toString().contains("thumb")) {
                                         Log.i(TAG, "preview url exists")
                                         previewUrl = it.value.asString
                                     }
@@ -67,7 +65,8 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
                                         Log.i(TAG, "date_created exists")
 
                                         val dateStr: String = it.value.asString
-                                        val parsedDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+                                        val parsedDateFormat =
+                                            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
 
                                         val parsedDate: Date = parsedDateFormat.parse(dateStr)
 
@@ -81,7 +80,6 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
                                         val year = yearDateFormat.format(parsedDate)
 
                                         dateCreated = "$month $day, $year"
-
                                     }
 
                                     if (it.key == "nasa_id") {
@@ -93,7 +91,7 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
                                     if (it.key == "media_type") {
                                         Log.i(TAG, "media_type exists")
                                         val tmpMediaType = it.value.asString
-                                        when(tmpMediaType){
+                                        when (tmpMediaType) {
                                             "image" -> {
                                                 mediaType = ContentType.IMAGE
                                             }
@@ -109,19 +107,17 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
                                     if (it.key == "description") {
                                         Log.i(TAG, "description exists")
                                         val tmpDescription = it.value.asString
-                                        if (tmpDescription.length>200){
-                                            description = tmpDescription.substring(0,200)
-                                        }
-                                        else{
+                                        if (tmpDescription.length > 200) {
+                                            description = tmpDescription.substring(0, 200)
+                                        } else {
                                             description = it.value.asString
                                         }
                                     }
-
                                 }
                             }
 
-                            if (mediaType!=ContentType.AUDIO){
-                                if (previewUrl.isNotEmpty()){
+                            if (mediaType != ContentType.AUDIO) {
+                                if (previewUrl.isNotEmpty()) {
                                     previewsList.add(
                                         MediaPreview(
                                             nasaId,
@@ -132,8 +128,7 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
                                         )
                                     )
                                 }
-                            }
-                            else {
+                            } else {
                                 previewsList.add(
                                     MediaPreview(
                                         nasaId,
@@ -145,13 +140,12 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
                                 )
                             }
 
-
                             //variables clearing for next iteration
-                            dateCreated= ""
+                            dateCreated = ""
                             previewUrl = ""
-                            mediaType=ContentType.UNKNOWN
-                            nasaId= ""
-                            description=""
+                            mediaType = ContentType.UNKNOWN
+                            nasaId = ""
+                            description = ""
                         }
                     }
                 }
@@ -159,7 +153,6 @@ class MediaPreviewDeserializer: JsonDeserializer<MediaPreviewResponse> {
         }
 
         Log.e("DeserializationResult", previewsList.toString())
-
         return MediaPreviewResponse(previewsList)
     }
 }

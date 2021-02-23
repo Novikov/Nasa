@@ -8,11 +8,11 @@ import com.google.gson.JsonElement
 import com.nasa.app.data.model.ContentType
 import java.lang.reflect.Type
 
-class MediaAssetDeserializer: JsonDeserializer<MediaDetailAssetResponse> {
+class MediaAssetDeserializer : JsonDeserializer<MediaDetailAssetResponse> {
     private val TAG: String = "MediaAssetDeserialization"
     lateinit var contentType: ContentType
-    var metadataUrl:String? = null
-    var assetMap = mapOf<String,String>()
+    var metadataUrl: String? = null
+    var assetMap = mapOf<String, String>()
 
     override fun deserialize(
         json: JsonElement?,
@@ -35,8 +35,7 @@ class MediaAssetDeserializer: JsonDeserializer<MediaDetailAssetResponse> {
 
                         metadataUrl = getMetadataUrl(items)
 
-
-                        when(contentType){
+                        when (contentType) {
                             ContentType.AUDIO -> assetMap = getAudioAsset(items)
                             ContentType.VIDEO -> assetMap = getVideoAsset(items)
                             ContentType.IMAGE -> assetMap = getImageAsset(items)
@@ -48,11 +47,11 @@ class MediaAssetDeserializer: JsonDeserializer<MediaDetailAssetResponse> {
             }
         }
 
-        return MediaDetailAssetResponse(assetMap,metadataUrl!!)
+        return MediaDetailAssetResponse(assetMap, metadataUrl!!)
     }
 
     private fun getMetadataUrl(items: JsonArray): String? {
-        var tmpUrl:String? = null
+        var tmpUrl: String? = null
         for (element in items) {
             var href = element.asJsonObject.get("href").asString
             if (href.contains("metadata.json")) {
@@ -62,7 +61,7 @@ class MediaAssetDeserializer: JsonDeserializer<MediaDetailAssetResponse> {
         return tmpUrl
     }
 
-    private fun getAudioAsset(items: JsonArray): LinkedHashMap<String, String>  {
+    private fun getAudioAsset(items: JsonArray): LinkedHashMap<String, String> {
         val tmpMap = linkedMapOf<String, String>()
         for (element in items) {
             var href = element.asJsonObject.get("href").asString
@@ -88,7 +87,7 @@ class MediaAssetDeserializer: JsonDeserializer<MediaDetailAssetResponse> {
         return tmpMap
     }
 
-    private fun getImageAsset(items: JsonArray): LinkedHashMap<String, String>  {
+    private fun getImageAsset(items: JsonArray): LinkedHashMap<String, String> {
         val tmpMap = linkedMapOf<String, String>()
         for (element in items) {
             var href = element.asJsonObject.get("href").asString
@@ -101,20 +100,20 @@ class MediaAssetDeserializer: JsonDeserializer<MediaDetailAssetResponse> {
         return tmpMap
     }
 
-    private fun getAssetType(items: JsonArray) : ContentType {
+    private fun getAssetType(items: JsonArray): ContentType {
         var contentType: ContentType? = null
 
         for (element in items) {
             var href = element.asJsonObject.get("href").asString
 
             if (href.contains("mp3").or(href.contains("m4a").or(href.contains("wav")))) {
-                contentType =  ContentType.AUDIO
+                contentType = ContentType.AUDIO
                 break
             } else if (href.contains("mp4")) {
                 contentType = ContentType.VIDEO
                 break
             }
         }
-        return contentType?: ContentType.IMAGE
+        return contentType ?: ContentType.IMAGE
     }
 }

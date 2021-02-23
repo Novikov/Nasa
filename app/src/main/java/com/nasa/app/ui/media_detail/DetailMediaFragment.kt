@@ -114,7 +114,7 @@ class DetailMediaFragment : Fragment() {
                     contentLayout.visibility = View.VISIBLE
                     activityContract?.hideProgressBar()
                 }
-                if (state == Player.STATE_BUFFERING){
+                if (state == Player.STATE_BUFFERING) {
                     contentLayout.visibility = View.INVISIBLE
                     activityContract?.showProgressBar()
                 }
@@ -123,10 +123,10 @@ class DetailMediaFragment : Fragment() {
             override fun onPlayerError(error: ExoPlaybackException) {
                 super.onPlayerError(error)
                 activityContract?.hideProgressBar()
+                contentLayout.visibility = View.GONE
                 activityContract?.showMsg("ExoPlayer loading error")
             }
         })
-
 
         //media content view preparation
         when (contentType) {
@@ -158,14 +158,16 @@ class DetailMediaFragment : Fragment() {
                     mediaDetail.assets?.let {
                         initViewByVideoContent(
                             exoMediaPlayer,
-                            mediaDetail)
+                            mediaDetail
+                        )
                     }
                 }
                 ContentType.AUDIO -> {
                     mediaDetail.assets?.let {
                         initViewByAudioContent(
                             exoMediaPlayer,
-                            mediaDetail)
+                            mediaDetail
+                        )
                     }
                 }
             }
@@ -245,7 +247,8 @@ class DetailMediaFragment : Fragment() {
 
     private fun initViewByAudioContent(
         exoMediaPlayer: ExoMediaPlayer,
-        mediaDetail: MediaDetail) {
+        mediaDetail: MediaDetail
+    ) {
         var audioUrl = ""
 
         for (asset in mediaDetail.assets!!) {
@@ -266,7 +269,10 @@ class DetailMediaFragment : Fragment() {
         when (orientation) {
             1 -> {
                 playerView.layoutParams =
-                    ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+                    ConstraintLayout.LayoutParams(
+                        ConstraintLayout.LayoutParams.MATCH_PARENT,
+                        ConstraintLayout.LayoutParams.WRAP_CONTENT
+                    )
             }
             2 -> {
                 playerView.layoutParams =
@@ -300,7 +306,8 @@ class DetailMediaFragment : Fragment() {
 
     private fun initViewByVideoContent(
         exoMediaPlayer: ExoMediaPlayer,
-        mediaDetail: MediaDetail) {
+        mediaDetail: MediaDetail
+    ) {
         var videoUrl = ""
 
         for (asset in mediaDetail.assets!!) {
@@ -345,7 +352,8 @@ class DetailMediaFragment : Fragment() {
         val orientation = getResources().getConfiguration().orientation
         Log.i("Device orientation", orientation.toString())
         when (orientation) {
-            1 -> { }
+            1 -> {
+            }
             2 -> {
                 activityContract?.hideActionBar()
             }

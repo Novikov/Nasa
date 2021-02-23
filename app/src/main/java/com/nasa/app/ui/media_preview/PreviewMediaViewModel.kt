@@ -8,14 +8,14 @@ import com.nasa.app.ui.SEARCH_REQUEST_QUERY
 import com.nasa.app.ui.media_detail.DetailMediaRepository
 import io.reactivex.disposables.CompositeDisposable
 
-class PreviewMediaViewModel(private val mediaRepository : PreviewMediaRepository):ViewModel() {
+class PreviewMediaViewModel(private val mediaRepository: PreviewMediaRepository) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
-    val mediaPreviews:LiveData<List<MediaPreview>> by lazy {
+    val mediaPreviews: LiveData<List<MediaPreview>> by lazy {
         mediaRepository.fetchMultipleMediaPreview(compositeDisposable)
     }
 
-    val networkState : LiveData<NetworkState> by lazy {
+    val networkState: LiveData<NetworkState> by lazy {
         mediaRepository.getMediaPreviewNetworkState()
     }
 

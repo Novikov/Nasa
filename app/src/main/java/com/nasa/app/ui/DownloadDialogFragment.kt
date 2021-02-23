@@ -30,11 +30,10 @@ class DownloadDialogFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (arguments!=null && requireArguments().containsKey(DOWNLOAD_DIALOG_FRAGMET)){
+        if (arguments != null && requireArguments().containsKey(DOWNLOAD_DIALOG_FRAGMET)) {
             sUrls = requireArguments().getStringArrayList(DOWNLOAD_DIALOG_FRAGMET)
-        }
-        else {
-            throw IllegalArgumentException("urls can't be empty")
+        } else {
+            throw IllegalArgumentException("Urls can't be empty")
         }
     }
 
@@ -43,12 +42,11 @@ class DownloadDialogFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view =  inflater.inflate(R.layout.fragment_download_dialog, container, false)
+        val view = inflater.inflate(R.layout.fragment_download_dialog, container, false)
 
         val listView = view.findViewById<ListView>(R.id.files_asset_list_view)
 
-//        val adapter = ArrayAdapter(requireContext(), R.layout.download_list_view_item, sUrls!!.toArray())
-        val adapter = DownloadFilesAdapter(requireContext(),sUrls!!)
+        val adapter = DownloadFilesAdapter(requireContext(), sUrls!!)
 
         listView.setOnItemClickListener { parent, view, position, id ->
             Toast.makeText(requireContext(), (view as TextView).text, Toast.LENGTH_SHORT).show()
@@ -60,10 +58,12 @@ class DownloadDialogFragment : DialogFragment() {
     }
 }
 
-class DownloadFilesAdapter (private val context: Context,
-                            private val dataSource: ArrayList<String>) : BaseAdapter(){
-    private val inflater: LayoutInflater
-            = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+class DownloadFilesAdapter(
+    private val context: Context,
+    private val dataSource: ArrayList<String>
+) : BaseAdapter() {
+    private val inflater: LayoutInflater =
+        context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getCount(): Int {
         return dataSource.size
@@ -84,7 +84,8 @@ class DownloadFilesAdapter (private val context: Context,
         if (convertView == null) {
             view = inflater.inflate(R.layout.download_list_view_item, parent, false)
             holder = ViewHolder()
-            holder.urlTextView = view.findViewById(R.id.download_fragment_item_text_view) as TextView
+            holder.urlTextView =
+                view.findViewById(R.id.download_fragment_item_text_view) as TextView
             view.tag = holder
         } else {
             view = convertView
@@ -97,7 +98,7 @@ class DownloadFilesAdapter (private val context: Context,
         holder.urlTextView.setOnClickListener {
             val address: Uri = Uri.parse(dataSource.get(position))
             val intent = Intent(Intent.ACTION_VIEW, address)
-            startActivity(context,intent,null)
+            startActivity(context, intent, null)
         }
 
         return view

@@ -15,13 +15,19 @@ import com.nasa.app.databinding.MediaPreviewViewHolderBinding
 import com.squareup.picasso.Picasso
 
 
-class MediaPreviewAdapter(val dataSource: List<MediaPreview> ):RecyclerView.Adapter<MediaPreviewAdapter.MediaPreviewViewHolder>() {
+class MediaPreviewAdapter(val dataSource: List<MediaPreview>) :
+    RecyclerView.Adapter<MediaPreviewAdapter.MediaPreviewViewHolder>() {
 
     var navController: NavController? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaPreviewViewHolder {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)
-        val binding = DataBindingUtil.inflate<MediaPreviewViewHolderBinding>(inflater, R.layout.media_preview_view_holder,parent,false)
+        val binding = DataBindingUtil.inflate<MediaPreviewViewHolderBinding>(
+            inflater,
+            R.layout.media_preview_view_holder,
+            parent,
+            false
+        )
         navController = Navigation.findNavController(parent)
         return MediaPreviewViewHolder(binding)
     }
@@ -30,8 +36,11 @@ class MediaPreviewAdapter(val dataSource: List<MediaPreview> ):RecyclerView.Adap
         val mediaPreview = dataSource[position]
         holder.binding.mediaPreview = mediaPreview
         holder.itemView.setOnClickListener {
-           val action = PreviewMediaFragmentDirections.actionMediaFragmentToDetailMediaFragment(mediaPreview.nasaId,mediaPreview.mediaType)
-           navController?.navigate(action)
+            val action = PreviewMediaFragmentDirections.actionMediaFragmentToDetailMediaFragment(
+                mediaPreview.nasaId,
+                mediaPreview.mediaType
+            )
+            navController?.navigate(action)
         }
 
         holder.bind(mediaPreview)
@@ -41,13 +50,15 @@ class MediaPreviewAdapter(val dataSource: List<MediaPreview> ):RecyclerView.Adap
         return dataSource.size
     }
 
-    inner class MediaPreviewViewHolder(val binding: MediaPreviewViewHolderBinding) : RecyclerView.ViewHolder(binding.root){
-        val mediaPreviewImageView: ImageView = itemView.findViewById(R.id.media_preview_recycler_view_image)
+    inner class MediaPreviewViewHolder(val binding: MediaPreviewViewHolderBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        val mediaPreviewImageView: ImageView =
+            itemView.findViewById(R.id.media_preview_recycler_view_image)
         val playVideoImageView: ImageView = itemView.findViewById(R.id.play_video_image_view)
         val playAudioImageView: ImageView = itemView.findViewById(R.id.play_audio_image_view)
 
-        fun bind(mediaPreview: MediaPreview){
-            when(mediaPreview.mediaType){
+        fun bind(mediaPreview: MediaPreview) {
+            when (mediaPreview.mediaType) {
                 ContentType.IMAGE -> {
                     Picasso
                         .get()

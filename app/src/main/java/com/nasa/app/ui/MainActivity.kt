@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(), IActivity {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 collapseSearchField()
-                searchRequest(query?:"apollo")
+                searchRequest(query ?: "apollo")
                 return true
             }
 
@@ -55,8 +55,7 @@ class MainActivity : AppCompatActivity(), IActivity {
             try {
                 val errorDialogFragment = SearchSettingsFragment.newInstance("Hello")
                 errorDialogFragment.show(supportFragmentManager, "ErrorDialogFragment")
-            }
-            catch (ex: Exception){
+            } catch (ex: Exception) {
                 Log.e("MainActivity", ex.message.toString())
             }
         }
@@ -73,11 +72,12 @@ class MainActivity : AppCompatActivity(), IActivity {
         mProgress.visibility = ProgressBar.INVISIBLE
     }
 
-    override fun searchRequest(query:String) {
+    override fun searchRequest(query: String) {
         clearMsg()
         SEARCH_REQUEST_QUERY = query
         val navController = findNavController(R.id.nav_host_fragment)
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val inflater = navHostFragment.navController.navInflater
         val graph = inflater.inflate(R.navigation.app_navigation)
         graph.startDestination = R.id.mediaFragment
@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity(), IActivity {
     }
 
     override fun collapseSearchField() {
-        if (menuItem!=null) {
+        if (menuItem != null) {
             if (menuItem!!.isActionViewExpanded) {
                 menuItem!!.collapseActionView()
             }
@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity(), IActivity {
         msgTextView.visibility = View.VISIBLE
     }
 
-    override fun clearMsg(){
+    override fun clearMsg() {
         msgTextView.setText("")
         msgTextView.visibility = View.INVISIBLE
     }
