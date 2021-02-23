@@ -56,19 +56,19 @@ class MainActivity : AppCompatActivity(), IActivity {
                 val errorDialogFragment = SearchSettingsFragment.newInstance("Hello")
                 errorDialogFragment.show(supportFragmentManager, "ErrorDialogFragment")
             } catch (ex: Exception) {
-                Log.e("MainActivity", ex.message.toString())
+                Log.i("MainActivity", ex.message.toString())
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
     override fun showProgressBar() {
-        Log.e("ProgressBar", "Loading")
+        Log.i("ProgressBar", "Loading")
         mProgress.visibility = ProgressBar.VISIBLE
     }
 
     override fun hideProgressBar() {
-        Log.e("ProgressBar", "Hide")
+        Log.i("ProgressBar", "Hide")
         mProgress.visibility = ProgressBar.INVISIBLE
     }
 

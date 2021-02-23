@@ -53,7 +53,7 @@ class DetailMediaDataSource(
                             }
                     }
                     .subscribe({
-                        Log.e("TAG", it.toString())
+                        Log.i("TAG", it.toString())
                         _downloadedMediaDetailsResponse.postValue(it)
                         _networkState.postValue(NetworkState.LOADED)
                     }, {

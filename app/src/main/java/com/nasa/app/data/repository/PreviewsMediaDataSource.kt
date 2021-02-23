@@ -35,7 +35,7 @@ class PreviewsMediaDataSource(
                     .observeOn(Schedulers.io())
                     .subscribeOn(Schedulers.io())
                     .subscribe({
-                        Log.e("MediaPreviewsDataSource", it.item.size.toString())
+                        Log.i("MediaPreviewsDataSource", it.item.size.toString())
                         _downloadedMediaPreviewsResponse.postValue(it.item)
                         _networkState.postValue(NetworkState.LOADED)
                     }, {

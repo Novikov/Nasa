@@ -152,7 +152,7 @@ class MediaPreviewDeserializer : JsonDeserializer<MediaPreviewResponse> {
             }
         }
 
-        Log.e("DeserializationResult", previewsList.toString())
+        Log.i("DeserializationResult", previewsList.toString())
         return MediaPreviewResponse(previewsList)
     }
 }
