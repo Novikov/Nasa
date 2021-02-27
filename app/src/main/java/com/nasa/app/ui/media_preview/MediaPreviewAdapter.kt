@@ -1,6 +1,5 @@
 package com.nasa.app.ui.media_preview
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,12 +25,12 @@ class MediaPreviewAdapter(
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    val SEARCH_INFO_TEXTVIEW_VIEW = 0
-    val MEDIA_PREVIEW_VIEW = 1
-    val NEXT_BUTTON_VIEW = 2
-    val BACK_AND_NEXT_BUTTON_VIEW = 3
-    val BACK_BUTTON_VIEW = 4
-    val EMPTY_VIEW = 5
+    private val SEARCH_INFO_TEXTVIEW_VIEW = 0
+    private val MEDIA_PREVIEW_VIEW = 1
+    private val NEXT_BUTTON_VIEW = 2
+    private val BACK_AND_NEXT_BUTTON_VIEW = 3
+    private val BACK_BUTTON_VIEW = 4
+    private val EMPTY_VIEW = 5
 
     var navController: NavController? = null
 

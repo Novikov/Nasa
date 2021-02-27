@@ -35,12 +35,6 @@ class SearchSettingsFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (arguments != null && requireArguments().containsKey(ERROR_DIALOG_FRAGMET)) {
-            sMsg = requireArguments().getString(ERROR_DIALOG_FRAGMET)
-        } else {
-            throw IllegalArgumentException("Error message can't be empty")
-        }
-
         tmpBeginSearchDateValue = SEARCH_YEAR_START
         tmpEndSearchDateValue = SEARCH_YEAR_END
     }
@@ -131,13 +125,8 @@ class SearchSettingsFragment : DialogFragment() {
     }
 
     companion object {
-        private val ERROR_DIALOG_FRAGMET = "app_error_dialog_fragment"
-
-        fun newInstance(msg: String): SearchSettingsFragment {
-            val args = Bundle()
-            args.putString(ERROR_DIALOG_FRAGMET, msg)
+        fun newInstance(): SearchSettingsFragment {
             val fragment = SearchSettingsFragment()
-            fragment.arguments = args
             return fragment
         }
     }

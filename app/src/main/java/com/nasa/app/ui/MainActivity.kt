@@ -32,11 +32,11 @@ class MainActivity : AppCompatActivity(), IActivity {
         menuItem = menu?.findItem(R.id.action_search)
 
         val searchView = menuItem?.actionView as SearchView
-        searchView.queryHint = "Type here to search"
+        searchView.queryHint = getString(R.string.Type_here_to_search)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 collapseSearchField()
-                searchRequest(query ?: "apollo")
+                searchRequest(query ?: "\"\"")
                 return true
             }
 
@@ -53,8 +53,8 @@ class MainActivity : AppCompatActivity(), IActivity {
         if (id == R.id.search_settings) {
             collapseSearchField()
             try {
-                val errorDialogFragment = SearchSettingsFragment.newInstance("Hello")
-                errorDialogFragment.show(supportFragmentManager, "ErrorDialogFragment")
+                val searchSettingsFragment = SearchSettingsFragment.newInstance()
+                searchSettingsFragment.show(supportFragmentManager, "SearchSettingsFragment")
             } catch (ex: Exception) {
                 Log.i("MainActivity", ex.message.toString())
             }
@@ -94,12 +94,12 @@ class MainActivity : AppCompatActivity(), IActivity {
     }
 
     override fun showMsg(msg: String) {
-        msgTextView.setText(msg)
+        msgTextView.text = msg
         msgTextView.visibility = View.VISIBLE
     }
 
     override fun clearMsg() {
-        msgTextView.setText("")
+        msgTextView.text = ""
         msgTextView.visibility = View.INVISIBLE
     }
 
