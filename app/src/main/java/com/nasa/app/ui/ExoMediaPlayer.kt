@@ -23,12 +23,7 @@
 package com.nasa.app.ui
 
 import android.content.Context
-import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.source.TrackGroupArray
-import com.google.android.exoplayer2.trackselection.MappingTrackSelector.MappedTrackInfo
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 
 class ExoMediaPlayer {
 
@@ -38,8 +33,6 @@ class ExoMediaPlayer {
 
     private lateinit var exoPlayer: ExoPlayer
     private lateinit var context: Context
-    private lateinit var mediaSession: MediaSessionCompat
-    private lateinit var stateBuilder: PlaybackStateCompat.Builder
 
     fun playPlayer(url: String, time: Long) {
         val mediaItem: MediaItem = MediaItem.fromUri(url)
@@ -52,7 +45,6 @@ class ExoMediaPlayer {
     fun getPlayer(context: Context): ExoPlayer {
         this.context = context
         exoPlayer = SimpleExoPlayer.Builder(context).build()
-        initializeMediaSession()
         return exoPlayer
     }
 
@@ -71,55 +63,6 @@ class ExoMediaPlayer {
 
     fun addListener(listener: Player.EventListener) {
         exoPlayer.addListener(listener)
-    }
-
-    fun setMediaSessionState(isActive: Boolean) {
-        mediaSession.isActive = isActive
-    }
-    
-    private fun initializeMediaSession() {
-        mediaSession = MediaSessionCompat(context, TAG)
-        mediaSession.setFlags(
-            MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
-                    MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
-        )
-        mediaSession.setMediaButtonReceiver(null)
-
-        stateBuilder = PlaybackStateCompat.Builder()
-            .setActions(
-                PlaybackStateCompat.ACTION_PLAY or
-                        PlaybackStateCompat.ACTION_PAUSE or
-                        PlaybackStateCompat.ACTION_PLAY_PAUSE or
-                        PlaybackStateCompat.ACTION_FAST_FORWARD or
-                        PlaybackStateCompat.ACTION_REWIND
-            )
-
-        mediaSession.setPlaybackState(stateBuilder.build())
-
-        mediaSession.setCallback(SessionCallback())
-
-        mediaSession.isActive = true
-    }
-
-    private inner class SessionCallback : MediaSessionCompat.Callback() {
-
-        private val SEEK_WINDOW_MILLIS = 10000
-
-        override fun onPlay() {
-            exoPlayer.playWhenReady = true
-        }
-
-        override fun onPause() {
-            exoPlayer.playWhenReady = false
-        }
-
-        override fun onRewind() {
-            exoPlayer.seekTo(exoPlayer.currentPosition - SEEK_WINDOW_MILLIS)
-        }
-
-        override fun onFastForward() {
-            exoPlayer.seekTo(exoPlayer.currentPosition + SEEK_WINDOW_MILLIS)
-        }
     }
 }
 
