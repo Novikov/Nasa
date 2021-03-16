@@ -121,7 +121,7 @@ class MediaPreviewAdapter(
                         }
 
                         ContentType.IMAGE -> {
-                            navController?.navigate(PreviewMediaFragmentDirections.actionMediaFragmentToDetailMediaFragment(
+                            navController?.navigate(PreviewMediaFragmentDirections.actionMediaFragmentToImageDetailFragment(
                                 mediaPreview.nasaId,
                                 mediaPreview.mediaType
                             ))
