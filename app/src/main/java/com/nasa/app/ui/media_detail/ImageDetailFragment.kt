@@ -30,7 +30,6 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
 class ImageDetailFragment : DetailFragment() {
-    private var activityContract: Activity? = null
     private lateinit var viewModel: DetailMediaViewModel
     lateinit var detailMediaRepository: DetailMediaRepository
     lateinit var nasaId: String
@@ -38,16 +37,6 @@ class ImageDetailFragment : DetailFragment() {
 
     val TAG = "AudioDetailFragment"
     val PLAYER_TIME = "PlayerTime"
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Log.i(TAG, "onAttach: ")
-        try {
-            activityContract = context as Activity
-        } catch (e: ClassCastException) {
-            throw ClassCastException(context.toString() + "Activity have to implement interface Activity")
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
