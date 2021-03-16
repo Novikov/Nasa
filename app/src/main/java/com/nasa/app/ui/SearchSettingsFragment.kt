@@ -15,7 +15,7 @@ import com.nasa.app.R
 
 class SearchSettingsFragment : DialogFragment() {
     private val TAG = "SearchSettingsFragment"
-    private var activityContract: IActivity? = null
+    private var activityContract: Activity? = null
     private var sMsg: String? = null
     lateinit var tmpBeginSearchDateValue: String
     lateinit var tmpEndSearchDateValue: String
@@ -27,7 +27,7 @@ class SearchSettingsFragment : DialogFragment() {
         super.onAttach(context)
         Log.i(TAG, "onAttach: ")
         try {
-            activityContract = context as IActivity
+            activityContract = context as Activity
         } catch (e: ClassCastException) {
             throw ClassCastException(context.toString() + "Activity have to implement interface IActivityView")
         }

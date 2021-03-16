@@ -14,7 +14,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.nasa.app.R
 
 
-class MainActivity : AppCompatActivity(), IActivity {
+class MainActivity : AppCompatActivity(), Activity {
     lateinit var mProgress: ProgressBar
     lateinit var msgTextView: TextView
     var menuItem: MenuItem? = null

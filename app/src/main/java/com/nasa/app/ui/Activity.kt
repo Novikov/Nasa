@@ -1,6 +1,6 @@
 package com.nasa.app.ui
 
-interface IActivity {
+interface Activity {
     fun showProgressBar()
     fun hideProgressBar()
     fun searchRequest(query: String)

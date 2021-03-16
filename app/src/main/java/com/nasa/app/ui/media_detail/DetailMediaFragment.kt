@@ -31,14 +31,14 @@ import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.databinding.FragmentMediaDetailBinding
 import com.nasa.app.ui.DownloadDialogFragment
 import com.nasa.app.ui.ExoMediaPlayer
-import com.nasa.app.ui.IActivity
+import com.nasa.app.ui.Activity
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
 
 class DetailMediaFragment : Fragment() {
 
-    private var activityContract: IActivity? = null
+    private var activityContract: Activity? = null
     private lateinit var viewModel: DetailMediaViewModel
     lateinit var detailMediaRepository: DetailMediaRepository
     lateinit var nasaId: String
@@ -53,7 +53,7 @@ class DetailMediaFragment : Fragment() {
         super.onAttach(context)
         Log.i(TAG, "onAttach: ")
         try {
-            activityContract = context as IActivity
+            activityContract = context as Activity
         } catch (e: ClassCastException) {
             throw ClassCastException(context.toString() + "Activity have to implement interface IActivityView")
         }
