@@ -13,8 +13,7 @@
         android:id="@+id/content_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/detail_fragments_bcg"
-        tools:context=".ui.media_detail.DetailMediaFragment">
+        android:background="@color/detail_fragments_bcg">
 
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/exo_player_video_view"

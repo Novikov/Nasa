@@ -44,7 +44,7 @@ class ImageDetailFragment : DetailFragment() {
 
         //getting fragment params
         if (arguments != null) {
-            val args = DetailMediaFragmentArgs.fromBundle(requireArguments())
+            val args = ImageDetailFragmentArgs.fromBundle(requireArguments())
             nasaId = args.nasaId
             contentType = args.contentType
 

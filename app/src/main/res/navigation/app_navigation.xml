@@ -10,9 +10,6 @@
         android:label="fragment_media"
         tools:layout="@layout/fragment_media_preview" >
         <action
-            android:id="@+id/action_mediaFragment_to_detailMediaFragment"
-            app:destination="@id/detailMediaFragment" />
-        <action
             android:id="@+id/action_mediaFragment_to_videoDetailFragment"
             app:destination="@id/videoDetailFragment" />
         <action
@@ -23,17 +20,6 @@
             app:destination="@id/audioDetailFragment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/detailMediaFragment"
-        android:name="com.nasa.app.ui.media_detail.DetailMediaFragment"
-        android:label="DetailMediaFragment" >
-        <argument
-            android:name="nasaId"
-            app:argType="string" />
-        <argument
-            android:name="contentType"
-            app:argType="com.nasa.app.data.model.ContentType" />
-    </fragment>
     <fragment
         android:id="@+id/audioDetailFragment"
         android:name="com.nasa.app.ui.media_detail.AudioDetailFragment"

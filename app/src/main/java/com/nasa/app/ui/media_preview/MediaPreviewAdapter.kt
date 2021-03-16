@@ -101,11 +101,6 @@ class MediaPreviewAdapter(
                 var hideDivider = position == dataSource.mediaPreviewList.size - 1
                 viewHolder.bind(mediaPreview, hideDivider)
                 viewHolder.itemView.setOnClickListener {
-                        PreviewMediaFragmentDirections.actionMediaFragmentToDetailMediaFragment(
-                            mediaPreview.nasaId,
-                            mediaPreview.mediaType
-                        )
-
                     when(mediaPreview.mediaType){
                         ContentType.AUDIO -> {
                             navController?.navigate(PreviewMediaFragmentDirections.actionMediaFragmentToAudioDetailFragment(

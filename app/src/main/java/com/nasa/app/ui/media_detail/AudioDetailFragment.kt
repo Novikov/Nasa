@@ -44,7 +44,7 @@ class AudioDetailFragment : DetailFragment() {
 
         //getting fragment params
         if (arguments != null) {
-            val args = DetailMediaFragmentArgs.fromBundle(requireArguments())
+            val args = AudioDetailFragmentArgs.fromBundle(requireArguments())
             nasaId = args.nasaId
             contentType = args.contentType
 

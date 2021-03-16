@@ -47,7 +47,7 @@ class VideoDetailFragment : DetailFragment() {
 
         //getting fragment params
         if (arguments != null) {
-            val args = DetailMediaFragmentArgs.fromBundle(requireArguments())
+            val args = VideoDetailFragmentArgs.fromBundle(requireArguments())
             nasaId = args.nasaId
             contentType = args.contentType
 
