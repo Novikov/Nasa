@@ -114,7 +114,7 @@ class MediaPreviewAdapter(
                             ))
                         }
                         ContentType.VIDEO -> {
-                            navController?.navigate(PreviewMediaFragmentDirections.actionMediaFragmentToDetailMediaFragment(
+                            navController?.navigate(PreviewMediaFragmentDirections.actionMediaFragmentToVideoDetailFragment(
                                 mediaPreview.nasaId,
                                 mediaPreview.mediaType
                             ))

@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 
 open class DetailFragment : Fragment() {
+
+
     protected fun getViewModel(nasaId: String, detailMediaRepository: DetailMediaRepository): DetailMediaViewModel {
         return ViewModelProviders.of(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {

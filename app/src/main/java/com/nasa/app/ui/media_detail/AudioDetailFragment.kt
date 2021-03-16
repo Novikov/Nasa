@@ -45,7 +45,7 @@ class AudioDetailFragment : DetailFragment() {
         try {
             activityContract = context as Activity
         } catch (e: ClassCastException) {
-            throw ClassCastException(context.toString() + "Activity have to implement interface ActivityView")
+            throw ClassCastException(context.toString() + "Activity have to implement interface Activity")
         }
     }
 
