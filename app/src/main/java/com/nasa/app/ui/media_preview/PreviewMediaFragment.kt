@@ -8,28 +8,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.nasa.app.R
 import com.nasa.app.data.api.NasaApiClient
-import com.nasa.app.data.model.ContentType
-import com.nasa.app.data.model.MediaPreview
 import com.nasa.app.data.repository.NetworkState
-import com.nasa.app.ui.IActivity
-import com.nasa.app.ui.media_detail.DetailMediaRepository
-import com.nasa.app.ui.media_detail.DetailMediaViewModel
-import org.w3c.dom.Text
+import com.nasa.app.ui.Activity
 
 class PreviewMediaFragment : Fragment() {
-    private var activityContract: IActivity? = null
+    private var activityContract: Activity? = null
     lateinit var navController: NavController
     lateinit var previewMediaRepository: PreviewMediaRepository
     private lateinit var viewModel: PreviewMediaViewModel
@@ -40,7 +31,7 @@ class PreviewMediaFragment : Fragment() {
         super.onAttach(context)
         Log.i(TAG, "onAttach: ")
         try {
-            activityContract = context as IActivity
+            activityContract = context as Activity
         } catch (e: ClassCastException) {
             throw ClassCastException(context.toString() + "Activity have to implement interface IActivityView")
         }

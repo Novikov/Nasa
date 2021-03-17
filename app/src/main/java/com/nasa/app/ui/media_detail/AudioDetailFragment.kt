@@ -14,11 +14,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerView
@@ -26,19 +21,13 @@ import com.google.android.flexbox.FlexboxLayout
 import com.nasa.app.R
 import com.nasa.app.data.api.NasaApiClient
 import com.nasa.app.data.model.ContentType
-import com.nasa.app.data.model.MediaDetail
 import com.nasa.app.data.repository.NetworkState
-import com.nasa.app.databinding.FragmentMediaDetailBinding
-import com.nasa.app.ui.DownloadDialogFragment
+import com.nasa.app.databinding.FragmentAudioDetailBinding
 import com.nasa.app.ui.ExoMediaPlayer
-import com.nasa.app.ui.IActivity
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
+import com.nasa.app.ui.Activity
+import com.nasa.app.ui.DownloadDialogFragment
 
-
-class DetailMediaFragment : Fragment() {
-
-    private var activityContract: IActivity? = null
+class AudioDetailFragment : DetailFragment() {
     private lateinit var viewModel: DetailMediaViewModel
     lateinit var detailMediaRepository: DetailMediaRepository
     lateinit var nasaId: String
@@ -46,18 +35,8 @@ class DetailMediaFragment : Fragment() {
     lateinit var exoMediaPlayer: ExoMediaPlayer
     var time: Long? = null
 
-    val TAG = "DetailMediaFragment"
+    val TAG = "AudioDetailFragment"
     val PLAYER_TIME = "PlayerTime"
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Log.i(TAG, "onAttach: ")
-        try {
-            activityContract = context as IActivity
-        } catch (e: ClassCastException) {
-            throw ClassCastException(context.toString() + "Activity have to implement interface IActivityView")
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +44,7 @@ class DetailMediaFragment : Fragment() {
 
         //getting fragment params
         if (arguments != null) {
-            val args = DetailMediaFragmentArgs.fromBundle(requireArguments())
+            val args = AudioDetailFragmentArgs.fromBundle(requireArguments())
             nasaId = args.nasaId
             contentType = args.contentType
 
@@ -77,7 +56,7 @@ class DetailMediaFragment : Fragment() {
 
         val apiService = NasaApiClient.getClient()
         detailMediaRepository = DetailMediaRepository(apiService)
-        viewModel = getViewModel(nasaId)
+        viewModel = getViewModel(nasaId,detailMediaRepository)
         exoMediaPlayer = ExoMediaPlayer()
     }
 
@@ -88,9 +67,9 @@ class DetailMediaFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         Log.i(TAG, "onCreateView: ")
-        val binding = DataBindingUtil.inflate<FragmentMediaDetailBinding>(
+        val binding = DataBindingUtil.inflate<FragmentAudioDetailBinding>(
             inflater,
-            R.layout.fragment_media_detail,
+            R.layout.fragment_audio_detail,
             container,
             false
         )
@@ -104,8 +83,8 @@ class DetailMediaFragment : Fragment() {
         contentLayout.visibility = View.INVISIBLE
         val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
         playerView.player = exoMediaPlayer.getPlayer(requireContext())
-        val imageView = view.findViewById<ImageView>(R.id.image_media_view)
         val button = view.findViewById<Button>(R.id.update_results_button)
+
 
         exoMediaPlayer.addListener(object : Player.EventListener {
             override fun onPlaybackStateChanged(state: Int) {
@@ -128,49 +107,39 @@ class DetailMediaFragment : Fragment() {
             }
         })
 
-        //media content view preparation
-        when (contentType) {
-            ContentType.IMAGE -> {
-                prepareViewForImageContent(playerView, imageView)
+        val orientation = getResources().getConfiguration().orientation
+        Log.i("Device orientation", orientation.toString())
+        when (orientation) {
+            1 -> {
+                playerView.layoutParams =
+                    ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, 450)
             }
-            ContentType.AUDIO -> {
-                prepareViewForAudioContent(playerView)
-            }
-            ContentType.VIDEO -> {
-                prepareViewForVideoContent(playerView)
+            2 -> {
+                playerView.layoutParams =
+                    ConstraintLayout.LayoutParams(
+                        ConstraintLayout.LayoutParams.MATCH_PARENT,
+                        ConstraintLayout.LayoutParams.MATCH_PARENT
+                    )
+                activityContract?.hideActionBar()
             }
         }
 
+
+
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetail ->
 
-            //view media content initialization
-            when (contentType) {
-                ContentType.IMAGE -> {
-                    mediaDetail.assets?.let {
-                        initViewByImageContent(
-                            imageView,
-                            mediaDetail,
-                            contentLayout
-                        )
-                    }
-                }
-                ContentType.VIDEO -> {
-                    mediaDetail.assets?.let {
-                        initViewByVideoContent(
-                            exoMediaPlayer,
-                            mediaDetail
-                        )
-                    }
-                }
-                ContentType.AUDIO -> {
-                    mediaDetail.assets?.let {
-                        initViewByAudioContent(
-                            exoMediaPlayer,
-                            mediaDetail
-                        )
-                    }
+            //audio content initialization
+            var audioUrl = ""
+            for (asset in mediaDetail.assets!!) {
+                if (asset.value.contains("mp3")) {
+                    audioUrl = asset.value
+                    break
                 }
             }
+            val substring = audioUrl.substringAfter("//")
+            audioUrl = "https://$substring"
+            Log.i("AudioUrl", "audioUrl $audioUrl")
+            exoMediaPlayer.playPlayer(audioUrl, time ?: 0)
 
             binding.mediaDetail = mediaDetail
 
@@ -225,10 +194,13 @@ class DetailMediaFragment : Fragment() {
                     Log.i("MainActivity", ex.message.toString())
                 }
             }
+
         })
 
+
+
         //network state status observing
-        viewModel.networkState.observe(viewLifecycleOwner, Observer {
+        viewModel.networkState.observe(viewLifecycleOwner, {
             when (it) {
                 NetworkState.LOADING -> activityContract?.showProgressBar()
                 NetworkState.NO_INTERNET -> {
@@ -243,132 +215,6 @@ class DetailMediaFragment : Fragment() {
         })
 
         return view
-    }
-
-    private fun initViewByAudioContent(
-        exoMediaPlayer: ExoMediaPlayer,
-        mediaDetail: MediaDetail
-    ) {
-        var audioUrl = ""
-
-        for (asset in mediaDetail.assets!!) {
-            if (asset.value.contains("mp3")) {
-                audioUrl = asset.value
-                break
-            }
-        }
-        val substring = audioUrl.substringAfter("//")
-        audioUrl = "https://$substring"
-        Log.i("AudioUrl", "audioUrl $audioUrl")
-        exoMediaPlayer.playPlayer(audioUrl, time ?: 0)
-    }
-
-    private fun prepareViewForVideoContent(playerView: PlayerView) {
-        val orientation = getResources().getConfiguration().orientation
-        Log.i("Device orientation", orientation.toString())
-        when (orientation) {
-            1 -> {
-                playerView.layoutParams =
-                    ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        ConstraintLayout.LayoutParams.WRAP_CONTENT
-                    )
-            }
-            2 -> {
-                playerView.layoutParams =
-                    ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        ConstraintLayout.LayoutParams.MATCH_PARENT
-                    )
-                activityContract?.hideActionBar()
-            }
-        }
-    }
-
-    private fun prepareViewForAudioContent(playerView: PlayerView) {
-        val orientation = getResources().getConfiguration().orientation
-        Log.i("Device orientation", orientation.toString())
-        when (orientation) {
-            1 -> {
-                playerView.layoutParams =
-                    ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, 450)
-            }
-            2 -> {
-                playerView.layoutParams =
-                    ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        ConstraintLayout.LayoutParams.MATCH_PARENT
-                    )
-                activityContract?.hideActionBar()
-            }
-        }
-    }
-
-    private fun initViewByVideoContent(
-        exoMediaPlayer: ExoMediaPlayer,
-        mediaDetail: MediaDetail
-    ) {
-        var videoUrl = ""
-
-        for (asset in mediaDetail.assets!!) {
-            if (asset.value.contains("mp4")) {
-                videoUrl = asset.value
-                break
-            }
-        }
-
-        val substring = videoUrl.substringAfter("//")
-        videoUrl = "https://$substring"
-        Log.i("VideoUrl", "videoUrl $videoUrl")
-        exoMediaPlayer.playPlayer(videoUrl, time ?: 0)
-    }
-
-
-    private fun initViewByImageContent(
-        imageView: ImageView,
-        mediaDetail: MediaDetail,
-        contentLayout: ConstraintLayout
-    ) {
-        Picasso.get().load(mediaDetail.previewUrl).into(
-            imageView,
-            object :
-                Callback {
-                override fun onSuccess() {
-                    contentLayout.visibility = View.VISIBLE
-                    activityContract?.hideProgressBar()
-                }
-
-                override fun onError(e: java.lang.Exception?) {
-                    activityContract?.hideProgressBar()
-                    activityContract?.showMsg("Image loading error: ${e?.message}")
-                }
-            })
-    }
-
-    private fun prepareViewForImageContent(
-        playerView: PlayerView,
-        imageView: ImageView
-    ) {
-        val orientation = getResources().getConfiguration().orientation
-        Log.i("Device orientation", orientation.toString())
-        when (orientation) {
-            1 -> {
-            }
-            2 -> {
-                activityContract?.hideActionBar()
-            }
-        }
-        playerView.visibility = View.GONE
-        imageView.adjustViewBounds = true
-    }
-
-    private fun getViewModel(nasaId: String): DetailMediaViewModel {
-        return ViewModelProviders.of(this, object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return DetailMediaViewModel(detailMediaRepository, nasaId) as T
-            }
-        })[DetailMediaViewModel::class.java]
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -390,3 +236,4 @@ class DetailMediaFragment : Fragment() {
         exoMediaPlayer.releasePlayer()
     }
 }
+

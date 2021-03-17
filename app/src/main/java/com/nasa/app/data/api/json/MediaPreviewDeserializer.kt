@@ -22,7 +22,7 @@ class MediaPreviewDeserializer : JsonDeserializer<MediaPreviewResponse> {
         val previewsList = ArrayList<MediaPreview>()
         var dateCreated = ""
         var previewUrl = ""
-        var mediaType: ContentType = ContentType.UNKNOWN
+        var mediaType: ContentType? = null
         var nasaId = ""
         var description = ""
         var totalResults = 0
@@ -126,34 +126,22 @@ class MediaPreviewDeserializer : JsonDeserializer<MediaPreviewResponse> {
                                 }
                             }
 
-                            if (mediaType != ContentType.AUDIO) {
-                                if (previewUrl.isNotEmpty()) {
+                            if (mediaType != null) {
                                     previewsList.add(
                                         MediaPreview(
                                             nasaId,
                                             previewUrl,
-                                            mediaType,
+                                            mediaType!!,
                                             dateCreated,
                                             description
                                         )
                                     )
-                                }
-                            } else {
-                                previewsList.add(
-                                    MediaPreview(
-                                        nasaId,
-                                        previewUrl,
-                                        mediaType,
-                                        dateCreated,
-                                        description
-                                    )
-                                )
                             }
 
                             //variables clearing for next iteration
                             dateCreated = ""
                             previewUrl = ""
-                            mediaType = ContentType.UNKNOWN
+                            mediaType = null
                             nasaId = ""
                             description = ""
                         }

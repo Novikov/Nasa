@@ -101,12 +101,27 @@ class MediaPreviewAdapter(
                 var hideDivider = position == dataSource.mediaPreviewList.size - 1
                 viewHolder.bind(mediaPreview, hideDivider)
                 viewHolder.itemView.setOnClickListener {
-                    val action =
-                        PreviewMediaFragmentDirections.actionMediaFragmentToDetailMediaFragment(
-                            mediaPreview.nasaId,
-                            mediaPreview.mediaType
-                        )
-                    navController?.navigate(action)
+                    when(mediaPreview.mediaType){
+                        ContentType.AUDIO -> {
+                            navController?.navigate(PreviewMediaFragmentDirections.actionMediaFragmentToAudioDetailFragment(
+                                mediaPreview.nasaId,
+                                mediaPreview.mediaType
+                            ))
+                        }
+                        ContentType.VIDEO -> {
+                            navController?.navigate(PreviewMediaFragmentDirections.actionMediaFragmentToVideoDetailFragment(
+                                mediaPreview.nasaId,
+                                mediaPreview.mediaType
+                            ))
+                        }
+
+                        ContentType.IMAGE -> {
+                            navController?.navigate(PreviewMediaFragmentDirections.actionMediaFragmentToImageDetailFragment(
+                                mediaPreview.nasaId,
+                                mediaPreview.mediaType
+                            ))
+                        }
+                    }
                 }
             }
             2 -> {
