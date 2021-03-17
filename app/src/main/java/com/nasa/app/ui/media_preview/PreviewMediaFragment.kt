@@ -14,16 +14,22 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.nasa.app.BaseApplication
 import com.nasa.app.R
 import com.nasa.app.data.api.NasaApiClient
+import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.ui.Activity
+import com.nasa.app.ui.MainActivity
+import javax.inject.Inject
 
 class PreviewMediaFragment : Fragment() {
     private var activityContract: Activity? = null
     lateinit var navController: NavController
     lateinit var previewMediaRepository: PreviewMediaRepository
     private lateinit var viewModel: PreviewMediaViewModel
+
+    @Inject lateinit var apiService:NasaApiService
 
     val TAG = "PreviewMediaFragment"
 
@@ -35,12 +41,13 @@ class PreviewMediaFragment : Fragment() {
         } catch (e: ClassCastException) {
             throw ClassCastException(context.toString() + "Activity have to implement interface IActivityView")
         }
+
+        ((activityContract as MainActivity).application as BaseApplication).appComponent.inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val apiService = NasaApiClient.getClient()
         previewMediaRepository = PreviewMediaRepository(apiService)
         viewModel = getViewModel()
     }
