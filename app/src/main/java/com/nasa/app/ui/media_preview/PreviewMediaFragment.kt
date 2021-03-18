@@ -43,7 +43,7 @@ class PreviewMediaFragment : Fragment() {
             throw ClassCastException(context.toString() + "Activity have to implement interface IActivityView")
         }
 
-        ((activityContract as MainActivity).application as BaseApplication).appComponent.inject(this)
+        ((activityContract as MainActivity).application as BaseApplication).appComponent.getPreviewComponent().inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
