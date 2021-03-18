@@ -12,10 +12,12 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
 @Module
 class AppModule {
 
+    @Singleton
     @Provides
     fun provideNasaApiService() :NasaApiService {
         val interceptor = HttpLoggingInterceptor()
@@ -50,6 +52,7 @@ class AppModule {
         return retrofit.create(NasaApiService::class.java)
     }
 
+    @Singleton
     @Provides
     fun providePicassoInstance(): Picasso {
         return Picasso.get()

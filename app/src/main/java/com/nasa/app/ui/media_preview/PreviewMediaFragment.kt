@@ -49,8 +49,6 @@ class PreviewMediaFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this, providerFactory).get(PreviewMediaViewModel::class.java)
-
-//        viewModel = ViewModelProviders.of(this, providerFactory).get(PostsViewModel::class.java)
     }
 
     override fun onCreateView(
