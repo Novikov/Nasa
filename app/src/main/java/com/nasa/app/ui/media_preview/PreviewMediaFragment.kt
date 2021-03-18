@@ -4,21 +4,21 @@ package com.nasa.app.ui.media_preview
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.get
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
-import com.nasa.app.data.api.NasaApiClient
-import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.repository.NetworkState
+import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.Activity
 import com.nasa.app.ui.MainActivity
 import javax.inject.Inject
@@ -26,10 +26,11 @@ import javax.inject.Inject
 class PreviewMediaFragment : Fragment() {
     private var activityContract: Activity? = null
     lateinit var navController: NavController
-    lateinit var previewMediaRepository: PreviewMediaRepository
     private lateinit var viewModel: PreviewMediaViewModel
 
-    @Inject lateinit var apiService:NasaApiService
+    @Inject lateinit var previewMediaRepository: PreviewMediaRepository
+
+    @Inject lateinit var providerFactory: ViewModelProviderFactory
 
     val TAG = "PreviewMediaFragment"
 
@@ -47,9 +48,9 @@ class PreviewMediaFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProviders.of(this, providerFactory).get(PreviewMediaViewModel::class.java)
 
-        previewMediaRepository = PreviewMediaRepository(apiService)
-        viewModel = getViewModel()
+//        viewModel = ViewModelProviders.of(this, providerFactory).get(PostsViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -67,7 +68,7 @@ class PreviewMediaFragment : Fragment() {
 
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
             if (it.mediaPreviewList.isNotEmpty()) {
-                val adapter = MediaPreviewAdapter(it,previewMediaRepository)
+                val adapter = MediaPreviewAdapter(it, previewMediaRepository)
                 mediaPreviewRecyclerView.adapter = adapter
             } else {
                 activityContract?.showMsg("Nothing found")

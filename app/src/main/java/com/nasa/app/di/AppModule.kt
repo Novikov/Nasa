@@ -5,6 +5,7 @@ import dagger.Provides
 import com.google.gson.GsonBuilder
 import com.nasa.app.NASA_BASE_URL
 import com.nasa.app.data.api.json.*
+import com.squareup.picasso.Picasso
 import dagger.Module
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -47,5 +48,10 @@ class AppModule {
             .build()
 
         return retrofit.create(NasaApiService::class.java)
+    }
+
+    @Provides
+    fun providePicassoInstance(): Picasso {
+        return Picasso.get()
     }
 }

@@ -77,7 +77,6 @@ class ImageDetailFragment : DetailFragment() {
 
         val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
         contentLayout.visibility = View.INVISIBLE
-        val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
         val button = view.findViewById<Button>(R.id.update_results_button)
         val imageView = view.findViewById<ImageView>(R.id.image_media_view)
 

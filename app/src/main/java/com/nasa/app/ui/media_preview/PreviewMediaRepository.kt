@@ -6,8 +6,9 @@ import com.nasa.app.data.api.json.MediaPreviewResponse
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.data.repository.PreviewsMediaDataSource
 import io.reactivex.disposables.CompositeDisposable
+import javax.inject.Inject
 
-class PreviewMediaRepository(private val apiService: NasaApiService) {
+class PreviewMediaRepository @Inject constructor(private val apiService: NasaApiService) {
     lateinit var previewMediaDataSource: PreviewsMediaDataSource
 
     fun fetchMultipleMediaPreview(compositeDisposable: CompositeDisposable): LiveData<MediaPreviewResponse> {

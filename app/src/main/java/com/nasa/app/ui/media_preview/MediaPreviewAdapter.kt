@@ -34,6 +34,8 @@ class MediaPreviewAdapter(
 
     var navController: NavController? = null
 
+    val picasso = Picasso.get()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             0 -> {
@@ -221,8 +223,7 @@ class MediaPreviewAdapter(
             }
             when (mediaPreview.mediaType) {
                 ContentType.IMAGE -> {
-                    Picasso
-                        .get()
+                    picasso
                         .load(mediaPreview.previewUrl)
                         .fit()
                         .centerCrop()
@@ -231,8 +232,7 @@ class MediaPreviewAdapter(
                     playAudioImageView.visibility = View.GONE
                 }
                 ContentType.VIDEO -> {
-                    Picasso
-                        .get()
+                    picasso
                         .load(mediaPreview.previewUrl)
                         .fit()
                         .centerCrop()
