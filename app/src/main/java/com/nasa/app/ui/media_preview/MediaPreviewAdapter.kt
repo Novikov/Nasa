@@ -23,11 +23,13 @@ import javax.inject.Inject
 class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaRepository) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    @Inject lateinit var picasso:Picasso
     private val SEARCH_INFO_TEXTVIEW_VIEW = 0
     private val MEDIA_PREVIEW_VIEW = 1
     private val NEXT_BUTTON_VIEW = 2
     private val BACK_AND_NEXT_BUTTON_VIEW = 3
     private val BACK_BUTTON_VIEW = 4
+
     private val EMPTY_VIEW = 5
 
      var dataSource: MediaPreviewResponse = MediaPreviewResponse(listOf(MediaPreview("","",ContentType.IMAGE,"","")),1,1,1)
@@ -37,8 +39,6 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
        }
 
     var navController: NavController? = null
-
-    val picasso = Picasso.get()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -246,6 +246,7 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
 
                 }
                 ContentType.AUDIO -> {
+                    mediaPreviewImageView.setImageResource(android.R.color.black)
                     playVideoImageView.visibility = View.GONE
                     playAudioImageView.visibility = View.VISIBLE
                 }
