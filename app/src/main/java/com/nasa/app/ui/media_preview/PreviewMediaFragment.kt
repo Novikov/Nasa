@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,15 +23,14 @@ import javax.inject.Inject
 class PreviewMediaFragment : Fragment() {
     private var activityContract: Activity? = null
     private lateinit var viewModel: PreviewMediaViewModel
+    lateinit var mediaPreviewRecyclerView:RecyclerView
 
-    @Inject lateinit var previewMediaRepository: PreviewMediaRepository
     @Inject lateinit var providerFactory: ViewModelProviderFactory
-
-    val TAG = "PreviewMediaFragment"
+    @Inject lateinit var adapter:MediaPreviewAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.i(TAG, "onAttach: ")
+        Log.i(Companion.TAG, "onAttach: ")
         try {
             activityContract = context as Activity
         } catch (e: ClassCastException) {
@@ -54,14 +54,16 @@ class PreviewMediaFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_media_preview, container, false)
 
-        val mediaPreviewRecyclerView =
-            view.findViewById<RecyclerView>(R.id.media_preview_recycler_view)
-        mediaPreviewRecyclerView.layoutManager = LinearLayoutManager(context)
+        val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
+        contentLayout.visibility = View.INVISIBLE
+
+        mediaPreviewRecyclerView = view.findViewById(R.id.media_preview_recycler_view)
+        initRecyclerView()
 
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
             if (it.mediaPreviewList.isNotEmpty()) {
-                val adapter = MediaPreviewAdapter(it, previewMediaRepository)
-                mediaPreviewRecyclerView.adapter = adapter
+                adapter.dataSource = it
+                contentLayout.visibility = View.VISIBLE
             } else {
                 activityContract?.showMsg("Nothing found")
             }
@@ -84,5 +86,14 @@ class PreviewMediaFragment : Fragment() {
         })
 
         return view
+    }
+
+    fun initRecyclerView(){
+        mediaPreviewRecyclerView.layoutManager = LinearLayoutManager(context)
+        mediaPreviewRecyclerView.adapter = adapter
+    }
+
+    companion object {
+        const val TAG = "PreviewMediaFragment"
     }
 }
