@@ -13,8 +13,7 @@ import javax.inject.Inject
 class PreviewMediaRepository @Inject constructor(private val apiService: NasaApiService) {
     @Inject lateinit var previewMediaDataSource: PreviewsMediaDataSource
 
-    fun fetchMultipleMediaPreview(compositeDisposable: CompositeDisposable): LiveData<MediaPreviewResponse> {
-//        previewMediaDataSource = PreviewsMediaDataSource(apiService, compositeDisposable)
+    fun fetchMultipleMediaPreview(): LiveData<MediaPreviewResponse> {
         previewMediaDataSource.fetchMediaPreviews()
         return previewMediaDataSource.downloadedMediaPreviewsResponse
     }

@@ -63,6 +63,7 @@ class PreviewMediaFragment : Fragment() {
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
             if (it.mediaPreviewList.isNotEmpty()) {
                 adapter.dataSource = it
+                (mediaPreviewRecyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(0,0)
                 contentLayout.visibility = View.VISIBLE
             } else {
                 activityContract?.showMsg("Nothing found")
