@@ -5,7 +5,7 @@ import com.nasa.app.ui.media_preview.PreviewMediaFragment
 import dagger.Subcomponent
 
 @PreviewScope
-@Subcomponent(modules = [ViewModelFactoryModule::class, PreviewMediaViewModulesModule::class])
+@Subcomponent(modules = [ViewModelFactoryModule::class, PreviewMediaViewModulesModule::class, PreviewModule::class])
 interface PreviewComponent {
 
     @Subcomponent.Factory
