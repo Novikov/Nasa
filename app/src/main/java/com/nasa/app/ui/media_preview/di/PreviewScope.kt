@@ -1,4 +1,4 @@
-package com.nasa.app.di.media_preview
+package com.nasa.app.ui.media_preview.di
 
 import java.lang.annotation.Documented
 import java.lang.annotation.Retention

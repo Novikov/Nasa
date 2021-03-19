@@ -1,4 +1,4 @@
-package com.nasa.app.di.media_preview
+package com.nasa.app.ui.media_preview.di
 
 import androidx.lifecycle.ViewModel
 import com.nasa.app.di.view_models.ViewModelKey

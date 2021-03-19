@@ -1,14 +1,19 @@
 package com.nasa.app.di
 
-import com.nasa.app.di.media_preview.PreviewComponent
-import com.nasa.app.di.media_preview.PreviewMediaViewModulesModule
-import com.nasa.app.di.view_models.ViewModelFactoryModule
-import com.nasa.app.ui.media_preview.PreviewMediaFragment
+import android.content.Context
+import com.nasa.app.ui.media_preview.di.PreviewComponent
+import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [AppModule::class])
 interface AppComponent {
-    fun getPreviewComponent():PreviewComponent
+
+    @Component.Factory
+    interface Factory{
+        fun create(@BindsInstance applicationContext: Context): AppComponent
+    }
+
+    fun getPreviewComponent(): PreviewComponent.Factory
 }

@@ -8,11 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.get
-import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nasa.app.BaseApplication
@@ -25,11 +21,9 @@ import javax.inject.Inject
 
 class PreviewMediaFragment : Fragment() {
     private var activityContract: Activity? = null
-    lateinit var navController: NavController
     private lateinit var viewModel: PreviewMediaViewModel
 
     @Inject lateinit var previewMediaRepository: PreviewMediaRepository
-
     @Inject lateinit var providerFactory: ViewModelProviderFactory
 
     val TAG = "PreviewMediaFragment"
@@ -43,7 +37,7 @@ class PreviewMediaFragment : Fragment() {
             throw ClassCastException(context.toString() + "Activity have to implement interface IActivityView")
         }
 
-        ((activityContract as MainActivity).application as BaseApplication).appComponent.getPreviewComponent().inject(this)
+        (requireActivity().application as BaseApplication).appComponent.getPreviewComponent().create().inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,14 +84,5 @@ class PreviewMediaFragment : Fragment() {
         })
 
         return view
-    }
-
-    private fun getViewModel(): PreviewMediaViewModel {
-        return ViewModelProviders.of(this, object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return PreviewMediaViewModel(previewMediaRepository) as T
-            }
-        })[PreviewMediaViewModel::class.java]
     }
 }
