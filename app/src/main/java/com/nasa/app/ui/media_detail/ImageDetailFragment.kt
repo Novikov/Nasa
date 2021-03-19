@@ -32,8 +32,6 @@ import com.squareup.picasso.Picasso
 class ImageDetailFragment : DetailFragment() {
     private lateinit var viewModel: DetailMediaViewModel
     lateinit var detailMediaRepository: DetailMediaRepository
-    lateinit var nasaId: String
-    lateinit var contentType: ContentType
 
     val TAG = "AudioDetailFragment"
     val PLAYER_TIME = "PlayerTime"
@@ -41,16 +39,6 @@ class ImageDetailFragment : DetailFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(TAG, "onCreate: ")
-
-        //getting fragment params
-        if (arguments != null) {
-            val args = ImageDetailFragmentArgs.fromBundle(requireArguments())
-            nasaId = args.nasaId
-            contentType = args.contentType
-
-        } else {
-            throw Exception("arguments can't be null")
-        }
 
         val apiService = NasaApiClient.getClient()
         detailMediaRepository = DetailMediaRepository(apiService)

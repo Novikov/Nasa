@@ -33,8 +33,6 @@ class VideoDetailFragment : DetailFragment() {
 
     private lateinit var viewModel: DetailMediaViewModel
     lateinit var detailMediaRepository: DetailMediaRepository
-    lateinit var nasaId: String
-    lateinit var contentType: ContentType
     lateinit var exoMediaPlayer: ExoMediaPlayer
     var time: Long? = null
 
@@ -44,16 +42,6 @@ class VideoDetailFragment : DetailFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(TAG, "onCreate: ")
-
-        //getting fragment params
-        if (arguments != null) {
-            val args = VideoDetailFragmentArgs.fromBundle(requireArguments())
-            nasaId = args.nasaId
-            contentType = args.contentType
-
-        } else {
-            throw Exception("arguments can't be null")
-        }
 
         time = savedInstanceState?.getLong(PLAYER_TIME)
 
