@@ -1,5 +1,6 @@
 package com.nasa.app.ui.media_detail.di
 
+import com.nasa.app.ui.ExoMediaPlayer
 import dagger.Module
 import dagger.Provides
 import io.reactivex.disposables.CompositeDisposable
@@ -16,5 +17,10 @@ class DetailModule() {
     @Provides
     fun providesCompositeDisposable():CompositeDisposable{
         return CompositeDisposable()
+    }
+
+    @Provides
+    fun provideExoMediaPlayer(): ExoMediaPlayer {
+        return ExoMediaPlayer()
     }
 }

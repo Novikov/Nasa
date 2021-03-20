@@ -33,13 +33,12 @@ import javax.inject.Inject
 
 class AudioDetailFragment : Fragment() {
     private lateinit var viewModel: DetailMediaViewModel
-    lateinit var exoMediaPlayer: ExoMediaPlayer
     lateinit var nasaId: String
     lateinit var contentType: ContentType
     var time: Long? = null
-
     var activityContract: Activity? = null
 
+    @Inject lateinit var exoMediaPlayer: ExoMediaPlayer
     @Inject lateinit var detailMediaRepository: DetailMediaRepository
     @Inject lateinit var providerFactory: ViewModelProviderFactory
 

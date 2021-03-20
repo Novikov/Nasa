@@ -34,13 +34,13 @@ import javax.inject.Inject
 class VideoDetailFragment : Fragment() {
 
     private lateinit var viewModel: DetailMediaViewModel
-    lateinit var exoMediaPlayer: ExoMediaPlayer
     var time: Long? = null
-
     lateinit var nasaId: String
     lateinit var contentType: ContentType
     var activityContract: Activity? = null
+    var isExoPlayerPrepared = false
 
+    @Inject lateinit var exoMediaPlayer: ExoMediaPlayer
     @Inject lateinit var detailMediaRepository: DetailMediaRepository
     @Inject lateinit var providerFactory: ViewModelProviderFactory
 
@@ -73,11 +73,8 @@ class VideoDetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(TAG, "onCreate: ")
-
         time = savedInstanceState?.getLong(PLAYER_TIME)
-
         viewModel = ViewModelProviders.of(this, providerFactory).get(DetailMediaViewModel::class.java)
-        exoMediaPlayer = ExoMediaPlayer()
     }
 
     override fun onCreateView(
@@ -108,12 +105,15 @@ class VideoDetailFragment : Fragment() {
             override fun onPlaybackStateChanged(state: Int) {
                 super.onPlaybackStateChanged(state)
                 if (state == Player.STATE_READY) {
+                    isExoPlayerPrepared = true
                     contentLayout.visibility = View.VISIBLE
                     activityContract?.hideProgressBar()
                 }
                 if (state == Player.STATE_BUFFERING) {
-                    contentLayout.visibility = View.INVISIBLE
-                    activityContract?.showProgressBar()
+                    if (!isExoPlayerPrepared) {
+                        contentLayout.visibility = View.INVISIBLE
+                        activityContract?.showProgressBar()
+                    }
                 }
             }
 
