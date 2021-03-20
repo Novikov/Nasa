@@ -15,8 +15,6 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.Player
@@ -24,10 +22,8 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.flexbox.FlexboxLayout
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
-import com.nasa.app.data.api.NasaApiClient
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.repository.NetworkState
-import com.nasa.app.databinding.FragmentAudioDetailBinding
 import com.nasa.app.databinding.FragmentVideoDetailBinding
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.Activity

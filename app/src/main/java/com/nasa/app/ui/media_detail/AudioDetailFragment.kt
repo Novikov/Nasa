@@ -15,8 +15,6 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.Player
@@ -24,8 +22,6 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.flexbox.FlexboxLayout
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
-import com.nasa.app.data.api.NasaApiClient
-import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.databinding.FragmentAudioDetailBinding
@@ -33,7 +29,6 @@ import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.ExoMediaPlayer
 import com.nasa.app.ui.Activity
 import com.nasa.app.ui.DownloadDialogFragment
-import com.nasa.app.ui.media_preview.PreviewMediaViewModel
 import javax.inject.Inject
 
 class AudioDetailFragment : Fragment() {
@@ -44,18 +39,15 @@ class AudioDetailFragment : Fragment() {
     var time: Long? = null
 
     var activityContract: Activity? = null
-    @Inject
-    lateinit var detailMediaRepository: DetailMediaRepository
 
+    @Inject lateinit var detailMediaRepository: DetailMediaRepository
     @Inject lateinit var providerFactory: ViewModelProviderFactory
 
-
-    val TAG = "AudioDetailFragment"
     val PLAYER_TIME = "PlayerTime"
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.i(TAG, "onAttach: ")
+        Log.i(Companion.TAG, "onAttach: ")
         try {
             activityContract = context as Activity
         } catch (e: ClassCastException) {
@@ -79,7 +71,7 @@ class AudioDetailFragment : Fragment() {
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            Log.i(TAG, "onCreate: ")
+            Log.i(Companion.TAG, "onCreate: ")
 
             time = savedInstanceState?.getLong(PLAYER_TIME)
 
@@ -93,7 +85,7 @@ class AudioDetailFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
         ): View? {
-            Log.i(TAG, "onCreateView: ")
+            Log.i(Companion.TAG, "onCreateView: ")
             val binding = DataBindingUtil.inflate<FragmentAudioDetailBinding>(
                 inflater,
                 R.layout.fragment_audio_detail,
@@ -249,22 +241,26 @@ class AudioDetailFragment : Fragment() {
 
         override fun onSaveInstanceState(outState: Bundle) {
             super.onSaveInstanceState(outState)
-            Log.i(TAG, "onSaveInstanceState: ")
+            Log.i(Companion.TAG, "onSaveInstanceState: ")
             outState.putLong(PLAYER_TIME, exoMediaPlayer.getPlayerTime())
-            Log.i(TAG, "time onSavedInstanceState ${exoMediaPlayer.getPlayerTime()}")
+            Log.i(Companion.TAG, "time onSavedInstanceState ${exoMediaPlayer.getPlayerTime()}")
         }
 
         override fun onPause() {
             super.onPause()
-            Log.i(TAG, "onPause: ")
+            Log.i(Companion.TAG, "onPause: ")
             exoMediaPlayer.pausePlayer()
         }
 
         override fun onDestroyView() {
             super.onDestroyView()
-            Log.i(TAG, "onDestroyView: ")
+            Log.i(Companion.TAG, "onDestroyView: ")
             exoMediaPlayer.releasePlayer()
         }
+
+    companion object {
+        const val TAG = "AudioDetailFragment"
     }
+}
 
 

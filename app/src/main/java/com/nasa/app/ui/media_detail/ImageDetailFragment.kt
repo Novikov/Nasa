@@ -15,22 +15,16 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.flexbox.FlexboxLayout
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
-import com.nasa.app.data.api.NasaApiClient
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.repository.NetworkState
-import com.nasa.app.databinding.FragmentAudioDetailBinding
 import com.nasa.app.databinding.FragmentImageDetailBinding
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.Activity
 import com.nasa.app.ui.DownloadDialogFragment
-import com.nasa.app.ui.ExoMediaPlayer
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
@@ -41,17 +35,12 @@ class ImageDetailFragment : Fragment() {
     lateinit var contentType: ContentType
     var activityContract: Activity? = null
 
-    @Inject
-    lateinit var detailMediaRepository: DetailMediaRepository
-
+    @Inject lateinit var detailMediaRepository: DetailMediaRepository
     @Inject lateinit var providerFactory: ViewModelProviderFactory
-
-    val TAG = "AudioDetailFragment"
-    val PLAYER_TIME = "PlayerTime"
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.i(TAG, "onAttach: ")
+        Log.i(Companion.TAG, "onAttach: ")
         try {
             activityContract = context as Activity
         } catch (e: ClassCastException) {
@@ -75,7 +64,7 @@ class ImageDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i(TAG, "onCreate: ")
+        Log.i(Companion.TAG, "onCreate: ")
 
         viewModel = ViewModelProviders.of(this, providerFactory).get(DetailMediaViewModel::class.java)
     }
@@ -85,7 +74,7 @@ class ImageDetailFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.i(TAG, "onCreateView: ")
+        Log.i(Companion.TAG, "onCreateView: ")
         val binding = DataBindingUtil.inflate<FragmentImageDetailBinding>(
             inflater,
             R.layout.fragment_image_detail,
@@ -200,5 +189,9 @@ class ImageDetailFragment : Fragment() {
         })
 
         return view
+    }
+
+    companion object {
+        const val TAG = "AudioDetailFragment"
     }
 }
