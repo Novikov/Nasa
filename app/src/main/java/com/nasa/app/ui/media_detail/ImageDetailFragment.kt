@@ -15,8 +15,12 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.flexbox.FlexboxLayout
+import com.nasa.app.BaseApplication
 import com.nasa.app.R
 import com.nasa.app.data.api.NasaApiClient
 import com.nasa.app.data.model.ContentType
@@ -28,20 +32,59 @@ import com.nasa.app.ui.DownloadDialogFragment
 import com.nasa.app.ui.ExoMediaPlayer
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import javax.inject.Inject
 
-class ImageDetailFragment : DetailFragment() {
+class ImageDetailFragment : Fragment() {
     private lateinit var viewModel: DetailMediaViewModel
+    lateinit var nasaId: String
+    lateinit var contentType: ContentType
+    var activityContract: Activity? = null
+
+    @Inject
     lateinit var detailMediaRepository: DetailMediaRepository
 
     val TAG = "AudioDetailFragment"
     val PLAYER_TIME = "PlayerTime"
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        Log.i(TAG, "onAttach: ")
+        try {
+            activityContract = context as Activity
+        } catch (e: ClassCastException) {
+            throw ClassCastException(context.toString() + "Activity have to implement interface Activity")
+        }
+
+        //getting fragment params
+        if (arguments != null) {
+            val args = AudioDetailFragmentArgs.fromBundle(requireArguments())
+            nasaId = args.nasaId
+            contentType = args.contentType
+
+        } else {
+            throw Exception("arguments can't be null")
+        }
+
+        (requireActivity().application as BaseApplication).appComponent.getDetailComponent()
+            .create(nasaId).inject(this)
+    }
+
+    fun getViewModel(
+        nasaId: String,
+        detailMediaRepository: DetailMediaRepository
+    ): DetailMediaViewModel {
+        return ViewModelProviders.of(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return DetailMediaViewModel(detailMediaRepository, nasaId) as T
+            }
+        })[DetailMediaViewModel::class.java]
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(TAG, "onCreate: ")
 
-        val apiService = NasaApiClient.getClient()
-        detailMediaRepository = DetailMediaRepository(apiService)
         viewModel = getViewModel(nasaId,detailMediaRepository)
     }
 

@@ -8,8 +8,9 @@ import com.nasa.app.data.model.MediaDetail
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.exceptions.CompositeException
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class DetailMediaDataSource(
+class DetailMediaDataSource @Inject constructor(
     private val apiService: NasaApiService,
     private val compositeDisposable: CompositeDisposable
 ) {

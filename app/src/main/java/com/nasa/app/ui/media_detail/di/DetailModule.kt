@@ -5,7 +5,12 @@ import dagger.Provides
 import io.reactivex.disposables.CompositeDisposable
 
 @Module
-class DetailModule {
+class DetailModule() {
+
+    @Provides
+    fun provideNasaId(nasaId: String): String {
+        return nasaId
+    }
 
     @DetailScope
     @Provides

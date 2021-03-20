@@ -1,6 +1,7 @@
 package com.nasa.app.di
 
 import android.content.Context
+import com.nasa.app.ui.media_detail.di.DetailComponent
 import com.nasa.app.ui.media_preview.di.PreviewComponent
 import dagger.BindsInstance
 import dagger.Component
@@ -16,4 +17,5 @@ interface AppComponent {
     }
 
     fun getPreviewComponent(): PreviewComponent.Factory
+    fun getDetailComponent(): DetailComponent.Factory
 }
