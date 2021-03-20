@@ -9,10 +9,12 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.exceptions.CompositeException
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
+import javax.inject.Named
 
 class DetailMediaDataSource @Inject constructor(
     private val apiService: NasaApiService,
-    private val compositeDisposable: CompositeDisposable
+    private val compositeDisposable: CompositeDisposable,
+    @Named("nasa id") private val nasaId: String
 ) {
 
     private val _networkState = MutableLiveData<NetworkState>()
@@ -23,7 +25,7 @@ class DetailMediaDataSource @Inject constructor(
     val downloadedMediaResponse: LiveData<MediaDetail>
         get() = _downloadedMediaDetailsResponse
 
-    fun fetchMediaDetails(nasaId: String) {
+    fun fetchMediaDetails() {
         _networkState.postValue(NetworkState.LOADING)
 
         try {

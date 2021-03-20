@@ -1,5 +1,6 @@
 package com.nasa.app.ui.media_detail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.model.MediaDetail
@@ -10,15 +11,12 @@ import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 @DetailScope
-class DetailMediaRepository @Inject constructor(private val apiService: NasaApiService) {
+class DetailMediaRepository @Inject constructor() {
    @Inject lateinit var detailMediaDataSource: DetailMediaDataSource
 
     fun fetchSingleMediaDetail(
-        compositeDisposable: CompositeDisposable,
-        nasaId: String
     ): LiveData<MediaDetail> {
-//        detailMediaDataSource = DetailMediaDataSource(apiService, compositeDisposable)
-        detailMediaDataSource.fetchMediaDetails(nasaId)
+        detailMediaDataSource.fetchMediaDetails()
         return detailMediaDataSource.downloadedMediaResponse
     }
 

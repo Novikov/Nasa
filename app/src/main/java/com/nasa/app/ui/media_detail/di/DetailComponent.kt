@@ -7,6 +7,7 @@ import com.nasa.app.ui.media_detail.VideoDetailFragment
 import com.nasa.app.ui.media_preview.PreviewMediaFragment
 import dagger.BindsInstance
 import dagger.Subcomponent
+import javax.inject.Named
 
 @DetailScope
 @Subcomponent(modules = [DetailModule::class,ViewModelFactoryModule::class, DetailMediaViewModulesModule::class])
@@ -14,10 +15,10 @@ interface DetailComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(@BindsInstance nasaId:String): DetailComponent
+        fun create(@BindsInstance @Named("nasa id")nasaId:String): DetailComponent
     }
 
     fun inject(audioMediaFragment: AudioDetailFragment)
-    fun inject(audioMediaFragment: ImageDetailFragment)
-    fun inject(audioMediaFragment: VideoDetailFragment)
+    fun inject(imageMediaFragment: ImageDetailFragment)
+    fun inject(videoMediaFragment: VideoDetailFragment)
 }

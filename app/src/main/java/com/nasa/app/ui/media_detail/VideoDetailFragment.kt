@@ -29,6 +29,7 @@ import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.databinding.FragmentAudioDetailBinding
 import com.nasa.app.databinding.FragmentVideoDetailBinding
+import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.Activity
 import com.nasa.app.ui.DownloadDialogFragment
 import com.nasa.app.ui.ExoMediaPlayer
@@ -44,8 +45,8 @@ class VideoDetailFragment : Fragment() {
     lateinit var contentType: ContentType
     var activityContract: Activity? = null
 
-    @Inject
-    lateinit var detailMediaRepository: DetailMediaRepository
+    @Inject lateinit var detailMediaRepository: DetailMediaRepository
+    @Inject lateinit var providerFactory: ViewModelProviderFactory
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -79,21 +80,8 @@ class VideoDetailFragment : Fragment() {
 
         time = savedInstanceState?.getLong(PLAYER_TIME)
 
-        viewModel = getViewModel(nasaId,detailMediaRepository)
+        viewModel = ViewModelProviders.of(this, providerFactory).get(DetailMediaViewModel::class.java)
         exoMediaPlayer = ExoMediaPlayer()
-    }
-
-
-    fun getViewModel(
-        nasaId: String,
-        detailMediaRepository: DetailMediaRepository
-    ): DetailMediaViewModel {
-        return ViewModelProviders.of(this, object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return DetailMediaViewModel(detailMediaRepository, nasaId) as T
-            }
-        })[DetailMediaViewModel::class.java]
     }
 
     override fun onCreateView(

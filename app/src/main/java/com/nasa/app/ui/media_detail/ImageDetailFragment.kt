@@ -27,6 +27,7 @@ import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.databinding.FragmentAudioDetailBinding
 import com.nasa.app.databinding.FragmentImageDetailBinding
+import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.Activity
 import com.nasa.app.ui.DownloadDialogFragment
 import com.nasa.app.ui.ExoMediaPlayer
@@ -42,6 +43,8 @@ class ImageDetailFragment : Fragment() {
 
     @Inject
     lateinit var detailMediaRepository: DetailMediaRepository
+
+    @Inject lateinit var providerFactory: ViewModelProviderFactory
 
     val TAG = "AudioDetailFragment"
     val PLAYER_TIME = "PlayerTime"
@@ -69,23 +72,12 @@ class ImageDetailFragment : Fragment() {
             .create(nasaId).inject(this)
     }
 
-    fun getViewModel(
-        nasaId: String,
-        detailMediaRepository: DetailMediaRepository
-    ): DetailMediaViewModel {
-        return ViewModelProviders.of(this, object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return DetailMediaViewModel(detailMediaRepository, nasaId) as T
-            }
-        })[DetailMediaViewModel::class.java]
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(TAG, "onCreate: ")
 
-        viewModel = getViewModel(nasaId,detailMediaRepository)
+        viewModel = ViewModelProviders.of(this, providerFactory).get(DetailMediaViewModel::class.java)
     }
 
     override fun onCreateView(

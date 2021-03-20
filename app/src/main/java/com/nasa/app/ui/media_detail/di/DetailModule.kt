@@ -8,7 +8,7 @@ import io.reactivex.disposables.CompositeDisposable
 class DetailModule() {
 
     @Provides
-    fun provideNasaId(nasaId: String): String {
+    fun provideNasaId(nasaId:String): String {
         return nasaId
     }
 
