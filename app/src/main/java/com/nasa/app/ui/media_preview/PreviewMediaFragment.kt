@@ -4,28 +4,29 @@ package com.nasa.app.ui.media_preview
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.nasa.app.BaseApplication
 import com.nasa.app.R
-import com.nasa.app.data.api.NasaApiClient
 import com.nasa.app.data.repository.NetworkState
+import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.Activity
+import com.nasa.app.ui.MainActivity
+import javax.inject.Inject
 
 class PreviewMediaFragment : Fragment() {
     private var activityContract: Activity? = null
-    lateinit var navController: NavController
-    lateinit var previewMediaRepository: PreviewMediaRepository
     private lateinit var viewModel: PreviewMediaViewModel
+    lateinit var mediaPreviewRecyclerView:RecyclerView
 
-    val TAG = "PreviewMediaFragment"
+    @Inject lateinit var providerFactory: ViewModelProviderFactory
+    @Inject lateinit var adapter:MediaPreviewAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -35,14 +36,13 @@ class PreviewMediaFragment : Fragment() {
         } catch (e: ClassCastException) {
             throw ClassCastException(context.toString() + "Activity have to implement interface IActivityView")
         }
+
+        (requireActivity().application as BaseApplication).appComponent.getPreviewComponent().create().inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val apiService = NasaApiClient.getClient()
-        previewMediaRepository = PreviewMediaRepository(apiService)
-        viewModel = getViewModel()
+        viewModel = ViewModelProviders.of(this, providerFactory).get(PreviewMediaViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -54,14 +54,17 @@ class PreviewMediaFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_media_preview, container, false)
 
-        val mediaPreviewRecyclerView =
-            view.findViewById<RecyclerView>(R.id.media_preview_recycler_view)
-        mediaPreviewRecyclerView.layoutManager = LinearLayoutManager(context)
+        val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
+        contentLayout.visibility = View.INVISIBLE
+
+        mediaPreviewRecyclerView = view.findViewById(R.id.media_preview_recycler_view)
+        initRecyclerView()
 
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
             if (it.mediaPreviewList.isNotEmpty()) {
-                val adapter = MediaPreviewAdapter(it,previewMediaRepository)
-                mediaPreviewRecyclerView.adapter = adapter
+                adapter.dataSource = it
+                (mediaPreviewRecyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(0,0)
+                contentLayout.visibility = View.VISIBLE
             } else {
                 activityContract?.showMsg("Nothing found")
             }
@@ -86,12 +89,12 @@ class PreviewMediaFragment : Fragment() {
         return view
     }
 
-    private fun getViewModel(): PreviewMediaViewModel {
-        return ViewModelProviders.of(this, object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return PreviewMediaViewModel(previewMediaRepository) as T
-            }
-        })[PreviewMediaViewModel::class.java]
+    fun initRecyclerView(){
+        mediaPreviewRecyclerView.layoutManager = LinearLayoutManager(context)
+        mediaPreviewRecyclerView.adapter = adapter
+    }
+
+    companion object {
+        const val TAG = "PreviewMediaFragment"
     }
 }

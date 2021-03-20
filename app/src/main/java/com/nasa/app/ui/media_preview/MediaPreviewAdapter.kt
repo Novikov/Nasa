@@ -17,20 +17,26 @@ import com.nasa.app.ui.POST_PER_PAGE
 import com.nasa.app.ui.SEARCH_PAGE
 import com.nasa.app.ui.SEARCH_REQUEST_QUERY
 import com.squareup.picasso.Picasso
+import javax.inject.Inject
 
 
-class MediaPreviewAdapter(
-    val dataSource: MediaPreviewResponse,
-    val mediaRepository: PreviewMediaRepository
-) :
+class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaRepository) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    @Inject lateinit var picasso:Picasso
     private val SEARCH_INFO_TEXTVIEW_VIEW = 0
     private val MEDIA_PREVIEW_VIEW = 1
     private val NEXT_BUTTON_VIEW = 2
     private val BACK_AND_NEXT_BUTTON_VIEW = 3
     private val BACK_BUTTON_VIEW = 4
+
     private val EMPTY_VIEW = 5
+
+     var dataSource: MediaPreviewResponse = MediaPreviewResponse(listOf(MediaPreview("","",ContentType.IMAGE,"","")),1,1,1)
+       set(value) {
+           field = value
+           notifyDataSetChanged()
+       }
 
     var navController: NavController? = null
 
@@ -221,8 +227,7 @@ class MediaPreviewAdapter(
             }
             when (mediaPreview.mediaType) {
                 ContentType.IMAGE -> {
-                    Picasso
-                        .get()
+                    picasso
                         .load(mediaPreview.previewUrl)
                         .fit()
                         .centerCrop()
@@ -231,8 +236,7 @@ class MediaPreviewAdapter(
                     playAudioImageView.visibility = View.GONE
                 }
                 ContentType.VIDEO -> {
-                    Picasso
-                        .get()
+                    picasso
                         .load(mediaPreview.previewUrl)
                         .fit()
                         .centerCrop()
@@ -242,6 +246,7 @@ class MediaPreviewAdapter(
 
                 }
                 ContentType.AUDIO -> {
+                    mediaPreviewImageView.setImageResource(android.R.color.black)
                     playVideoImageView.visibility = View.GONE
                     playAudioImageView.visibility = View.VISIBLE
                 }

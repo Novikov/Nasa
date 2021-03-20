@@ -15,36 +15,41 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.google.android.exoplayer2.ui.PlayerView
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.flexbox.FlexboxLayout
+import com.nasa.app.BaseApplication
 import com.nasa.app.R
-import com.nasa.app.data.api.NasaApiClient
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.repository.NetworkState
-import com.nasa.app.databinding.FragmentAudioDetailBinding
 import com.nasa.app.databinding.FragmentImageDetailBinding
+import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.Activity
 import com.nasa.app.ui.DownloadDialogFragment
-import com.nasa.app.ui.ExoMediaPlayer
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import javax.inject.Inject
 
-class ImageDetailFragment : DetailFragment() {
+class ImageDetailFragment : Fragment() {
     private lateinit var viewModel: DetailMediaViewModel
-    lateinit var detailMediaRepository: DetailMediaRepository
     lateinit var nasaId: String
     lateinit var contentType: ContentType
+    var activityContract: Activity? = null
 
-    val TAG = "AudioDetailFragment"
-    val PLAYER_TIME = "PlayerTime"
+    @Inject lateinit var detailMediaRepository: DetailMediaRepository
+    @Inject lateinit var providerFactory: ViewModelProviderFactory
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.i(TAG, "onCreate: ")
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        Log.i(Companion.TAG, "onAttach: ")
+        try {
+            activityContract = context as Activity
+        } catch (e: ClassCastException) {
+            throw ClassCastException(context.toString() + "Activity have to implement interface Activity")
+        }
 
         //getting fragment params
         if (arguments != null) {
-            val args = ImageDetailFragmentArgs.fromBundle(requireArguments())
+            val args = AudioDetailFragmentArgs.fromBundle(requireArguments())
             nasaId = args.nasaId
             contentType = args.contentType
 
@@ -52,9 +57,16 @@ class ImageDetailFragment : DetailFragment() {
             throw Exception("arguments can't be null")
         }
 
-        val apiService = NasaApiClient.getClient()
-        detailMediaRepository = DetailMediaRepository(apiService)
-        viewModel = getViewModel(nasaId,detailMediaRepository)
+        (requireActivity().application as BaseApplication).appComponent.getDetailComponent()
+            .create(nasaId).inject(this)
+    }
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.i(Companion.TAG, "onCreate: ")
+
+        viewModel = ViewModelProviders.of(this, providerFactory).get(DetailMediaViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -62,7 +74,7 @@ class ImageDetailFragment : DetailFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.i(TAG, "onCreateView: ")
+        Log.i(Companion.TAG, "onCreateView: ")
         val binding = DataBindingUtil.inflate<FragmentImageDetailBinding>(
             inflater,
             R.layout.fragment_image_detail,
@@ -77,7 +89,6 @@ class ImageDetailFragment : DetailFragment() {
 
         val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
         contentLayout.visibility = View.INVISIBLE
-        val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
         val button = view.findViewById<Button>(R.id.update_results_button)
         val imageView = view.findViewById<ImageView>(R.id.image_media_view)
 
@@ -178,5 +189,9 @@ class ImageDetailFragment : DetailFragment() {
         })
 
         return view
+    }
+
+    companion object {
+        const val TAG = "AudioDetailFragment"
     }
 }

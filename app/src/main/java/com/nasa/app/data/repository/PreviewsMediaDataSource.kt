@@ -9,11 +9,9 @@ import com.nasa.app.data.model.MediaPreview
 import com.nasa.app.ui.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class PreviewsMediaDataSource(
-    private val apiService: NasaApiService,
-    private val compositeDisposable: CompositeDisposable
-) {
+class PreviewsMediaDataSource @Inject constructor(private val apiService: NasaApiService, private val compositeDisposable: CompositeDisposable) {
     private val _networkState = MutableLiveData<NetworkState>()
     val networkState: LiveData<NetworkState>
         get() = _networkState
