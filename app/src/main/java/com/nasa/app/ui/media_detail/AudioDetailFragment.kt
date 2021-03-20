@@ -37,6 +37,7 @@ class AudioDetailFragment : Fragment() {
     lateinit var contentType: ContentType
     var time: Long? = null
     var activityContract: Activity? = null
+    var isExoPlayerPrepared = false
 
     @Inject lateinit var exoMediaPlayer: ExoMediaPlayer
     @Inject lateinit var detailMediaRepository: DetailMediaRepository
@@ -108,12 +109,15 @@ class AudioDetailFragment : Fragment() {
                 override fun onPlaybackStateChanged(state: Int) {
                     super.onPlaybackStateChanged(state)
                     if (state == Player.STATE_READY) {
+                        isExoPlayerPrepared = true
                         contentLayout.visibility = View.VISIBLE
                         activityContract?.hideProgressBar()
                     }
                     if (state == Player.STATE_BUFFERING) {
-                        contentLayout.visibility = View.INVISIBLE
-                        activityContract?.showProgressBar()
+                        if(!isExoPlayerPrepared) {
+                            contentLayout.visibility = View.INVISIBLE
+                            activityContract?.showProgressBar()
+                        }
                     }
                 }
 
