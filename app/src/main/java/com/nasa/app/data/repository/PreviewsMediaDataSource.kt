@@ -5,13 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.api.json.MediaPreviewResponse
-import com.nasa.app.data.model.MediaPreview
 import com.nasa.app.ui.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class PreviewsMediaDataSource @Inject constructor(private val apiService: NasaApiService, private val compositeDisposable: CompositeDisposable) {
+    @Inject lateinit var searchParams: SearchParams
+
     private val _networkState = MutableLiveData<NetworkState>()
     val networkState: LiveData<NetworkState>
         get() = _networkState
@@ -26,11 +27,11 @@ class PreviewsMediaDataSource @Inject constructor(private val apiService: NasaAp
         try {
             compositeDisposable.add(
                 apiService.mediaPreview(
-                    SEARCH_REQUEST_QUERY,
-                    getSearchMediaTypes(),
-                    SEARCH_YEAR_START,
-                    SEARCH_YEAR_END,
-                    SEARCH_PAGE
+                    searchParams.searchRequestQuery,
+                    searchParams.getSearchMediaTypes(),
+                    searchParams.startSearchYear,
+                    searchParams.endSearchYear,
+                    searchParams.searchPage
                 )
                     .observeOn(Schedulers.io())
                     .subscribeOn(Schedulers.io())
