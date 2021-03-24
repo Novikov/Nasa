@@ -13,9 +13,9 @@ import com.nasa.app.R
 import com.nasa.app.data.api.json.MediaPreviewResponse
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.MediaPreview
-import com.nasa.app.ui.POST_PER_PAGE
 import com.nasa.app.ui.SEARCH_PAGE
 import com.nasa.app.ui.SEARCH_REQUEST_QUERY
+import com.nasa.app.utils.POST_PER_PAGE
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
 

@@ -1,12 +1,12 @@
 package com.nasa.app.ui
 
 import com.nasa.app.data.model.ContentType
+import com.nasa.app.utils.FIRST_PAGE
 
-const val EMPTY_SEARCH = "\"\""
-const val BEGIN_DATE = "1920"
-const val END_DATE = "2021"
-const val FIRST_PAGE = 1
-const val POST_PER_PAGE = 100
+val EMPTY_SEARCH = "\"\""
+val BEGIN_DATE = "1920"
+val END_DATE = "2021"
+
 
 //search params
 var SEARCH_REQUEST_QUERY = EMPTY_SEARCH
