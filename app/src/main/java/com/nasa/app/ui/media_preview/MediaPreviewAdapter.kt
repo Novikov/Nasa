@@ -105,7 +105,7 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
             1 -> {
                 val viewHolder = holder as MediaPreviewViewHolder
                 val mediaPreview = dataSource.mediaPreviewList[position]
-                var hideDivider = position == dataSource.mediaPreviewList.size - 1
+                val hideDivider = position == dataSource.mediaPreviewList.lastIndex
                 viewHolder.bind(mediaPreview, hideDivider)
                 viewHolder.itemView.setOnClickListener {
                     when(mediaPreview.mediaType){
@@ -221,10 +221,11 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
         val divider: View = view.findViewById(R.id.divider)
 
         fun bind(mediaPreview: MediaPreview, hideDivider: Boolean) {
-            descriptionTextView.setText(mediaPreview.description)
-            dateCreatedTextView.setText(mediaPreview.dateCreated)
+            descriptionTextView.text = mediaPreview.description
+            dateCreatedTextView.text = mediaPreview.dateCreated
+            divider.visibility = View.VISIBLE
             if (hideDivider) {
-                divider.visibility = View.GONE
+                divider.visibility = View.INVISIBLE
             }
             when (mediaPreview.mediaType) {
                 ContentType.IMAGE -> {
