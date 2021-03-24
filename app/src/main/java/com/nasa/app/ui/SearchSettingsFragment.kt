@@ -39,11 +39,11 @@ class SearchSettingsFragment @Inject constructor() : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        tmpIsCheckedImageCheckBox = searchParams.SEARCH_IMAGE
-        tmpIsCheckedVideoCheckBox = searchParams.SEARCH_VIDEO
-        tmpIsCheckedAudioCheckBox = searchParams.SEARCH_AUDIO
-        tmpBeginSearchDateValue = searchParams.SEARCH_YEAR_START
-        tmpEndSearchDateValue = searchParams.SEARCH_YEAR_END
+        tmpIsCheckedImageCheckBox = searchParams.searchImage
+        tmpIsCheckedVideoCheckBox = searchParams.searchVideo
+        tmpIsCheckedAudioCheckBox = searchParams.searchAudio
+        tmpBeginSearchDateValue = searchParams.startSearchYear
+        tmpEndSearchDateValue = searchParams.endSearchYear
     }
 
     override fun onCreateView(
@@ -103,23 +103,23 @@ class SearchSettingsFragment @Inject constructor() : DialogFragment() {
         val updateResultsButton = view.findViewById<Button>(R.id.update_results_button)
         updateResultsButton.setOnClickListener {
             this.dismiss()
-            activityContract?.searchRequest(searchParams.SEARCH_REQUEST_QUERY)
-            searchParams.SEARCH_YEAR_START = tmpBeginSearchDateValue
-            searchParams.SEARCH_YEAR_END = tmpEndSearchDateValue
-            searchParams.SEARCH_IMAGE = tmpIsCheckedImageCheckBox
-            searchParams.SEARCH_VIDEO = tmpIsCheckedVideoCheckBox
-            searchParams.SEARCH_AUDIO = tmpIsCheckedAudioCheckBox
+            activityContract?.searchRequest(searchParams.searchRequestQuery)
+            searchParams.startSearchYear = tmpBeginSearchDateValue
+            searchParams.endSearchYear = tmpEndSearchDateValue
+            searchParams.searchImage = tmpIsCheckedImageCheckBox
+            searchParams.searchVideo = tmpIsCheckedVideoCheckBox
+            searchParams.searchAudio = tmpIsCheckedAudioCheckBox
         }
 
         //date text views
         val beginDateTextView = view.findViewById<TextView>(R.id.begin_date_text_view)
-        beginDateTextView.text = searchParams.SEARCH_YEAR_START
+        beginDateTextView.text = searchParams.startSearchYear
         val endDateTextView = view.findViewById<TextView>(R.id.end_date_text_view)
-        endDateTextView.text = searchParams.SEARCH_YEAR_END
+        endDateTextView.text = searchParams.endSearchYear
 
         //range slider
         val rangeSlider = view.findViewById<RangeSlider>(R.id.rangeSlider)
-        rangeSlider.values = listOf(searchParams.SEARCH_YEAR_START.toFloat(), searchParams.SEARCH_YEAR_END.toFloat())
+        rangeSlider.values = listOf(searchParams.startSearchYear.toFloat(), searchParams.endSearchYear.toFloat())
 
         rangeSlider.addOnChangeListener { slider, value, fromUser ->
             beginDateTextView.text = slider.values[0].toInt().toString()

@@ -79,8 +79,8 @@ class MainActivity : AppCompatActivity(), Activity {
 
     override fun searchRequest(query: String) {
         clearMsg()
-        searchParams.SEARCH_REQUEST_QUERY = query
-        searchParams.SEARCH_PAGE = 1
+        searchParams.searchRequestQuery = query
+        searchParams.searchPage = 1
         val navController = findNavController(R.id.nav_host_fragment)
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
