@@ -11,17 +11,20 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.slider.RangeSlider
+import com.nasa.app.BaseApplication
 import com.nasa.app.R
+import javax.inject.Inject
 
-class SearchSettingsFragment : DialogFragment() {
+class SearchSettingsFragment @Inject constructor() : DialogFragment() {
     private val TAG = "SearchSettingsFragment"
     private var activityContract: Activity? = null
-    private var sMsg: String? = null
+    @Inject lateinit var searchParams: SearchParams
     lateinit var tmpBeginSearchDateValue: String
     lateinit var tmpEndSearchDateValue: String
-    var tmpIsCheckedImageCheckBox: Boolean = SEARCH_IMAGE
-    var tmpIsCheckedVideoCheckBox: Boolean = SEARCH_VIDEO
-    var tmpIsCheckedAudioCheckBox: Boolean = SEARCH_AUDIO
+
+    var tmpIsCheckedImageCheckBox: Boolean = true
+    var tmpIsCheckedVideoCheckBox: Boolean = true
+    var tmpIsCheckedAudioCheckBox: Boolean = true
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -31,12 +34,16 @@ class SearchSettingsFragment : DialogFragment() {
         } catch (e: ClassCastException) {
             throw ClassCastException(context.toString() + "Activity have to implement interface IActivityView")
         }
+        (requireActivity().application as BaseApplication).appComponent.inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        tmpBeginSearchDateValue = SEARCH_YEAR_START
-        tmpEndSearchDateValue = SEARCH_YEAR_END
+        tmpIsCheckedImageCheckBox = searchParams.SEARCH_IMAGE
+        tmpIsCheckedVideoCheckBox = searchParams.SEARCH_VIDEO
+        tmpIsCheckedAudioCheckBox = searchParams.SEARCH_AUDIO
+        tmpBeginSearchDateValue = searchParams.SEARCH_YEAR_START
+        tmpEndSearchDateValue = searchParams.SEARCH_YEAR_END
     }
 
     override fun onCreateView(
@@ -96,23 +103,23 @@ class SearchSettingsFragment : DialogFragment() {
         val updateResultsButton = view.findViewById<Button>(R.id.update_results_button)
         updateResultsButton.setOnClickListener {
             this.dismiss()
-            activityContract?.searchRequest(SEARCH_REQUEST_QUERY)
-            SEARCH_YEAR_START = tmpBeginSearchDateValue
-            SEARCH_YEAR_END = tmpEndSearchDateValue
-            SEARCH_IMAGE = tmpIsCheckedImageCheckBox
-            SEARCH_VIDEO = tmpIsCheckedVideoCheckBox
-            SEARCH_AUDIO = tmpIsCheckedAudioCheckBox
+            activityContract?.searchRequest(searchParams.SEARCH_REQUEST_QUERY)
+            searchParams.SEARCH_YEAR_START = tmpBeginSearchDateValue
+            searchParams.SEARCH_YEAR_END = tmpEndSearchDateValue
+            searchParams.SEARCH_IMAGE = tmpIsCheckedImageCheckBox
+            searchParams.SEARCH_VIDEO = tmpIsCheckedVideoCheckBox
+            searchParams.SEARCH_AUDIO = tmpIsCheckedAudioCheckBox
         }
 
         //date text views
         val beginDateTextView = view.findViewById<TextView>(R.id.begin_date_text_view)
-        beginDateTextView.text = SEARCH_YEAR_START
+        beginDateTextView.text = searchParams.SEARCH_YEAR_START
         val endDateTextView = view.findViewById<TextView>(R.id.end_date_text_view)
-        endDateTextView.text = SEARCH_YEAR_END
+        endDateTextView.text = searchParams.SEARCH_YEAR_END
 
         //range slider
         val rangeSlider = view.findViewById<RangeSlider>(R.id.rangeSlider)
-        rangeSlider.values = listOf(SEARCH_YEAR_START.toFloat(), SEARCH_YEAR_END.toFloat())
+        rangeSlider.values = listOf(searchParams.SEARCH_YEAR_START.toFloat(), searchParams.SEARCH_YEAR_END.toFloat())
 
         rangeSlider.addOnChangeListener { slider, value, fromUser ->
             beginDateTextView.text = slider.values[0].toInt().toString()

@@ -12,6 +12,8 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class PreviewsMediaDataSource @Inject constructor(private val apiService: NasaApiService, private val compositeDisposable: CompositeDisposable) {
+    @Inject lateinit var searchParams: SearchParams
+
     private val _networkState = MutableLiveData<NetworkState>()
     val networkState: LiveData<NetworkState>
         get() = _networkState
@@ -26,11 +28,11 @@ class PreviewsMediaDataSource @Inject constructor(private val apiService: NasaAp
         try {
             compositeDisposable.add(
                 apiService.mediaPreview(
-                    SEARCH_REQUEST_QUERY,
-                    getSearchMediaTypes(),
-                    SEARCH_YEAR_START,
-                    SEARCH_YEAR_END,
-                    SEARCH_PAGE
+                    searchParams.SEARCH_REQUEST_QUERY,
+                    searchParams.getSearchMediaTypes(),
+                    searchParams.SEARCH_YEAR_START,
+                    searchParams.SEARCH_YEAR_END,
+                    searchParams.SEARCH_PAGE
                 )
                     .observeOn(Schedulers.io())
                     .subscribeOn(Schedulers.io())

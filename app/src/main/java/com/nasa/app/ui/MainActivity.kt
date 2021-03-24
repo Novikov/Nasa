@@ -11,15 +11,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import com.nasa.app.BaseApplication
 import com.nasa.app.R
+import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity(), Activity {
     lateinit var mProgress: ProgressBar
     lateinit var msgTextView: TextView
     var menuItem: MenuItem? = null
+    @Inject lateinit var searchParams: SearchParams
+//    @Inject lateinit var searchSettingsFragment: SearchSettingsFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as BaseApplication).appComponent.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mProgress = findViewById(R.id.progressBar)
@@ -74,8 +79,8 @@ class MainActivity : AppCompatActivity(), Activity {
 
     override fun searchRequest(query: String) {
         clearMsg()
-        SEARCH_REQUEST_QUERY = query
-        SEARCH_PAGE = 1
+        searchParams.SEARCH_REQUEST_QUERY = query
+        searchParams.SEARCH_PAGE = 1
         val navController = findNavController(R.id.nav_host_fragment)
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment

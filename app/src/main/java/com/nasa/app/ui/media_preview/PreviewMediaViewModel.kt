@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import com.nasa.app.data.api.json.MediaPreviewResponse
 import com.nasa.app.data.model.MediaPreview
 import com.nasa.app.data.repository.NetworkState
-import com.nasa.app.ui.SEARCH_REQUEST_QUERY
 import com.nasa.app.ui.media_detail.DetailMediaRepository
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject

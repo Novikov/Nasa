@@ -13,8 +13,7 @@ import com.nasa.app.R
 import com.nasa.app.data.api.json.MediaPreviewResponse
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.MediaPreview
-import com.nasa.app.ui.SEARCH_PAGE
-import com.nasa.app.ui.SEARCH_REQUEST_QUERY
+import com.nasa.app.ui.SearchParams
 import com.nasa.app.utils.POST_PER_PAGE
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
@@ -24,6 +23,8 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     @Inject lateinit var picasso:Picasso
+    @Inject lateinit var searchParams: SearchParams
+
     private val SEARCH_INFO_TEXTVIEW_VIEW = 0
     private val MEDIA_PREVIEW_VIEW = 1
     private val NEXT_BUTTON_VIEW = 2
@@ -81,10 +82,10 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
 
         when (holder.itemViewType) {
             0 -> {
-                val result = SEARCH_REQUEST_QUERY.substring(0, 1)
-                    .toUpperCase() + SEARCH_REQUEST_QUERY.substring(1).toLowerCase()
+                val result = searchParams.SEARCH_REQUEST_QUERY.substring(0, 1)
+                    .toUpperCase() + searchParams.SEARCH_REQUEST_QUERY.substring(1).toLowerCase()
                 val viewHolder = holder as SearchInfoViewHolder
-                if (SEARCH_REQUEST_QUERY == "\"\"") {
+                if (searchParams.SEARCH_REQUEST_QUERY == "\"\"") {
                     viewHolder.searchInfoTextView.text = "Random uploads"
                 } else if (dataSource.totalResults < 100) {
                     viewHolder.searchInfoTextView.text =
@@ -133,7 +134,7 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
             2 -> {
                 //next button
                 val viewHolder = holder as NextButtonNavigationViewHolder
-                SEARCH_PAGE = dataSource.page + 1
+                searchParams.SEARCH_PAGE = dataSource.page + 1
                 viewHolder.nextButton.setOnClickListener {
                     mediaRepository.updateMediaPreviews()
                 }
@@ -142,19 +143,19 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
                 //back and next buttons
                 val viewHolder = holder as TwoButtonNavigationViewHolder
                 viewHolder.nextButton.setOnClickListener {
-                    SEARCH_PAGE = dataSource.page + 1
+                    searchParams.SEARCH_PAGE = dataSource.page + 1
                     mediaRepository.updateMediaPreviews()
                 }
 
                 viewHolder.previousButton.setOnClickListener {
-                    SEARCH_PAGE = dataSource.page - 1
+                    searchParams.SEARCH_PAGE = dataSource.page - 1
                     mediaRepository.updateMediaPreviews()
                 }
             }
             4 -> {
                 val viewHolder = holder as BackButtonNavigationViewHolder
                 viewHolder.backButton.setOnClickListener {
-                    SEARCH_PAGE = dataSource.page - 1
+                    searchParams.SEARCH_PAGE = dataSource.page - 1
                     mediaRepository.updateMediaPreviews()
                 }
             }
