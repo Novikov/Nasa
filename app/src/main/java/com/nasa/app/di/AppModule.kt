@@ -37,10 +37,6 @@ class AppModule {
                 MediaDetailAssetResponse::class.java,
                 MediaAssetDeserializer()
             )
-            .registerTypeAdapter(
-                MediaPreviewResponse::class.java,
-                MediaPreviewDeserializer()
-            )
             .create()
 
         val retrofit = Retrofit.Builder()
