@@ -12,18 +12,8 @@ import retrofit2.http.Query
 import retrofit2.http.Url
 
 interface NasaApiService {
-    //MediaPreview
     @GET("search")
     fun mediaPreview(
-        @Query("q") q: String,
-        @Query("media_type") mediaType: String,
-        @Query("year_start") year_start: String,
-        @Query("year_end") year_end: String,
-        @Query("page")page:Int
-    ): Single<MediaPreviewResponse>
-
-    @GET("search")
-    fun mediaPreview2(
         @Query("q") q: String,
         @Query("media_type") mediaType: String,
         @Query("year_start") year_start: String,

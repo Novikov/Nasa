@@ -149,6 +149,7 @@ class MediaPreviewDeserializer : JsonDeserializer<MediaPreviewResponse> {
                     }
 
                     if (it.key.equals("href")){
+                        Log.i("DeserializationResult", it.value.asString)
                         page = it.value.asString.substringAfter("page=").toInt()
                         Log.i(TAG, "current page: $page")
                     }
@@ -156,7 +157,7 @@ class MediaPreviewDeserializer : JsonDeserializer<MediaPreviewResponse> {
             }
         }
 
-        Log.i("DeserializationResult", previewsList.toString())
+        Log.i("DeserializationResult", page.toString())
 
         totalPages = if ((totalResults % POST_PER_PAGE)!=0){
             (totalResults/ POST_PER_PAGE) + 1

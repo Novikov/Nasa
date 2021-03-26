@@ -14,7 +14,6 @@ class PreviewMediaRepository @Inject constructor(private val apiService: NasaApi
 
     fun fetchMultipleMediaPreview(): LiveData<MediaPreviewResponse> {
         previewMediaDataSource.fetchMediaPreviews()
-        previewMediaDataSource.fetchMediaPreviews2()
         return previewMediaDataSource.downloadedMediaPreviewsResponse
     }
 

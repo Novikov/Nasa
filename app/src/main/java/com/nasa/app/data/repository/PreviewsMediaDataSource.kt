@@ -5,12 +5,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.model.media_preview.MediaPreviewResponse
-import com.nasa.app.ui.*
+import com.nasa.app.data.model.media_preview.RawMediaPreviewResponseConverter
+import com.nasa.app.ui.SearchParams
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.io.FileOutputStream
 import javax.inject.Inject
 
-class PreviewsMediaDataSource @Inject constructor(private val apiService: NasaApiService, private val compositeDisposable: CompositeDisposable) {
+class PreviewsMediaDataSource @Inject constructor(
+    private val apiService: NasaApiService,
+    private val compositeDisposable: CompositeDisposable
+) {
     @Inject lateinit var searchParams: SearchParams
 
     private val _networkState = MutableLiveData<NetworkState>()
@@ -36,8 +41,8 @@ class PreviewsMediaDataSource @Inject constructor(private val apiService: NasaAp
                     .observeOn(Schedulers.io())
                     .subscribeOn(Schedulers.io())
                     .subscribe({
-                        Log.i("MediaPreviewsDataSource", it.mediaPreviewList.size.toString())
-                        _downloadedMediaPreviewsResponse.postValue(it)
+                        val mediaPreviewResponse = RawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
+                        _downloadedMediaPreviewsResponse.postValue(mediaPreviewResponse)
                         _networkState.postValue(NetworkState.LOADED)
                     }, {
                         if (it.message?.contains("Unable to resolve host")!!) {
@@ -49,37 +54,6 @@ class PreviewsMediaDataSource @Inject constructor(private val apiService: NasaAp
             )
         } catch (e: Exception) {
             Log.e("MediaPreviewsDataSource", e.message.toString())
-        }
-    }
-
-    fun fetchMediaPreviews2() {
-//        _networkState.postValue(NetworkState.LOADING)
-
-        try {
-            compositeDisposable.add(
-                apiService.mediaPreview2(
-                    searchParams.searchRequestQuery,
-                    searchParams.getSearchMediaTypes(),
-                    searchParams.startSearchYear,
-                    searchParams.endSearchYear,
-                    searchParams.searchPage
-                )
-                    .observeOn(Schedulers.io())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe({
-                        Log.i("XXX", it.toString())
-//                        _downloadedMediaPreviewsResponse.postValue(it)
-//                        _networkState.postValue(NetworkState.LOADED)
-                    }, {
-                        if (it.message?.contains("Unable to resolve host")!!) {
-//                            _networkState.postValue(NetworkState.NO_INTERNET)
-                        } else {
-//                            _networkState.postValue(NetworkState.ERROR)
-                        }
-                    })
-            )
-        } catch (e: Exception) {
-            Log.e("XXX", e.message.toString())
         }
     }
 }
