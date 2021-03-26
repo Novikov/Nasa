@@ -2,7 +2,7 @@ package com.nasa.app.ui.media_preview
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.nasa.app.data.api.json.MediaPreviewResponse
+import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.data.repository.NetworkState
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-package com.nasa.app.data.api.json
+package com.nasa.app.data.model.media_preview
 
 import com.nasa.app.data.model.media_preview.MediaPreview
 

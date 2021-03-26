@@ -2,11 +2,10 @@ package com.nasa.app.ui.media_preview
 
 import androidx.lifecycle.LiveData
 import com.nasa.app.data.api.NasaApiService
-import com.nasa.app.data.api.json.MediaPreviewResponse
+import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.data.repository.PreviewsMediaDataSource
 import com.nasa.app.ui.media_preview.di.PreviewScope
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 @PreviewScope
@@ -15,6 +14,7 @@ class PreviewMediaRepository @Inject constructor(private val apiService: NasaApi
 
     fun fetchMultipleMediaPreview(): LiveData<MediaPreviewResponse> {
         previewMediaDataSource.fetchMediaPreviews()
+        previewMediaDataSource.fetchMediaPreviews2()
         return previewMediaDataSource.downloadedMediaPreviewsResponse
     }
 

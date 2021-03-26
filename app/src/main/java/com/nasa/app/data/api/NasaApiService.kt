@@ -3,7 +3,8 @@ package com.nasa.app.data.api
 import com.nasa.app.data.api.json.MediaDetailAssetResponse
 import com.nasa.app.data.api.json.MediaDetailMetadataResponse
 import com.nasa.app.data.api.json.MediaDetailResponse
-import com.nasa.app.data.api.json.MediaPreviewResponse
+import com.nasa.app.data.model.media_preview.MediaPreviewResponse
+import com.nasa.app.data.model.media_preview.RawMediaPreviewResponse
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -20,6 +21,15 @@ interface NasaApiService {
         @Query("year_end") year_end: String,
         @Query("page")page:Int
     ): Single<MediaPreviewResponse>
+
+    @GET("search")
+    fun mediaPreview2(
+        @Query("q") q: String,
+        @Query("media_type") mediaType: String,
+        @Query("year_start") year_start: String,
+        @Query("year_end") year_end: String,
+        @Query("page")page:Int
+    ): Single<RawMediaPreviewResponse>
 
 
     //MediaDetail

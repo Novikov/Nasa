@@ -1,7 +1,7 @@
 package com.nasa.app.data.model.media_preview
 
-data class Link(
+data class PageLink(
     val href: String,
-    val rel: String,
-    val render: String
+    val prompt: String,
+    val rel: String
 )
