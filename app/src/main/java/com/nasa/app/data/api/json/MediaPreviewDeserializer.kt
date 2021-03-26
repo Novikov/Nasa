@@ -5,7 +5,7 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.nasa.app.data.model.ContentType
-import com.nasa.app.data.model.MediaPreview
+import com.nasa.app.data.model.media_preview.MediaPreview
 import com.nasa.app.utils.POST_PER_PAGE
 import java.lang.reflect.Type
 import java.text.SimpleDateFormat
