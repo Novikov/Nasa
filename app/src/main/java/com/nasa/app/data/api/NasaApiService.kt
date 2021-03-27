@@ -3,6 +3,7 @@ package com.nasa.app.data.api
 import com.nasa.app.data.model.media_detail.MediaDetailAssetResponse
 import com.nasa.app.data.model.media_detail.MediaDetailMetadataResponse
 import com.nasa.app.data.model.media_detail.MediaDetailResponse
+import com.nasa.app.data.model.media_detail.raw_media_asset.RawMediaDetailAssetResponse
 import com.nasa.app.data.model.media_detail.raw_media_detail.RawMediaDetailResponse
 import com.nasa.app.data.model.media_preview.raw_data.RawMediaPreviewResponse
 import io.reactivex.Single
@@ -24,12 +25,16 @@ interface NasaApiService {
 
     //MediaDetail
     @GET("search")
-    fun mediaInfo(@Query("nasa_id") nasa_id: String): Single<MediaDetailResponse>@GET("search")
+    fun mediaInfo(@Query("nasa_id") nasa_id: String): Single<MediaDetailResponse>
 
+    @GET("search")
     fun mediaInfo2(@Query("nasa_id") nasa_id: String): Single<RawMediaDetailResponse>
 
     @GET("asset/{nasa_id}")
     fun mediaAsset(@Path("nasa_id") nasa_id: String): Single<MediaDetailAssetResponse>
+
+    @GET("asset/{nasa_id}")
+    fun mediaAsset2(@Path("nasa_id") nasa_id: String): Single<RawMediaDetailAssetResponse>
 
     @GET
     fun mediaMetadata(@Url url: String): Single<MediaDetailMetadataResponse>
