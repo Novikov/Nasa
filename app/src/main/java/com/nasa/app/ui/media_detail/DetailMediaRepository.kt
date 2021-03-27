@@ -1,7 +1,6 @@
 package com.nasa.app.ui.media_detail
 
 import androidx.lifecycle.LiveData
-import com.nasa.app.data.model.media_detail.MediaDetail
 import com.nasa.app.data.model.media_detail.MediaDetailResponse
 import com.nasa.app.data.repository.DetailMediaDataSource
 import com.nasa.app.data.repository.NetworkState
@@ -12,9 +11,9 @@ import javax.inject.Inject
 class DetailMediaRepository @Inject constructor() {
    @Inject lateinit var detailMediaDataSource: DetailMediaDataSource
 
-    fun fetchSingleMediaDetail(
+    fun getMediaDetail(
     ): LiveData<MediaDetailResponse> {
-        detailMediaDataSource.fetchMediaDetails()
+        detailMediaDataSource.getMediaDetail()
         return detailMediaDataSource.downloadedMediaResponse
     }
 

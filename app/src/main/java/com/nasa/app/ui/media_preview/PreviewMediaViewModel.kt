@@ -10,7 +10,7 @@ import javax.inject.Inject
 class PreviewMediaViewModel @Inject constructor(private val mediaRepository: PreviewMediaRepository, private val compositeDisposable: CompositeDisposable) : ViewModel() {
 
     val mediaPreviews: LiveData<MediaPreviewResponse> by lazy {
-        mediaRepository.fetchMultipleMediaPreview()
+        mediaRepository.getMediaPreviews()
     }
 
     val networkState: LiveData<NetworkState> by lazy {

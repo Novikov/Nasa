@@ -13,7 +13,7 @@ import retrofit2.http.Url
 interface NasaApiService {
 
     @GET("search")
-    fun mediaPreview(
+    fun getMediaPreviews(
         @Query("q") q: String,
         @Query("media_type") mediaType: String,
         @Query("year_start") year_start: String,
@@ -23,13 +23,13 @@ interface NasaApiService {
 
     //MediaDetail
     @GET("search")
-    fun mediaInfo(@Query("nasa_id") nasa_id: String): Single<RawMediaDetailResponse>
+    fun getMediaDetailInfo(@Query("nasa_id") nasa_id: String): Single<RawMediaDetailResponse>
 
     @GET("asset/{nasa_id}")
-    fun mediaAsset(@Path("nasa_id") nasa_id: String): Single<RawMediaDetailAssetResponse>
+    fun getMediaDetailAsset(@Path("nasa_id") nasa_id: String): Single<RawMediaDetailAssetResponse>
 
     @GET
-    fun mediaMetadata(@Url url: String): Single<MediaDetailMetadataResponse>
+    fun getMediaMetadata(@Url url: String): Single<MediaDetailMetadataResponse>
 
 
 }

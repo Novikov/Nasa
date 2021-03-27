@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nasa.app.data.api.NasaApiService
-import com.nasa.app.data.model.media_detail.MediaDetail
 import com.nasa.app.data.model.media_detail.MediaDetailResponse
 import com.nasa.app.data.model.media_detail.raw_media_asset.RawMediaAssetsConverter
 import com.nasa.app.data.model.media_detail.raw_media_detail.RawMediaDetailResponseConverter
@@ -30,19 +29,19 @@ class DetailMediaDataSource @Inject constructor(
     @Inject lateinit var rawMediaDetailConverter: RawMediaDetailResponseConverter
     @Inject lateinit var rawMediaAssetConverter: RawMediaAssetsConverter
 
-    fun fetchMediaDetails() {
+    fun getMediaDetail() {
         _networkState.postValue(NetworkState.LOADING)
 
         try {
             compositeDisposable.add(
-                apiService.mediaInfo(nasaId)
+                apiService.getMediaDetailInfo(nasaId)
                     .observeOn(Schedulers.io())
                     .subscribeOn(Schedulers.io())
                     .flatMap {
                         val rawMediaDetailResponse =
                             rawMediaDetailConverter.getMediaDetailResponseWithInfoData(it)
                         Log.i("MediaDetailsDataSource", rawMediaDetailResponse.item.toString())
-                        apiService.mediaAsset(rawMediaDetailResponse.item.nasaId)
+                        apiService.getMediaDetailAsset(rawMediaDetailResponse.item.nasaId)
                             .observeOn(Schedulers.io())
                             .subscribeOn(Schedulers.io())
                             .map {
@@ -54,7 +53,7 @@ class DetailMediaDataSource @Inject constructor(
                     }
                     .flatMap { rawMediaDetailResponse ->
                         Log.i("MediaDetailsDataSource", rawMediaDetailResponse.toString())
-                        apiService.mediaMetadata(rawMediaDetailResponse.metadataUrl!!)
+                        apiService.getMediaMetadata(rawMediaDetailResponse.metadataUrl!!)
                             .observeOn(Schedulers.io())
                             .subscribeOn(Schedulers.io())
                             .map {

@@ -26,12 +26,12 @@ class PreviewsMediaDataSource @Inject constructor(
     val downloadedMediaPreviewsResponse: LiveData<MediaPreviewResponse>
         get() = _downloadedMediaPreviewsResponse
 
-    fun fetchMediaPreviews() {
+    fun getMediaPreviews() {
         _networkState.postValue(NetworkState.LOADING)
 
         try {
             compositeDisposable.add(
-                apiService.mediaPreview(
+                apiService.getMediaPreviews(
                     searchParams.searchRequestQuery,
                     searchParams.getSearchMediaTypes(),
                     searchParams.startSearchYear,
