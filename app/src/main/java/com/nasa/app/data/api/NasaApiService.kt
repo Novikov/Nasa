@@ -1,8 +1,9 @@
 package com.nasa.app.data.api
 
-import com.nasa.app.data.api.json.MediaDetailAssetResponse
-import com.nasa.app.data.api.json.MediaDetailMetadataResponse
-import com.nasa.app.data.api.json.MediaDetailResponse
+import com.nasa.app.data.model.media_detail.MediaDetailAssetResponse
+import com.nasa.app.data.model.media_detail.MediaDetailMetadataResponse
+import com.nasa.app.data.model.media_detail.MediaDetailResponse
+import com.nasa.app.data.model.media_detail.raw_media_detail.RawMediaDetailResponse
 import com.nasa.app.data.model.media_preview.raw_data.RawMediaPreviewResponse
 import io.reactivex.Single
 import retrofit2.http.GET
@@ -23,11 +24,15 @@ interface NasaApiService {
 
     //MediaDetail
     @GET("search")
-    fun mediaInfo(@Query("nasa_id") nasa_id: String): Single<MediaDetailResponse>
+    fun mediaInfo(@Query("nasa_id") nasa_id: String): Single<MediaDetailResponse>@GET("search")
+
+    fun mediaInfo2(@Query("nasa_id") nasa_id: String): Single<RawMediaDetailResponse>
 
     @GET("asset/{nasa_id}")
     fun mediaAsset(@Path("nasa_id") nasa_id: String): Single<MediaDetailAssetResponse>
 
     @GET
     fun mediaMetadata(@Url url: String): Single<MediaDetailMetadataResponse>
+
+
 }

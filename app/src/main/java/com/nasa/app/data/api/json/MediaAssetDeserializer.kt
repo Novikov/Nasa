@@ -6,6 +6,7 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.nasa.app.data.model.ContentType
+import com.nasa.app.data.model.media_detail.MediaDetailAssetResponse
 import java.lang.reflect.Type
 
 class MediaAssetDeserializer : JsonDeserializer<MediaDetailAssetResponse> {

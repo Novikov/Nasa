@@ -5,6 +5,7 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.nasa.app.data.model.media_detail.MediaDetail
+import com.nasa.app.data.model.media_detail.MediaDetailResponse
 import java.lang.reflect.Type
 import java.text.SimpleDateFormat
 import java.util.*
@@ -21,7 +22,6 @@ class MediaDetailDeserializer : JsonDeserializer<MediaDetailResponse> {
         var dateCreated = ""
         var nasaId = ""
         var previewUrl = ""
-        var mediaType = ""
         var center = ""
         var title = ""
         var description = ""
@@ -95,11 +95,6 @@ class MediaDetailDeserializer : JsonDeserializer<MediaDetailResponse> {
                                         }
                                     }
 
-                                    if (it.key == "media_type") {
-                                        Log.i(TAG, "media_type exists")
-                                        mediaType = it.value.asString
-                                    }
-
                                     if (it.key == "center") {
                                         Log.i(TAG, "center exists")
                                         center = it.value.asString
@@ -132,11 +127,9 @@ class MediaDetailDeserializer : JsonDeserializer<MediaDetailResponse> {
             nasaId,
             previewUrl,
             keywordList,
-            mediaType,
             center,
             title,
             description,
-            location,
             null,
             null,
             null,

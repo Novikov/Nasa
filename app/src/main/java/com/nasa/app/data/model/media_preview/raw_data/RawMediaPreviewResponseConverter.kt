@@ -50,7 +50,7 @@ class RawMediaPreviewResponseConverter @Inject constructor(){
             }
 
             val tmpDateCreated = item.data.first().date_created
-            dateCreated = dateConverter(tmpDateCreated)
+            dateCreated = convertDate(tmpDateCreated)
 
             description = if (item.data.first().description!=null){
                 val tmpDescription = item.data.first().description
@@ -71,7 +71,7 @@ class RawMediaPreviewResponseConverter @Inject constructor(){
         return mediaPreviewResponse
     }
 
-    private fun dateConverter(dateStr: String): String {
+    private fun convertDate(dateStr: String): String {
                 val parsedDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
                 val parsedDate: Date = parsedDateFormat.parse(dateStr)
 

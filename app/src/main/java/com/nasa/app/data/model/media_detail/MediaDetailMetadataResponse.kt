@@ -1,4 +1,4 @@
-package com.nasa.app.data.api.json
+package com.nasa.app.data.model.media_detail
 
 import com.google.gson.annotations.SerializedName
 

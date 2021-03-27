@@ -1,4 +1,4 @@
-package com.nasa.app.data.model.media_detail.raw_media_info
+package com.nasa.app.data.model.media_detail.raw_media_detail
 
 data class AssetLink(
     val href: String,
