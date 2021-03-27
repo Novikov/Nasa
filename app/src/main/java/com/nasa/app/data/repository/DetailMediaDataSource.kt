@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.model.media_detail.MediaDetail
+import com.nasa.app.data.model.media_detail.MediaDetailResponse
 import com.nasa.app.data.model.media_detail.raw_media_asset.RawMediaAssetsConverter
 import com.nasa.app.data.model.media_detail.raw_media_detail.RawMediaDetailResponseConverter
 import io.reactivex.disposables.CompositeDisposable
@@ -22,8 +23,8 @@ class DetailMediaDataSource @Inject constructor(
     val networkState: LiveData<NetworkState>
         get() = _networkState
 
-    private val _downloadedMediaDetailsResponse = MutableLiveData<MediaDetail>()
-    val downloadedMediaResponse: LiveData<MediaDetail>
+    private val _downloadedMediaDetailsResponse = MutableLiveData<MediaDetailResponse>()
+    val downloadedMediaResponse: LiveData<MediaDetailResponse>
         get() = _downloadedMediaDetailsResponse
 
     @Inject lateinit var rawMediaDetailConverter: RawMediaDetailResponseConverter
@@ -65,7 +66,7 @@ class DetailMediaDataSource @Inject constructor(
                     }
                     .subscribe({
                         Log.i("MediaDetailsDataSource", it.toString())
-                        _downloadedMediaDetailsResponse.postValue(it)
+                        _downloadedMediaDetailsResponse.postValue(MediaDetailResponse(it))
                         _networkState.postValue(NetworkState.LOADED)
                     }, {
                         if (it.message?.contains("Unable to resolve host")!!) {
