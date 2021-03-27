@@ -37,6 +37,7 @@ class ImageDetailFragment : Fragment() {
 
     @Inject lateinit var detailMediaRepository: DetailMediaRepository
     @Inject lateinit var providerFactory: ViewModelProviderFactory
+    @Inject lateinit var picasso: Picasso
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -103,7 +104,7 @@ class ImageDetailFragment : Fragment() {
         }
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
-            Picasso.get().load(mediaDetailResponse.item.previewUrl).into(
+            picasso.load(mediaDetailResponse.item.previewUrl).into(
                 imageView,
                 object :
                     Callback {
