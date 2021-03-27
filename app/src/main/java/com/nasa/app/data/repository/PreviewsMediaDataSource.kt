@@ -5,11 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.model.media_preview.MediaPreviewResponse
-import com.nasa.app.data.model.media_preview.RawMediaPreviewResponseConverter
+import com.nasa.app.data.model.media_preview.raw_data.RawMediaPreviewResponseConverter
 import com.nasa.app.ui.SearchParams
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import java.io.FileOutputStream
 import javax.inject.Inject
 
 class PreviewsMediaDataSource @Inject constructor(

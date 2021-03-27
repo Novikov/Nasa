@@ -4,9 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nasa.app.data.api.NasaApiService
-import com.nasa.app.data.model.MediaDetail
+import com.nasa.app.data.model.media_detail.MediaDetail
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.exceptions.CompositeException
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Named

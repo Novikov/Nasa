@@ -1,6 +1,8 @@
-package com.nasa.app.data.model.media_preview
+package com.nasa.app.data.model.media_preview.raw_data
 
 import com.nasa.app.data.model.ContentType
+import com.nasa.app.data.model.media_preview.MediaPreview
+import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.utils.POST_PER_PAGE
 import java.text.SimpleDateFormat
 import java.util.*
@@ -59,7 +61,7 @@ object RawMediaPreviewResponseConverter {
             } else {
                 ""
             }
-            val mediaPreview = MediaPreview(nasaId,previewUrl,mediaType,dateCreated, description)
+            val mediaPreview = MediaPreview(nasaId, previewUrl, mediaType, dateCreated, description)
 
             previewsList.add(mediaPreview)
         }

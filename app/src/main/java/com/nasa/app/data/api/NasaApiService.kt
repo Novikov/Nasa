@@ -3,8 +3,7 @@ package com.nasa.app.data.api
 import com.nasa.app.data.api.json.MediaDetailAssetResponse
 import com.nasa.app.data.api.json.MediaDetailMetadataResponse
 import com.nasa.app.data.api.json.MediaDetailResponse
-import com.nasa.app.data.model.media_preview.MediaPreviewResponse
-import com.nasa.app.data.model.media_preview.RawMediaPreviewResponse
+import com.nasa.app.data.model.media_preview.raw_data.RawMediaPreviewResponse
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path

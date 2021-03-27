@@ -1,4 +1,4 @@
-package com.nasa.app.data.model
+package com.nasa.app.data.model.media_detail
 
 data class MediaDetail(
    val dateCreated: String,

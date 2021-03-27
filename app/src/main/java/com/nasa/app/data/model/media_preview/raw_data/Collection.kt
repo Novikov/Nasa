@@ -1,9 +1,7 @@
-package com.nasa.app.data.model.media_preview
+package com.nasa.app.data.model.media_preview.raw_data
 
 data class Collection(
     val href: String,
     val items: List<Item>,
-    val links: List<PageLink>,
     val metadata: Metadata,
-    val version: String
 )
