@@ -16,6 +16,7 @@ class PreviewsMediaDataSource @Inject constructor(
     private val compositeDisposable: CompositeDisposable
 ) {
     @Inject lateinit var searchParams: SearchParams
+    @Inject lateinit var rawMediaPreviewResponseConverter: RawMediaPreviewResponseConverter
 
     private val _networkState = MutableLiveData<NetworkState>()
     val networkState: LiveData<NetworkState>
@@ -40,7 +41,7 @@ class PreviewsMediaDataSource @Inject constructor(
                     .observeOn(Schedulers.io())
                     .subscribeOn(Schedulers.io())
                     .subscribe({
-                        val mediaPreviewResponse = RawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
+                        val mediaPreviewResponse = rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
                         _downloadedMediaPreviewsResponse.postValue(mediaPreviewResponse)
                         _networkState.postValue(NetworkState.LOADED)
                     }, {

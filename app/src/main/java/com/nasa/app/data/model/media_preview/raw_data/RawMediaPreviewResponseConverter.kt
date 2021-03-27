@@ -6,8 +6,9 @@ import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.utils.POST_PER_PAGE
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-object RawMediaPreviewResponseConverter {
+class RawMediaPreviewResponseConverter @Inject constructor(){
     lateinit var previewUrl:String
     lateinit var nasaId: String
     lateinit var mediaType: ContentType
