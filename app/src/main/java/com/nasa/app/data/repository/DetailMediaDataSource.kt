@@ -7,7 +7,6 @@ import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.model.media_detail.MediaDetail
 import com.nasa.app.data.model.media_detail.raw_media_asset.RawMediaAssetsConverter
 import com.nasa.app.data.model.media_detail.raw_media_detail.RawMediaDetailResponseConverter
-import com.nasa.app.data.model.media_preview.raw_data.RawMediaPreviewResponseConverter
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -38,75 +37,43 @@ class DetailMediaDataSource @Inject constructor(
                 apiService.mediaInfo(nasaId)
                     .observeOn(Schedulers.io())
                     .subscribeOn(Schedulers.io())
-                    .flatMap { rawMediaResponse ->
-                        apiService.mediaAsset(rawMediaResponse.item.nasaId)
+                    .flatMap {
+                        val rawMediaDetailResponse =
+                            rawMediaDetailConverter.getMediaDetailResponseWithInfoData(it)
+                        Log.i("MediaDetailsDataSource", rawMediaDetailResponse.item.toString())
+                        apiService.mediaAsset(rawMediaDetailResponse.item.nasaId)
                             .observeOn(Schedulers.io())
                             .subscribeOn(Schedulers.io())
                             .map {
-                                rawMediaResponse.item.copy(
-                                    assets = it.assetMap,
-                                    metadataUrl = it.metadataUrl
+                                rawMediaDetailResponse.item.copy(
+                                    assets = rawMediaAssetConverter.getAssets(it),
+                                    metadataUrl = rawMediaAssetConverter.getMetadataUrl(it)
                                 )
                             }
                     }
-                    .flatMap { rawMediaResponse ->
-                        apiService.mediaMetadata(rawMediaResponse.metadataUrl!!)
+                    .flatMap { rawMediaDetailResponse ->
+                        Log.i("MediaDetailsDataSource", rawMediaDetailResponse.toString())
+                        apiService.mediaMetadata(rawMediaDetailResponse.metadataUrl!!)
                             .observeOn(Schedulers.io())
                             .subscribeOn(Schedulers.io())
                             .map {
-                                rawMediaResponse.copy(
+                                rawMediaDetailResponse.copy(
                                     fileFormat = it.fileFormat,
                                     fileSize = it.fileSize
                                 )
                             }
                     }
                     .subscribe({
-                        Log.i("TAG", it.toString())
+                        Log.i("MediaDetailsDataSource", it.toString())
                         _downloadedMediaDetailsResponse.postValue(it)
                         _networkState.postValue(NetworkState.LOADED)
                     }, {
                         if (it.message?.contains("Unable to resolve host")!!) {
                             _networkState.postValue(NetworkState.NO_INTERNET)
                         } else {
+                            Log.i("MediaDetailsDataSource", it.message.toString())
                             _networkState.postValue(NetworkState.ERROR)
                         }
-                    })
-            )
-        } catch (e: Exception) {
-            Log.e("MediaDetailsDataSource", e.message.toString())
-        }
-    }
-
-    fun fetchMediaDetails2() {
-        _networkState.postValue(NetworkState.LOADING)
-
-        try {
-            compositeDisposable.add(
-                apiService.mediaInfo2(nasaId)
-                    .observeOn(Schedulers.io())
-                    .subscribeOn(Schedulers.io())
-                    .flatMap {
-                        val rawMediaResponse = rawMediaDetailConverter.getMediaDetailResponseWithInfoData(it)
-                        apiService.mediaAsset2(rawMediaResponse.item.nasaId)
-                            .observeOn(Schedulers.io())
-                            .subscribeOn(Schedulers.io())
-                            .map {
-                                rawMediaResponse.item.copy(
-                                    assets = rawMediaAssetConverter.getAssets(it),
-                                    metadataUrl = rawMediaAssetConverter.getMetadataUrl(it)
-                                )
-                            }
-                    }
-                    .subscribe({
-                        Log.i("ZZZ", it.toString())
-//                        _downloadedMediaDetailsResponse.postValue(it)
-//                        _networkState.postValue(NetworkState.LOADED)
-                    }, {
-//                        if (it.message?.contains("Unable to resolve host")!!) {
-//                            _networkState.postValue(NetworkState.NO_INTERNET)
-//                        } else {
-//                            _networkState.postValue(NetworkState.ERROR)
-//                        }
                     })
             )
         } catch (e: Exception) {

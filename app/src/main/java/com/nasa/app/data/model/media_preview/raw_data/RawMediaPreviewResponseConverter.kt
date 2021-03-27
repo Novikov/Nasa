@@ -32,6 +32,9 @@ class RawMediaPreviewResponseConverter @Inject constructor(){
             if (item.links!=null){
                 previewUrl = item.links.first().href
             }
+            else {
+                previewUrl = ""
+            }
 
             nasaId = item.data.first().nasa_id
 

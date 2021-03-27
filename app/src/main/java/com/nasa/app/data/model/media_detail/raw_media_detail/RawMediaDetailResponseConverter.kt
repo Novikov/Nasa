@@ -1,5 +1,6 @@
 package com.nasa.app.data.model.media_detail.raw_media_detail
 
+import android.util.Log
 import com.nasa.app.data.model.media_detail.MediaDetail
 import com.nasa.app.data.model.media_detail.MediaDetailResponse
 import java.text.SimpleDateFormat
@@ -18,17 +19,33 @@ class RawMediaDetailResponseConverter @Inject constructor(){
 
     fun getMediaDetailResponseWithInfoData(rawMediaDetailResponse: RawMediaDetailResponse): MediaDetailResponse {
         nasaId = rawMediaDetailResponse.collection.items.first().data.first().nasa_id
-        description = rawMediaDetailResponse.collection.items.first().data.first().description
+
+        val tmpDescription = rawMediaDetailResponse.collection.items.first().data.first().description
+        description = if (tmpDescription!=null){
+            tmpDescription
+        } else{
+            ""
+        }
+
         title = rawMediaDetailResponse.collection.items.first().data.first().title
         val tmpDateCreated = rawMediaDetailResponse.collection.items.first().data.first().date_created
         dateCreated = convertDate(tmpDateCreated)
         center = rawMediaDetailResponse.collection.items.first().data.first().center
         keywords = rawMediaDetailResponse.collection.items.first().data.first().keywords
-        rawMediaDetailResponse.collection.items.first().links.forEach {
-            if (it.rel.equals("preview")){
-                previewUrl = it.href
+
+        //preview url for audio and video items is always null
+        if (rawMediaDetailResponse.collection.items.first().links!=null){
+            rawMediaDetailResponse.collection.items.first().links.forEach {
+                if (it.rel.equals("preview")){
+                    previewUrl = it.href
+                }
             }
         }
+        else {
+            previewUrl = ""
+        }
+
+
         val mediaDetail = MediaDetail(
             dateCreated,
             nasaId,

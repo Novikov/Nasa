@@ -14,7 +14,6 @@ class DetailMediaRepository @Inject constructor() {
     fun fetchSingleMediaDetail(
     ): LiveData<MediaDetail> {
         detailMediaDataSource.fetchMediaDetails()
-        detailMediaDataSource.fetchMediaDetails2()
         return detailMediaDataSource.downloadedMediaResponse
     }
 

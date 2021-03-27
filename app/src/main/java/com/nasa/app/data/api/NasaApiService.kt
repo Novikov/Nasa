@@ -24,17 +24,17 @@ interface NasaApiService {
 
 
     //MediaDetail
-    @GET("search")
-    fun mediaInfo(@Query("nasa_id") nasa_id: String): Single<MediaDetailResponse>
+//    @GET("search")
+//    fun mediaInfo(@Query("nasa_id") nasa_id: String): Single<MediaDetailResponse>
 
     @GET("search")
-    fun mediaInfo2(@Query("nasa_id") nasa_id: String): Single<RawMediaDetailResponse>
+    fun mediaInfo(@Query("nasa_id") nasa_id: String): Single<RawMediaDetailResponse>
+
+//    @GET("asset/{nasa_id}")
+//    fun mediaAsset(@Path("nasa_id") nasa_id: String): Single<MediaDetailAssetResponse>
 
     @GET("asset/{nasa_id}")
-    fun mediaAsset(@Path("nasa_id") nasa_id: String): Single<MediaDetailAssetResponse>
-
-    @GET("asset/{nasa_id}")
-    fun mediaAsset2(@Path("nasa_id") nasa_id: String): Single<RawMediaDetailAssetResponse>
+    fun mediaAsset(@Path("nasa_id") nasa_id: String): Single<RawMediaDetailAssetResponse>
 
     @GET
     fun mediaMetadata(@Url url: String): Single<MediaDetailMetadataResponse>
