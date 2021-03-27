@@ -3,7 +3,6 @@ package com.nasa.app.di
 import com.nasa.app.data.api.NasaApiService
 import dagger.Provides
 import com.google.gson.GsonBuilder
-import com.nasa.app.data.api.json.*
 import com.nasa.app.utils.NASA_BASE_URL
 import com.squareup.picasso.Picasso
 import dagger.Module
@@ -28,18 +27,6 @@ class AppModule {
             .build()
 
         val gson = GsonBuilder()
-            .registerTypeAdapter(
-                MediaDetailResponse::class.java,
-                MediaDetailDeserializer()
-            )
-            .registerTypeAdapter(
-                MediaDetailAssetResponse::class.java,
-                MediaAssetDeserializer()
-            )
-            .registerTypeAdapter(
-                MediaPreviewResponse::class.java,
-                MediaPreviewDeserializer()
-            )
             .create()
 
         val retrofit = Retrofit.Builder()

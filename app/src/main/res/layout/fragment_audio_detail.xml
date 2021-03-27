@@ -6,7 +6,7 @@
     <data>
         <variable
             name="mediaDetail"
-            type="com.nasa.app.data.model.MediaDetail" />
+            type="com.nasa.app.data.model.media_detail.MediaDetail" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

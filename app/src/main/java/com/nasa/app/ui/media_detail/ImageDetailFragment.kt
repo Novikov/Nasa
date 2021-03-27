@@ -37,6 +37,7 @@ class ImageDetailFragment : Fragment() {
 
     @Inject lateinit var detailMediaRepository: DetailMediaRepository
     @Inject lateinit var providerFactory: ViewModelProviderFactory
+    @Inject lateinit var picasso: Picasso
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -102,8 +103,8 @@ class ImageDetailFragment : Fragment() {
             }
         }
 
-        viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetail ->
-            Picasso.get().load(mediaDetail.previewUrl).into(
+        viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
+            picasso.load(mediaDetailResponse.item.previewUrl).into(
                 imageView,
                 object :
                     Callback {
@@ -118,31 +119,31 @@ class ImageDetailFragment : Fragment() {
                     }
                 })
 
-            binding.mediaDetail = mediaDetail
+            binding.mediaDetail = mediaDetailResponse.item
 
-            if (mediaDetail.description == "") {
+            if (mediaDetailResponse.item.description == "") {
                 val secondDivider = view.findViewById<View>(R.id.second_divider)
                 secondDivider.visibility = View.INVISIBLE
             }
 
             //Keywords initialization
             val keyWordFlexBox = view.findViewById<FlexboxLayout>(R.id.key_word_flex_box_container)
-            for (i in mediaDetail.keywords.indices) {
+            for (i in mediaDetailResponse.item.keywords.indices) {
                 var keywordTextView =
                     TextView(requireContext(), null, 0, R.style.key_word_text_view_style)
-                if (i < mediaDetail.keywords.size - 1) {
-                    keywordTextView.text = "${mediaDetail.keywords.get(i)}, "
+                if (i < mediaDetailResponse.item.keywords.size - 1) {
+                    keywordTextView.text = "${mediaDetailResponse.item.keywords.get(i)}, "
                 } else {
-                    keywordTextView.text = "${mediaDetail.keywords.get(i)}"
+                    keywordTextView.text = "${mediaDetailResponse.item.keywords.get(i)}"
                 }
                 keyWordFlexBox.addView(keywordTextView)
             }
 
             //editText initialization
-            val keyToOriginalAsset = mediaDetail.assets?.keys?.first().toString()
+            val keyToOriginalAsset = mediaDetailResponse.item.assets?.keys?.first().toString()
             val editText = view.findViewById<EditText>(R.id.url_edit_text)
             editText.setText(
-                mediaDetail.assets?.get(keyToOriginalAsset),
+                mediaDetailResponse.item.assets?.get(keyToOriginalAsset),
                 TextView.BufferType.EDITABLE
             )
 
@@ -150,7 +151,7 @@ class ImageDetailFragment : Fragment() {
             val linkImageView = view.findViewById<ImageView>(R.id.link_image_view)
             linkImageView.setOnClickListener {
                 activityContract?.collapseSearchField()
-                val address: Uri = Uri.parse(mediaDetail.assets?.get(keyToOriginalAsset))
+                val address: Uri = Uri.parse(mediaDetailResponse.item.assets?.get(keyToOriginalAsset))
                 val intent = Intent(Intent.ACTION_VIEW, address)
                 startActivity(intent)
             }
@@ -159,7 +160,7 @@ class ImageDetailFragment : Fragment() {
             button.setOnClickListener {
                 activityContract?.collapseSearchField()
                 val urlList = mutableListOf<String>()
-                mediaDetail.assets?.values?.forEach {
+                mediaDetailResponse.item.assets?.values?.forEach {
                     urlList.add(it)
                 }
 

@@ -151,11 +151,11 @@ class AudioDetailFragment : Fragment() {
 
 
 
-            viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetail ->
+            viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
 
                 //audio content initialization
                 var audioUrl = ""
-                for (asset in mediaDetail.assets!!) {
+                for (asset in mediaDetailResponse.item.assets!!) {
                     if (asset.value.contains("mp3")) {
                         audioUrl = asset.value
                         break
@@ -166,9 +166,9 @@ class AudioDetailFragment : Fragment() {
                 Log.i("AudioUrl", "audioUrl $audioUrl")
                 exoMediaPlayer.playPlayer(audioUrl, time ?: 0)
 
-                binding.mediaDetail = mediaDetail
+                binding.mediaDetail = mediaDetailResponse.item
 
-                if (mediaDetail.description == "") {
+                if (mediaDetailResponse.item.description == "") {
                     val secondDivider = view.findViewById<View>(R.id.second_divider)
                     secondDivider.visibility = View.INVISIBLE
                 }
@@ -176,22 +176,22 @@ class AudioDetailFragment : Fragment() {
                 //Keywords initialization
                 val keyWordFlexBox =
                     view.findViewById<FlexboxLayout>(R.id.key_word_flex_box_container)
-                for (i in mediaDetail.keywords.indices) {
+                for (i in mediaDetailResponse.item.keywords.indices) {
                     var keywordTextView =
                         TextView(requireContext(), null, 0, R.style.key_word_text_view_style)
-                    if (i < mediaDetail.keywords.size - 1) {
-                        keywordTextView.text = "${mediaDetail.keywords.get(i)}, "
+                    if (i < mediaDetailResponse.item.keywords.size - 1) {
+                        keywordTextView.text = "${mediaDetailResponse.item.keywords.get(i)}, "
                     } else {
-                        keywordTextView.text = "${mediaDetail.keywords.get(i)}"
+                        keywordTextView.text = "${mediaDetailResponse.item.keywords.get(i)}"
                     }
                     keyWordFlexBox.addView(keywordTextView)
                 }
 
                 //editText initialization
-                val keyToOriginalAsset = mediaDetail.assets?.keys?.first().toString()
+                val keyToOriginalAsset = mediaDetailResponse.item.assets?.keys?.first().toString()
                 val editText = view.findViewById<EditText>(R.id.url_edit_text)
                 editText.setText(
-                    mediaDetail.assets?.get(keyToOriginalAsset),
+                    mediaDetailResponse.item.assets?.get(keyToOriginalAsset),
                     TextView.BufferType.EDITABLE
                 )
 
@@ -199,7 +199,7 @@ class AudioDetailFragment : Fragment() {
                 val linkImageView = view.findViewById<ImageView>(R.id.link_image_view)
                 linkImageView.setOnClickListener {
                     activityContract?.collapseSearchField()
-                    val address: Uri = Uri.parse(mediaDetail.assets?.get(keyToOriginalAsset))
+                    val address: Uri = Uri.parse(mediaDetailResponse.item.assets?.get(keyToOriginalAsset))
                     val intent = Intent(Intent.ACTION_VIEW, address)
                     startActivity(intent)
                 }
@@ -208,7 +208,7 @@ class AudioDetailFragment : Fragment() {
                 button.setOnClickListener {
                     activityContract?.collapseSearchField()
                     val urlList = mutableListOf<String>()
-                    mediaDetail.assets?.values?.forEach {
+                    mediaDetailResponse.item.assets?.values?.forEach {
                         urlList.add(it)
                     }
 

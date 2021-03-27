@@ -4,14 +4,19 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nasa.app.data.api.NasaApiService
-import com.nasa.app.data.api.json.MediaPreviewResponse
-import com.nasa.app.ui.*
+import com.nasa.app.data.model.media_preview.MediaPreviewResponse
+import com.nasa.app.data.model.media_preview.raw_media_preview.RawMediaPreviewResponseConverter
+import com.nasa.app.ui.SearchParams
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class PreviewsMediaDataSource @Inject constructor(private val apiService: NasaApiService, private val compositeDisposable: CompositeDisposable) {
+class PreviewsMediaDataSource @Inject constructor(
+    private val apiService: NasaApiService,
+    private val compositeDisposable: CompositeDisposable
+) {
     @Inject lateinit var searchParams: SearchParams
+    @Inject lateinit var rawMediaPreviewResponseConverter: RawMediaPreviewResponseConverter
 
     private val _networkState = MutableLiveData<NetworkState>()
     val networkState: LiveData<NetworkState>
@@ -21,12 +26,12 @@ class PreviewsMediaDataSource @Inject constructor(private val apiService: NasaAp
     val downloadedMediaPreviewsResponse: LiveData<MediaPreviewResponse>
         get() = _downloadedMediaPreviewsResponse
 
-    fun fetchMediaPreviews() {
+    fun getMediaPreviews() {
         _networkState.postValue(NetworkState.LOADING)
 
         try {
             compositeDisposable.add(
-                apiService.mediaPreview(
+                apiService.getMediaPreviews(
                     searchParams.searchRequestQuery,
                     searchParams.getSearchMediaTypes(),
                     searchParams.startSearchYear,
@@ -36,8 +41,8 @@ class PreviewsMediaDataSource @Inject constructor(private val apiService: NasaAp
                     .observeOn(Schedulers.io())
                     .subscribeOn(Schedulers.io())
                     .subscribe({
-                        Log.i("MediaPreviewsDataSource", it.mediaPreviewList.size.toString())
-                        _downloadedMediaPreviewsResponse.postValue(it)
+                        val mediaPreviewResponse = rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
+                        _downloadedMediaPreviewsResponse.postValue(mediaPreviewResponse)
                         _networkState.postValue(NetworkState.LOADED)
                     }, {
                         if (it.message?.contains("Unable to resolve host")!!) {

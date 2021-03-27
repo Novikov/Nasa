@@ -10,9 +10,9 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.nasa.app.R
-import com.nasa.app.data.api.json.MediaPreviewResponse
+import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.data.model.ContentType
-import com.nasa.app.data.model.MediaPreview
+import com.nasa.app.data.model.media_preview.MediaPreview
 import com.nasa.app.ui.SearchParams
 import com.nasa.app.utils.POST_PER_PAGE
 import com.squareup.picasso.Picasso

@@ -1,4 +1,6 @@
-package com.nasa.app.data.model
+package com.nasa.app.data.model.media_preview
+
+import com.nasa.app.data.model.ContentType
 
 data class MediaPreview(
     val nasaId: String,
