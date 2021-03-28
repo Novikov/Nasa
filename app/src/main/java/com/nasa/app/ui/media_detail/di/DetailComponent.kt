@@ -4,18 +4,17 @@ import com.nasa.app.di.view_models.ViewModelFactoryModule
 import com.nasa.app.ui.media_detail.AudioDetailFragment
 import com.nasa.app.ui.media_detail.ImageDetailFragment
 import com.nasa.app.ui.media_detail.VideoDetailFragment
-import com.nasa.app.ui.media_preview.PreviewMediaFragment
 import dagger.BindsInstance
 import dagger.Subcomponent
 import javax.inject.Named
 
 @DetailScope
-@Subcomponent(modules = [DetailModule::class,ViewModelFactoryModule::class, DetailMediaViewModulesModule::class])
+@Subcomponent(modules = [DetailModule::class, ViewModelFactoryModule::class, DetailMediaViewModulesModule::class])
 interface DetailComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(@BindsInstance @Named("nasa id")nasaId:String): DetailComponent
+        fun create(@BindsInstance @Named("nasa id") nasaId: String): DetailComponent
     }
 
     fun inject(audioMediaFragment: AudioDetailFragment)

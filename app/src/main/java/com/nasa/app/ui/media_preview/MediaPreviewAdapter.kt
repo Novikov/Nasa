@@ -22,8 +22,10 @@ import javax.inject.Inject
 class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaRepository) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    @Inject lateinit var picasso:Picasso
-    @Inject lateinit var searchParams: SearchParams
+    @Inject
+    lateinit var picasso: Picasso
+    @Inject
+    lateinit var searchParams: SearchParams
 
     private val SEARCH_INFO_TEXTVIEW_VIEW = 0
     private val MEDIA_PREVIEW_VIEW = 1
@@ -33,11 +35,12 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
 
     private val EMPTY_VIEW = 5
 
-     var dataSource: MediaPreviewResponse = MediaPreviewResponse(listOf(MediaPreview("","",ContentType.IMAGE,"","")),1,1,1)
-       set(value) {
-           field = value
-           notifyDataSetChanged()
-       }
+    var dataSource: MediaPreviewResponse =
+        MediaPreviewResponse(listOf(MediaPreview("", "", ContentType.IMAGE, "", "")), 1, 1, 1)
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     var navController: NavController? = null
 
@@ -108,25 +111,31 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
                 val hideDivider = position == dataSource.mediaPreviewList.lastIndex
                 viewHolder.bind(mediaPreview, hideDivider)
                 viewHolder.itemView.setOnClickListener {
-                    when(mediaPreview.mediaType){
+                    when (mediaPreview.mediaType) {
                         ContentType.AUDIO -> {
-                            navController?.navigate(PreviewMediaFragmentDirections.actionMediaFragmentToAudioDetailFragment(
-                                mediaPreview.nasaId,
-                                mediaPreview.mediaType
-                            ))
+                            navController?.navigate(
+                                PreviewMediaFragmentDirections.actionMediaFragmentToAudioDetailFragment(
+                                    mediaPreview.nasaId,
+                                    mediaPreview.mediaType
+                                )
+                            )
                         }
                         ContentType.VIDEO -> {
-                            navController?.navigate(PreviewMediaFragmentDirections.actionMediaFragmentToVideoDetailFragment(
-                                mediaPreview.nasaId,
-                                mediaPreview.mediaType
-                            ))
+                            navController?.navigate(
+                                PreviewMediaFragmentDirections.actionMediaFragmentToVideoDetailFragment(
+                                    mediaPreview.nasaId,
+                                    mediaPreview.mediaType
+                                )
+                            )
                         }
 
                         ContentType.IMAGE -> {
-                            navController?.navigate(PreviewMediaFragmentDirections.actionMediaFragmentToImageDetailFragment(
-                                mediaPreview.nasaId,
-                                mediaPreview.mediaType
-                            ))
+                            navController?.navigate(
+                                PreviewMediaFragmentDirections.actionMediaFragmentToImageDetailFragment(
+                                    mediaPreview.nasaId,
+                                    mediaPreview.mediaType
+                                )
+                            )
                         }
                     }
                 }

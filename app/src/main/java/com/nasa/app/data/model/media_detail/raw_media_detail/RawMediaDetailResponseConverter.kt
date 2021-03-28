@@ -1,13 +1,12 @@
 package com.nasa.app.data.model.media_detail.raw_media_detail
 
-import android.util.Log
 import com.nasa.app.data.model.media_detail.MediaDetail
 import com.nasa.app.data.model.media_detail.MediaDetailResponse
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class RawMediaDetailResponseConverter @Inject constructor(){
+class RawMediaDetailResponseConverter @Inject constructor() {
 
     lateinit var dateCreated: String
     lateinit var nasaId: String
@@ -19,37 +18,39 @@ class RawMediaDetailResponseConverter @Inject constructor(){
 
     fun getMediaDetailResponseWithInfoData(rawMediaDetailResponse: RawMediaDetailResponse): MediaDetailResponse {
 
-        val tmpNasaId:String? = rawMediaDetailResponse.collection.items.first().data.first().nasa_id
-        nasaId = tmpNasaId?:""
+        val tmpNasaId: String? =
+            rawMediaDetailResponse.collection.items.first().data.first().nasa_id
+        nasaId = tmpNasaId ?: ""
 
-        val tmpDescription:String? = rawMediaDetailResponse.collection.items.first().data.first().description
+        val tmpDescription: String? =
+            rawMediaDetailResponse.collection.items.first().data.first().description
         description = tmpDescription ?: ""
 
-        val tmpTitle:String? = rawMediaDetailResponse.collection.items.first().data.first().title
-        title = tmpTitle?:""
+        val tmpTitle: String? = rawMediaDetailResponse.collection.items.first().data.first().title
+        title = tmpTitle ?: ""
 
-        val tmpDateCreated = rawMediaDetailResponse.collection.items.first().data.first().date_created
+        val tmpDateCreated =
+            rawMediaDetailResponse.collection.items.first().data.first().date_created
         dateCreated = convertDate(tmpDateCreated)
 
-        val tmpCenter:String? = rawMediaDetailResponse.collection.items.first().data.first().center
-        center = tmpCenter?:""
+        val tmpCenter: String? = rawMediaDetailResponse.collection.items.first().data.first().center
+        center = tmpCenter ?: ""
 
-        val tmpKeywords :List<String>? = rawMediaDetailResponse.collection.items.first().data.first().keywords
-        keywords = tmpKeywords?: listOf("")
+        val tmpKeywords: List<String>? =
+            rawMediaDetailResponse.collection.items.first().data.first().keywords
+        keywords = tmpKeywords ?: listOf("")
 
         //preview url for audio and video items is always null
         val tmpLinks: List<AssetLink>? = rawMediaDetailResponse.collection.items.first().links
-        if (tmpLinks!=null){
+        if (tmpLinks != null) {
             rawMediaDetailResponse.collection.items.first().links.forEach {
-                if (it.rel.equals("preview")){
+                if (it.rel.equals("preview")) {
                     previewUrl = it.href
                 }
             }
-        }
-        else {
+        } else {
             previewUrl = ""
         }
-
 
         val mediaDetail = MediaDetail(
             dateCreated,
@@ -68,8 +69,8 @@ class RawMediaDetailResponseConverter @Inject constructor(){
         return MediaDetailResponse(mediaDetail)
     }
 
-    fun convertDate (dateStr: String): String {
-        if (dateStr.equals("")){
+    private fun convertDate(dateStr: String): String {
+        if (dateStr.equals("")) {
             return ""
         }
 
@@ -77,20 +78,21 @@ class RawMediaDetailResponseConverter @Inject constructor(){
 
         val parsedDate: Date? = parsedDateFormat.parse(dateStr)
 
-        if (parsedDate!=null){
-        val dayDateFormat = SimpleDateFormat("dd")
-        val day = dayDateFormat.format(parsedDate)
+        if (parsedDate != null) {
+            val dayDateFormat = SimpleDateFormat("dd")
+            val day = dayDateFormat.format(parsedDate)
 
-        val monthDateFormat = SimpleDateFormat("MM")
-        val month = monthDateFormat.format(parsedDate)
+            val monthDateFormat = SimpleDateFormat("MM")
+            val month = monthDateFormat.format(parsedDate)
 
-        val yearDateFormat = SimpleDateFormat("yyyy")
-        val year = yearDateFormat.format(parsedDate)
+            val yearDateFormat = SimpleDateFormat("yyyy")
+            val year = yearDateFormat.format(parsedDate)
 
-        val convertedDate = "$day-$month-$year"
+            val convertedDate = "$day-$month-$year"
 
-        return convertedDate}
-        else {
+            return convertedDate
+
+        } else {
             return ""
         }
     }

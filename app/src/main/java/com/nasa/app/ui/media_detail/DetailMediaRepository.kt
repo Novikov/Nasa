@@ -9,7 +9,8 @@ import javax.inject.Inject
 
 @DetailScope
 class DetailMediaRepository @Inject constructor() {
-   @Inject lateinit var detailMediaDataSource: DetailMediaDataSource
+    @Inject
+    lateinit var detailMediaDataSource: DetailMediaDataSource
 
     fun getMediaDetail(
     ): LiveData<MediaDetailResponse> {

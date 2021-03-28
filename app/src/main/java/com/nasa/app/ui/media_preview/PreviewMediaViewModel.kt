@@ -7,7 +7,10 @@ import com.nasa.app.data.repository.NetworkState
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
-class PreviewMediaViewModel @Inject constructor(private val mediaRepository: PreviewMediaRepository, private val compositeDisposable: CompositeDisposable) : ViewModel() {
+class PreviewMediaViewModel @Inject constructor(
+    private val mediaRepository: PreviewMediaRepository,
+    private val compositeDisposable: CompositeDisposable
+) : ViewModel() {
 
     val mediaPreviews: LiveData<MediaPreviewResponse> by lazy {
         mediaRepository.getMediaPreviews()

@@ -20,8 +20,8 @@ class MainActivity : AppCompatActivity(), Activity {
     lateinit var mProgress: ProgressBar
     lateinit var msgTextView: TextView
     var menuItem: MenuItem? = null
-    @Inject lateinit var searchParams: SearchParams
-//    @Inject lateinit var searchSettingsFragment: SearchSettingsFragment
+    @Inject
+    lateinit var searchParams: SearchParams
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as BaseApplication).appComponent.inject(this)
@@ -33,9 +33,7 @@ class MainActivity : AppCompatActivity(), Activity {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.search_menu, menu)
-
         menuItem = menu?.findItem(R.id.action_search)
-
         val searchView = menuItem?.actionView as SearchView
         searchView.queryHint = getString(R.string.Type_here_to_search)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

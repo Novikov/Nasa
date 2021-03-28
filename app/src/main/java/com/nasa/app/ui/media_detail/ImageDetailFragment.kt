@@ -35,9 +35,12 @@ class ImageDetailFragment : Fragment() {
     lateinit var contentType: ContentType
     var activityContract: Activity? = null
 
-    @Inject lateinit var detailMediaRepository: DetailMediaRepository
-    @Inject lateinit var providerFactory: ViewModelProviderFactory
-    @Inject lateinit var picasso: Picasso
+    @Inject
+    lateinit var detailMediaRepository: DetailMediaRepository
+    @Inject
+    lateinit var providerFactory: ViewModelProviderFactory
+    @Inject
+    lateinit var picasso: Picasso
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -67,7 +70,8 @@ class ImageDetailFragment : Fragment() {
         super.onCreate(savedInstanceState)
         Log.i(Companion.TAG, "onCreate: ")
 
-        viewModel = ViewModelProviders.of(this, providerFactory).get(DetailMediaViewModel::class.java)
+        viewModel =
+            ViewModelProviders.of(this, providerFactory).get(DetailMediaViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -151,7 +155,8 @@ class ImageDetailFragment : Fragment() {
             val linkImageView = view.findViewById<ImageView>(R.id.link_image_view)
             linkImageView.setOnClickListener {
                 activityContract?.collapseSearchField()
-                val address: Uri = Uri.parse(mediaDetailResponse.item.assets?.get(keyToOriginalAsset))
+                val address: Uri =
+                    Uri.parse(mediaDetailResponse.item.assets?.get(keyToOriginalAsset))
                 val intent = Intent(Intent.ACTION_VIEW, address)
                 startActivity(intent)
             }

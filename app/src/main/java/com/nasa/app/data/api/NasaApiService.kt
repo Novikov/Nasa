@@ -1,6 +1,6 @@
 package com.nasa.app.data.api
 
-import com.nasa.app.data.model.media_detail.MediaDetailMetadataResponse
+import com.nasa.app.data.model.media_detail.metadata.MediaDetailMetadataResponse
 import com.nasa.app.data.model.media_detail.raw_media_asset.RawMediaDetailAssetResponse
 import com.nasa.app.data.model.media_detail.raw_media_detail.RawMediaDetailResponse
 import com.nasa.app.data.model.media_preview.raw_media_preview.RawMediaPreviewResponse
@@ -18,7 +18,7 @@ interface NasaApiService {
         @Query("media_type") mediaType: String,
         @Query("year_start") year_start: String,
         @Query("year_end") year_end: String,
-        @Query("page")page:Int
+        @Query("page") page: Int
     ): Single<RawMediaPreviewResponse>
 
     //MediaDetail

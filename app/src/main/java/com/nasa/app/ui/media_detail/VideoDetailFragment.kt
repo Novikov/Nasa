@@ -40,9 +40,12 @@ class VideoDetailFragment : Fragment() {
     var activityContract: Activity? = null
     var isExoPlayerPrepared = false
 
-    @Inject lateinit var exoMediaPlayer: ExoMediaPlayer
-    @Inject lateinit var detailMediaRepository: DetailMediaRepository
-    @Inject lateinit var providerFactory: ViewModelProviderFactory
+    @Inject
+    lateinit var exoMediaPlayer: ExoMediaPlayer
+    @Inject
+    lateinit var detailMediaRepository: DetailMediaRepository
+    @Inject
+    lateinit var providerFactory: ViewModelProviderFactory
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -74,7 +77,8 @@ class VideoDetailFragment : Fragment() {
         super.onCreate(savedInstanceState)
         Log.i(TAG, "onCreate: ")
         time = savedInstanceState?.getLong(PLAYER_TIME)
-        viewModel = ViewModelProviders.of(this, providerFactory).get(DetailMediaViewModel::class.java)
+        viewModel =
+            ViewModelProviders.of(this, providerFactory).get(DetailMediaViewModel::class.java)
     }
 
     override fun onCreateView(

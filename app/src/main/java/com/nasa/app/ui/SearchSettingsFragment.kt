@@ -18,7 +18,8 @@ import javax.inject.Inject
 class SearchSettingsFragment @Inject constructor() : DialogFragment() {
     private val TAG = "SearchSettingsFragment"
     private var activityContract: Activity? = null
-    @Inject lateinit var searchParams: SearchParams
+    @Inject
+    lateinit var searchParams: SearchParams
     lateinit var tmpBeginSearchDateValue: String
     lateinit var tmpEndSearchDateValue: String
 
@@ -119,7 +120,8 @@ class SearchSettingsFragment @Inject constructor() : DialogFragment() {
 
         //range slider
         val rangeSlider = view.findViewById<RangeSlider>(R.id.rangeSlider)
-        rangeSlider.values = listOf(searchParams.startSearchYear.toFloat(), searchParams.endSearchYear.toFloat())
+        rangeSlider.values =
+            listOf(searchParams.startSearchYear.toFloat(), searchParams.endSearchYear.toFloat())
 
         rangeSlider.addOnChangeListener { slider, _, _ ->
             beginDateTextView.text = slider.values[0].toInt().toString()

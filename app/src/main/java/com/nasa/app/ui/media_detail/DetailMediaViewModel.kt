@@ -10,7 +10,8 @@ import javax.inject.Inject
 class DetailMediaViewModel @Inject constructor(private val mediaRepository: DetailMediaRepository) :
     ViewModel() {
 
-    @Inject lateinit var compositeDisposable:CompositeDisposable
+    @Inject
+    lateinit var compositeDisposable: CompositeDisposable
 
     val mediaDetails: LiveData<MediaDetailResponse> by lazy {
         mediaRepository.getMediaDetail()

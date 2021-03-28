@@ -17,7 +17,6 @@ class DetailMediaDataSource @Inject constructor(
     private val compositeDisposable: CompositeDisposable,
     @Named("nasa id") private val nasaId: String
 ) {
-
     private val _networkState = MutableLiveData<NetworkState>()
     val networkState: LiveData<NetworkState>
         get() = _networkState
@@ -26,8 +25,10 @@ class DetailMediaDataSource @Inject constructor(
     val downloadedMediaResponse: LiveData<MediaDetailResponse>
         get() = _downloadedMediaDetailsResponse
 
-    @Inject lateinit var rawMediaDetailConverter: RawMediaDetailResponseConverter
-    @Inject lateinit var rawMediaAssetConverter: RawMediaAssetsConverter
+    @Inject
+    lateinit var rawMediaDetailConverter: RawMediaDetailResponseConverter
+    @Inject
+    lateinit var rawMediaAssetConverter: RawMediaAssetsConverter
 
     fun getMediaDetail() {
         _networkState.postValue(NetworkState.LOADING)
@@ -80,6 +81,4 @@ class DetailMediaDataSource @Inject constructor(
             Log.e("MediaDetailsDataSource", e.message.toString())
         }
     }
-
-
 }

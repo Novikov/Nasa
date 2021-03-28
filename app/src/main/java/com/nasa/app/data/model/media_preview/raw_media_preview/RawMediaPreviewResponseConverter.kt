@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class RawMediaPreviewResponseConverter @Inject constructor(){
-    lateinit var previewUrl:String
+class RawMediaPreviewResponseConverter @Inject constructor() {
+    lateinit var previewUrl: String
     lateinit var nasaId: String
     lateinit var mediaType: ContentType
     lateinit var dateCreated: String
@@ -18,20 +18,20 @@ class RawMediaPreviewResponseConverter @Inject constructor(){
     fun getMediaPreviewResponse(rawMediaPreviewResponse: RawMediaPreviewResponse): MediaPreviewResponse {
         val page = rawMediaPreviewResponse.collection.href.substringAfter("page=").toInt()
         val totalResults = rawMediaPreviewResponse.collection.metadata.total_hits
-        val totalPages = if ((totalResults % POST_PER_PAGE)!=0){
-            (totalResults/ POST_PER_PAGE) + 1
+        val totalPages = if ((totalResults % POST_PER_PAGE) != 0) {
+            (totalResults / POST_PER_PAGE) + 1
         } else {
-            (totalResults/ POST_PER_PAGE)
+            (totalResults / POST_PER_PAGE)
         }
 
         val previewsList = ArrayList<MediaPreview>()
 
-        rawMediaPreviewResponse.collection.items.forEach {item ->
+        rawMediaPreviewResponse.collection.items.forEach { item ->
 
             //preview url for audio item is always null
-            val tmpLinks:List<AssetLink>? = item.links
+            val tmpLinks: List<AssetLink>? = item.links
 
-            previewUrl = if (tmpLinks!=null){
+            previewUrl = if (tmpLinks != null) {
                 item.links.first().href
             } else {
                 ""
@@ -56,8 +56,8 @@ class RawMediaPreviewResponseConverter @Inject constructor(){
             val tmpDateCreated = item.data.first().date_created
             dateCreated = convertDate(tmpDateCreated)
 
-            val tmpDescription:String? = item.data.first().description
-            description = if (tmpDescription!=null){
+            val tmpDescription: String? = item.data.first().description
+            description = if (tmpDescription != null) {
                 val rawDescription = item.data.first().description
                 if (rawDescription.length > 200) {
                     rawDescription.substring(0, 200)
@@ -72,31 +72,32 @@ class RawMediaPreviewResponseConverter @Inject constructor(){
             previewsList.add(mediaPreview)
         }
 
-        val mediaPreviewResponse = MediaPreviewResponse(previewsList,page, totalPages, totalResults)
+        val mediaPreviewResponse =
+            MediaPreviewResponse(previewsList, page, totalPages, totalResults)
         return mediaPreviewResponse
     }
 
     private fun convertDate(dateStr: String): String {
-                val parsedDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
-                val parsedDate: Date? = parsedDateFormat.parse(dateStr)
+        val parsedDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+        val parsedDate: Date? = parsedDateFormat.parse(dateStr)
 
-                if (parsedDate!=null) {
+        if (parsedDate != null) {
 
-                    val dayDateFormat = SimpleDateFormat("dd")
-                    val day = dayDateFormat.format(parsedDate)
+            val dayDateFormat = SimpleDateFormat("dd")
+            val day = dayDateFormat.format(parsedDate)
 
-                    val monthDateFormat = SimpleDateFormat("MMMM")
-                    val month = monthDateFormat.format(parsedDate)
+            val monthDateFormat = SimpleDateFormat("MMMM")
+            val month = monthDateFormat.format(parsedDate)
 
-                    val yearDateFormat = SimpleDateFormat("yyyy")
-                    val year = yearDateFormat.format(parsedDate)
+            val yearDateFormat = SimpleDateFormat("yyyy")
+            val year = yearDateFormat.format(parsedDate)
 
-                    val dateCreated = "$month $day, $year"
+            val dateCreated = "$month $day, $year"
 
-                    return dateCreated
-                }
-                else {
-                    return ""
-                }
-            }
+            return dateCreated
+
+        } else {
+            return ""
+        }
     }
+}

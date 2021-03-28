@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.DialogFragment
 import com.nasa.app.R
 
-
 class DownloadDialogFragment : DialogFragment() {
     companion object {
         private val DOWNLOAD_DIALOG_FRAGMET = "app_error_dialog_fragment"

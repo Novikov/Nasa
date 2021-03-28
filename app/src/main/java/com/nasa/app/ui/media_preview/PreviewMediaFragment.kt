@@ -17,16 +17,17 @@ import com.nasa.app.R
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.Activity
-import com.nasa.app.ui.MainActivity
 import javax.inject.Inject
 
 class PreviewMediaFragment : Fragment() {
     private var activityContract: Activity? = null
     private lateinit var viewModel: PreviewMediaViewModel
-    lateinit var mediaPreviewRecyclerView:RecyclerView
+    lateinit var mediaPreviewRecyclerView: RecyclerView
 
-    @Inject lateinit var providerFactory: ViewModelProviderFactory
-    @Inject lateinit var adapter:MediaPreviewAdapter
+    @Inject
+    lateinit var providerFactory: ViewModelProviderFactory
+    @Inject
+    lateinit var adapter: MediaPreviewAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -34,15 +35,17 @@ class PreviewMediaFragment : Fragment() {
         try {
             activityContract = context as Activity
         } catch (e: ClassCastException) {
-            throw ClassCastException(context.toString() + "Activity have to implement interface IActivityView")
+            throw ClassCastException(context.toString() + "Activity have to implement interface Activity")
         }
 
-        (requireActivity().application as BaseApplication).appComponent.getPreviewComponent().create().inject(this)
+        (requireActivity().application as BaseApplication).appComponent.getPreviewComponent()
+            .create().inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, providerFactory).get(PreviewMediaViewModel::class.java)
+        viewModel =
+            ViewModelProviders.of(this, providerFactory).get(PreviewMediaViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -63,7 +66,10 @@ class PreviewMediaFragment : Fragment() {
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
             if (it.mediaPreviewList.isNotEmpty()) {
                 adapter.dataSource = it
-                (mediaPreviewRecyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(0,0)
+                (mediaPreviewRecyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
+                    0,
+                    0
+                )
                 contentLayout.visibility = View.VISIBLE
             } else {
                 activityContract?.showMsg("Nothing found")
@@ -89,7 +95,7 @@ class PreviewMediaFragment : Fragment() {
         return view
     }
 
-    fun initRecyclerView(){
+    private fun initRecyclerView() {
         mediaPreviewRecyclerView.layoutManager = LinearLayoutManager(context)
         mediaPreviewRecyclerView.adapter = adapter
     }

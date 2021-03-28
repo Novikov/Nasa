@@ -1,20 +1,19 @@
 package com.nasa.app.data.model.media_detail.raw_media_asset
 
-import com.google.gson.JsonArray
 import com.nasa.app.data.model.ContentType
 import javax.inject.Inject
 
 class RawMediaAssetsConverter @Inject constructor() {
 
     fun getAssets(rawMediaDetailAssetResponse: RawMediaDetailAssetResponse): LinkedHashMap<String, String> {
-        var assetMap = linkedMapOf<String, String>()
+        var assetMap: LinkedHashMap<String, String>
 
         val assetType = getAssetType(rawMediaDetailAssetResponse.collection.items)
 
-        when (assetType) {
-            ContentType.AUDIO -> assetMap = getAudioAsset(rawMediaDetailAssetResponse.collection.items)
-            ContentType.VIDEO -> assetMap = getVideoAsset(rawMediaDetailAssetResponse.collection.items)
-            ContentType.IMAGE -> assetMap = getImageAsset(rawMediaDetailAssetResponse.collection.items)
+        assetMap = when (assetType) {
+            ContentType.AUDIO -> getAudioAsset(rawMediaDetailAssetResponse.collection.items)
+            ContentType.VIDEO -> getVideoAsset(rawMediaDetailAssetResponse.collection.items)
+            ContentType.IMAGE -> getImageAsset(rawMediaDetailAssetResponse.collection.items)
         }
 
         return assetMap
