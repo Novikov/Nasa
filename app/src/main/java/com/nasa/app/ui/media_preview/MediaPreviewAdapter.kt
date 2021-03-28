@@ -223,6 +223,8 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
     inner class MediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val mediaPreviewImageView: ImageView =
             view.findViewById(R.id.media_preview_recycler_view_image)
+        val audioBackgroundImageView: ImageView =
+            view.findViewById(R.id.audio_background_image_view)
         val playVideoImageView: ImageView = view.findViewById(R.id.play_video_image_view)
         val playAudioImageView: ImageView = view.findViewById(R.id.play_audio_image_view)
         val descriptionTextView: TextView = view.findViewById(R.id.description_text_view)
@@ -238,27 +240,32 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
             }
             when (mediaPreview.mediaType) {
                 ContentType.IMAGE -> {
+                    mediaPreviewImageView.visibility = View.VISIBLE
+                    audioBackgroundImageView.visibility = View.INVISIBLE
                     picasso
                         .load(mediaPreview.previewUrl)
                         .fit()
                         .centerCrop()
                         .into(mediaPreviewImageView)
-                    playVideoImageView.visibility = View.GONE
-                    playAudioImageView.visibility = View.GONE
+                    playVideoImageView.visibility = View.INVISIBLE
+                    playAudioImageView.visibility = View.INVISIBLE
                 }
                 ContentType.VIDEO -> {
+                    mediaPreviewImageView.visibility = View.VISIBLE
+                    audioBackgroundImageView.visibility = View.INVISIBLE
                     picasso
                         .load(mediaPreview.previewUrl)
                         .fit()
                         .centerCrop()
                         .into(mediaPreviewImageView);
                     playVideoImageView.visibility = View.VISIBLE
-                    playAudioImageView.visibility = View.GONE
+                    playAudioImageView.visibility = View.INVISIBLE
 
                 }
                 ContentType.AUDIO -> {
-                    mediaPreviewImageView.setImageResource(android.R.color.black)
-                    playVideoImageView.visibility = View.GONE
+                    mediaPreviewImageView.visibility = View.INVISIBLE
+                    audioBackgroundImageView.visibility = View.VISIBLE
+                    playVideoImageView.visibility = View.INVISIBLE
                     playAudioImageView.visibility = View.VISIBLE
                 }
             }

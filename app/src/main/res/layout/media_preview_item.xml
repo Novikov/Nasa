@@ -1,79 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/media_preview_recycler_view_image"
-                android:layout_width="130dp"
-                android:layout_height="130dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="#1D1D23"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/media_preview_recycler_view_image"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="#1D1D23"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/date_created_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="@{mediaPreview.dateCreated}"
-                android:textColor="@color/exo_white"
-                app:layout_constraintStart_toEndOf="@+id/media_preview_recycler_view_image"
-                app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/audio_background_image_view"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="#1D1D23"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/description_text_view"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:maxLines="6"
-                android:ellipsize="end"
-                android:text="@{mediaPreview.description}"
-                android:textColor="@color/exo_white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/media_preview_recycler_view_image"
-                app:layout_constraintTop_toBottomOf="@+id/date_created_text_view" />
+    <TextView
+        android:id="@+id/date_created_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@{mediaPreview.dateCreated}"
+        android:textColor="@color/exo_white"
+        app:layout_constraintStart_toEndOf="@+id/media_preview_recycler_view_image"
+        app:layout_constraintTop_toTopOf="parent" />
 
-            <View
-                android:id="@+id/divider"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="@color/horisontal_divider_color"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+    <TextView
+        android:id="@+id/description_text_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:ellipsize="end"
+        android:maxLines="6"
+        android:text="@{mediaPreview.description}"
+        android:textColor="@color/exo_white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/media_preview_recycler_view_image"
+        app:layout_constraintTop_toBottomOf="@+id/date_created_text_view" />
 
-            <ImageView
-                android:id="@+id/play_video_image_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/media_preview_recycler_view_image"
-                app:layout_constraintEnd_toEndOf="@+id/media_preview_recycler_view_image"
-                app:layout_constraintStart_toStartOf="@+id/media_preview_recycler_view_image"
-                app:layout_constraintTop_toTopOf="@+id/media_preview_recycler_view_image"
-                app:srcCompat="@drawable/ic_play_video"
-                android:visibility="gone"/>
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/horisontal_divider_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-            <ImageView
-                android:id="@+id/play_audio_image_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/media_preview_recycler_view_image"
-                app:layout_constraintEnd_toEndOf="@+id/media_preview_recycler_view_image"
-                app:layout_constraintStart_toStartOf="@+id/media_preview_recycler_view_image"
-                app:layout_constraintTop_toTopOf="@+id/media_preview_recycler_view_image"
-                app:srcCompat="@drawable/ic_play_audio"
-                android:visibility="gone"/>
+    <ImageView
+        android:id="@+id/play_video_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/media_preview_recycler_view_image"
+        app:layout_constraintEnd_toEndOf="@+id/media_preview_recycler_view_image"
+        app:layout_constraintStart_toStartOf="@+id/media_preview_recycler_view_image"
+        app:layout_constraintTop_toTopOf="@+id/media_preview_recycler_view_image"
+        app:srcCompat="@drawable/ic_play_video" />
+
+    <ImageView
+        android:id="@+id/play_audio_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/media_preview_recycler_view_image"
+        app:layout_constraintEnd_toEndOf="@+id/media_preview_recycler_view_image"
+        app:layout_constraintStart_toStartOf="@+id/media_preview_recycler_view_image"
+        app:layout_constraintTop_toTopOf="@+id/media_preview_recycler_view_image"
+        app:srcCompat="@drawable/ic_play_audio" />
 </androidx.constraintlayout.widget.ConstraintLayout>
