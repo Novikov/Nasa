@@ -18,23 +18,28 @@ class RawMediaDetailResponseConverter @Inject constructor(){
     lateinit var description: String
 
     fun getMediaDetailResponseWithInfoData(rawMediaDetailResponse: RawMediaDetailResponse): MediaDetailResponse {
-        nasaId = rawMediaDetailResponse.collection.items.first().data.first().nasa_id
 
-        val tmpDescription = rawMediaDetailResponse.collection.items.first().data.first().description
-        description = if (tmpDescription!=null){
-            tmpDescription
-        } else{
-            ""
-        }
+        val tmpNasaId:String? = rawMediaDetailResponse.collection.items.first().data.first().nasa_id
+        nasaId = tmpNasaId?:""
 
-        title = rawMediaDetailResponse.collection.items.first().data.first().title
+        val tmpDescription:String? = rawMediaDetailResponse.collection.items.first().data.first().description
+        description = tmpDescription ?: ""
+
+        val tmpTitle:String? = rawMediaDetailResponse.collection.items.first().data.first().title
+        title = tmpTitle?:""
+
         val tmpDateCreated = rawMediaDetailResponse.collection.items.first().data.first().date_created
         dateCreated = convertDate(tmpDateCreated)
-        center = rawMediaDetailResponse.collection.items.first().data.first().center
-        keywords = rawMediaDetailResponse.collection.items.first().data.first().keywords
+
+        val tmpCenter:String? = rawMediaDetailResponse.collection.items.first().data.first().center
+        center = tmpCenter?:""
+
+        val tmpKeywords :List<String>? = rawMediaDetailResponse.collection.items.first().data.first().keywords
+        keywords = tmpKeywords?: listOf("")
 
         //preview url for audio and video items is always null
-        if (rawMediaDetailResponse.collection.items.first().links!=null){
+        val tmpLinks: List<AssetLink>? = rawMediaDetailResponse.collection.items.first().links
+        if (tmpLinks!=null){
             rawMediaDetailResponse.collection.items.first().links.forEach {
                 if (it.rel.equals("preview")){
                     previewUrl = it.href
@@ -64,8 +69,11 @@ class RawMediaDetailResponseConverter @Inject constructor(){
     }
 
     fun convertDate (dateStr: String): String {
-        val parsedDateFormat =
-            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+        if (dateStr.equals("")){
+            return ""
+        }
+
+        val parsedDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
 
         val parsedDate: Date = parsedDateFormat.parse(dateStr)
 
