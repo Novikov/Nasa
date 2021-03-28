@@ -29,11 +29,12 @@ class RawMediaPreviewResponseConverter @Inject constructor(){
         rawMediaPreviewResponse.collection.items.forEach {item ->
 
             //preview url for audio item is always null
-            if (item.links!=null){
-                previewUrl = item.links.first().href
-            }
-            else {
-                previewUrl = ""
+            val tmpLinks:List<AssetLink>? = item.links
+
+            previewUrl = if (tmpLinks!=null){
+                item.links.first().href
+            } else {
+                ""
             }
 
             nasaId = item.data.first().nasa_id
@@ -55,10 +56,11 @@ class RawMediaPreviewResponseConverter @Inject constructor(){
             val tmpDateCreated = item.data.first().date_created
             dateCreated = convertDate(tmpDateCreated)
 
-            description = if (item.data.first().description!=null){
-                val tmpDescription = item.data.first().description
-                if (tmpDescription.length > 200) {
-                    tmpDescription.substring(0, 200)
+            val tmpDescription:String? = item.data.first().description
+            description = if (tmpDescription!=null){
+                val rawDescription = item.data.first().description
+                if (rawDescription.length > 200) {
+                    rawDescription.substring(0, 200)
                 } else {
                     item.data.first().description
                 }
@@ -76,19 +78,25 @@ class RawMediaPreviewResponseConverter @Inject constructor(){
 
     private fun convertDate(dateStr: String): String {
                 val parsedDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
-                val parsedDate: Date = parsedDateFormat.parse(dateStr)
+                val parsedDate: Date? = parsedDateFormat.parse(dateStr)
 
-                val dayDateFormat = SimpleDateFormat("dd")
-                val day = dayDateFormat.format(parsedDate)
+                if (parsedDate!=null) {
 
-                val monthDateFormat = SimpleDateFormat("MMMM")
-                val month = monthDateFormat.format(parsedDate)
+                    val dayDateFormat = SimpleDateFormat("dd")
+                    val day = dayDateFormat.format(parsedDate)
 
-                val yearDateFormat = SimpleDateFormat("yyyy")
-                val year = yearDateFormat.format(parsedDate)
+                    val monthDateFormat = SimpleDateFormat("MMMM")
+                    val month = monthDateFormat.format(parsedDate)
 
-                val dateCreated = "$month $day, $year"
+                    val yearDateFormat = SimpleDateFormat("yyyy")
+                    val year = yearDateFormat.format(parsedDate)
 
-                return dateCreated
+                    val dateCreated = "$month $day, $year"
+
+                    return dateCreated
+                }
+                else {
+                    return ""
+                }
             }
     }

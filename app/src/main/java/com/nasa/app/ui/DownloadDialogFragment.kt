@@ -48,10 +48,6 @@ class DownloadDialogFragment : DialogFragment() {
 
         val adapter = DownloadFilesAdapter(requireContext(), sUrls!!)
 
-        listView.setOnItemClickListener { parent, view, position, id ->
-            Toast.makeText(requireContext(), (view as TextView).text, Toast.LENGTH_SHORT).show()
-        }
-
         listView.adapter = adapter
 
         return view

@@ -182,10 +182,10 @@ class VideoDetailFragment : Fragment() {
             }
 
             //editText initialization
-            val keyToOriginalAsset = mediaDetailResponse.item.assets?.keys?.first().toString()
+            val keyToOriginalAsset = mediaDetailResponse.item.assets.keys.first().toString()
             val editText = view.findViewById<EditText>(R.id.url_edit_text)
             editText.setText(
-                mediaDetailResponse.item.assets?.get(keyToOriginalAsset),
+                mediaDetailResponse.item.assets[keyToOriginalAsset],
                 TextView.BufferType.EDITABLE
             )
 
@@ -193,7 +193,7 @@ class VideoDetailFragment : Fragment() {
             val linkImageView = view.findViewById<ImageView>(R.id.link_image_view)
             linkImageView.setOnClickListener {
                 activityContract?.collapseSearchField()
-                val address: Uri = Uri.parse(mediaDetailResponse.item.assets?.get(keyToOriginalAsset))
+                val address: Uri = Uri.parse(mediaDetailResponse.item.assets[keyToOriginalAsset])
                 val intent = Intent(Intent.ACTION_VIEW, address)
                 startActivity(intent)
             }
@@ -202,7 +202,7 @@ class VideoDetailFragment : Fragment() {
             button.setOnClickListener {
                 activityContract?.collapseSearchField()
                 val urlList = mutableListOf<String>()
-                mediaDetailResponse.item.assets?.values?.forEach {
+                mediaDetailResponse.item.assets.values.forEach {
                     urlList.add(it)
                 }
 

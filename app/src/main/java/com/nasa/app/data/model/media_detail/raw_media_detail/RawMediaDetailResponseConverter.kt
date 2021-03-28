@@ -75,8 +75,9 @@ class RawMediaDetailResponseConverter @Inject constructor(){
 
         val parsedDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
 
-        val parsedDate: Date = parsedDateFormat.parse(dateStr)
+        val parsedDate: Date? = parsedDateFormat.parse(dateStr)
 
+        if (parsedDate!=null){
         val dayDateFormat = SimpleDateFormat("dd")
         val day = dayDateFormat.format(parsedDate)
 
@@ -88,6 +89,9 @@ class RawMediaDetailResponseConverter @Inject constructor(){
 
         val convertedDate = "$day-$month-$year"
 
-        return convertedDate
+        return convertedDate}
+        else {
+            return ""
+        }
     }
 }

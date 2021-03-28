@@ -67,7 +67,7 @@ class SearchSettingsFragment @Inject constructor() : DialogFragment() {
                 tmpIsCheckedImageCheckBox = false
                 //return state
                 if (!(videoCheckBox.isChecked.or(audioCheckBox.isChecked))) {
-                    (it as CheckBox).isChecked = true
+                    it.isChecked = true
                     tmpIsCheckedImageCheckBox = true
                 }
             } else {
@@ -79,7 +79,7 @@ class SearchSettingsFragment @Inject constructor() : DialogFragment() {
             if (!(it as CheckBox).isChecked) {
                 tmpIsCheckedVideoCheckBox = false
                 if (!(imageCheckBox.isChecked.or(audioCheckBox.isChecked))) {
-                    (it as CheckBox).isChecked = true
+                    it.isChecked = true
                     tmpIsCheckedVideoCheckBox = true
                 }
             } else {
@@ -91,7 +91,7 @@ class SearchSettingsFragment @Inject constructor() : DialogFragment() {
             if (!(it as CheckBox).isChecked) {
                 tmpIsCheckedAudioCheckBox = false
                 if (!(imageCheckBox.isChecked.or(videoCheckBox.isChecked))) {
-                    (it as CheckBox).isChecked = true
+                    it.isChecked = true
                     tmpIsCheckedAudioCheckBox = true
                 }
             } else {
@@ -121,7 +121,7 @@ class SearchSettingsFragment @Inject constructor() : DialogFragment() {
         val rangeSlider = view.findViewById<RangeSlider>(R.id.rangeSlider)
         rangeSlider.values = listOf(searchParams.startSearchYear.toFloat(), searchParams.endSearchYear.toFloat())
 
-        rangeSlider.addOnChangeListener { slider, value, fromUser ->
+        rangeSlider.addOnChangeListener { slider, _, _ ->
             beginDateTextView.text = slider.values[0].toInt().toString()
             endDateTextView.text = slider.values[1].toInt().toString()
             tmpBeginSearchDateValue = slider.values[0].toInt().toString()
