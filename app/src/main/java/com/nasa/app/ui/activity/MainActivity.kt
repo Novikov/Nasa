@@ -1,4 +1,4 @@
-package com.nasa.app.ui
+package com.nasa.app.ui.activity
 
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +13,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
+import com.nasa.app.utils.SearchParams
+import com.nasa.app.ui.fragment_search_settings.SearchSettingsFragment
 import javax.inject.Inject
 
 
@@ -24,7 +26,7 @@ class MainActivity : AppCompatActivity(), Activity {
     lateinit var searchParams: SearchParams
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as BaseApplication).appComponent.inject(this)
+        (application as BaseApplication).appComponent.getActivityComponent().create().inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mProgress = findViewById(R.id.progressBar)

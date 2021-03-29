@@ -1,11 +1,9 @@
 package com.nasa.app.di
 
-import android.content.Context
-import com.nasa.app.ui.MainActivity
-import com.nasa.app.ui.SearchSettingsFragment
-import com.nasa.app.ui.media_detail.di.DetailComponent
-import com.nasa.app.ui.media_preview.di.PreviewComponent
-import dagger.BindsInstance
+import com.nasa.app.ui.activity.di.ActivityComponent
+import com.nasa.app.ui.fragments_media_detail.di.DetailComponent
+import com.nasa.app.ui.fragment_media_preview.di.PreviewComponent
+import com.nasa.app.ui.fragment_search_settings.di.SearchSettingsComponent
 import dagger.Component
 import javax.inject.Singleton
 
@@ -20,7 +18,6 @@ interface AppComponent {
 
     fun getPreviewComponent(): PreviewComponent.Factory
     fun getDetailComponent(): DetailComponent.Factory
-
-    fun inject(mainActivity: MainActivity)
-    fun inject(searchSettingsFragment: SearchSettingsFragment)
+    fun getActivityComponent():ActivityComponent.Factory
+    fun getSearchSettingsComponent():SearchSettingsComponent.Factory
 }

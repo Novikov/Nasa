@@ -1,4 +1,4 @@
-package com.nasa.app.ui.media_preview
+package com.nasa.app.ui.fragment_media_preview
 
 
 import android.content.Context
@@ -16,8 +16,8 @@ import com.nasa.app.BaseApplication
 import com.nasa.app.R
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.di.view_models.ViewModelProviderFactory
-import com.nasa.app.ui.Activity
-import com.nasa.app.ui.SearchParams
+import com.nasa.app.ui.activity.Activity
+import com.nasa.app.utils.SearchParams
 import javax.inject.Inject
 
 class PreviewMediaFragment : Fragment() {
