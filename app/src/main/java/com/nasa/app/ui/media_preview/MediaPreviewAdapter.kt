@@ -109,8 +109,8 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
             }
             1 -> {
                 val viewHolder = holder as MediaPreviewViewHolder
-                val mediaPreview = dataSource.mediaPreviewList[position]
-                val hideDivider = (position) == dataSource.mediaPreviewList.lastIndex
+                val mediaPreview = dataSource.mediaPreviewList[position-1]
+                val hideDivider = (position-1) == dataSource.mediaPreviewList.lastIndex
                 Log.i("Position", "onBindViewHolder: ${position}")
                 viewHolder.bind(mediaPreview, hideDivider)
                 viewHolder.itemView.setOnClickListener {
@@ -181,7 +181,7 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
         return when {
             //search info textView for 0 position
             (position == 0) -> {
-                1
+                0
             }
 
             //mediaPreviewItem for 1 - 100 position
@@ -220,7 +220,7 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
 
     //0 - searchInfoTV, 1:100 - mediaPreviewItems, 101 - next|prev_and_next|prev buttons
     override fun getItemCount(): Int {
-        return dataSource.mediaPreviewList.size
+        return dataSource.mediaPreviewList.size + 1
     }
 
     inner class MediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
