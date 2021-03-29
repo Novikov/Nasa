@@ -44,7 +44,7 @@ class ImageDetailFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.i(Companion.TAG, "onAttach: ")
+        Log.i(TAG, "onAttach: ")
         try {
             activityContract = context as Activity
         } catch (e: ClassCastException) {

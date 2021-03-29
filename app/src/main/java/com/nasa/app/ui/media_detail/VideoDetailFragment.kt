@@ -115,7 +115,6 @@ class VideoDetailFragment : Fragment() {
                 }
                 if (state == Player.STATE_BUFFERING) {
                     if (!isExoPlayerPrepared) {
-                        contentLayout.visibility = View.INVISIBLE
                         activityContract?.showProgressBar()
                     }
                 }
