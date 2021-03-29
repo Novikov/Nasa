@@ -185,7 +185,7 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
             }
 
             //mediaPreviewItem for 1 - 100 position
-            (position < dataSource.mediaPreviewList.size+2) -> {
+            (position <= dataSource.mediaPreviewList.size+1) -> {
                 1
             }
 
