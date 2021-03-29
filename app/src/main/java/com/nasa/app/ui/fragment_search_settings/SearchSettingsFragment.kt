@@ -37,7 +37,7 @@ class SearchSettingsFragment @Inject constructor() : DialogFragment() {
         } catch (e: ClassCastException) {
             throw ClassCastException(context.toString() + "Activity have to implement interface IActivityView")
         }
-        (requireActivity().application as BaseApplication).appComponent.inject(this)
+        (requireActivity().application as BaseApplication).appComponent.getSearchSettingsComponent().create().inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
