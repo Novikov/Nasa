@@ -1,5 +1,6 @@
 package com.nasa.app.ui.media_preview
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -107,8 +108,9 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
             }
             1 -> {
                 val viewHolder = holder as MediaPreviewViewHolder
-                val mediaPreview = dataSource.mediaPreviewList[position]
+                val mediaPreview = dataSource.mediaPreviewList[position-1]
                 val hideDivider = position == dataSource.mediaPreviewList.lastIndex
+                Log.i("Position", "onBindViewHolder: $position")
                 viewHolder.bind(mediaPreview, hideDivider)
                 viewHolder.itemView.setOnClickListener {
                     when (mediaPreview.mediaType) {
