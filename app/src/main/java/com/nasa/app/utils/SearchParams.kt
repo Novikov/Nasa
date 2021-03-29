@@ -1,4 +1,4 @@
-package com.nasa.app.ui
+package com.nasa.app.utils
 
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.utils.EMPTY_SEARCH

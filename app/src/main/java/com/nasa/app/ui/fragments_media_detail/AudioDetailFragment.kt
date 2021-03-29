@@ -1,4 +1,4 @@
-package com.nasa.app.ui.media_detail
+package com.nasa.app.ui.fragments_media_detail
 
 import android.content.Context
 import android.content.Intent
@@ -26,9 +26,9 @@ import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.databinding.FragmentAudioDetailBinding
 import com.nasa.app.di.view_models.ViewModelProviderFactory
-import com.nasa.app.ui.ExoMediaPlayer
-import com.nasa.app.ui.Activity
-import com.nasa.app.ui.DownloadDialogFragment
+import com.nasa.app.utils.ExoMediaPlayer
+import com.nasa.app.ui.activity.Activity
+import com.nasa.app.ui.fragment_download_files.DownloadDialogFragment
 import javax.inject.Inject
 
 class AudioDetailFragment : Fragment() {

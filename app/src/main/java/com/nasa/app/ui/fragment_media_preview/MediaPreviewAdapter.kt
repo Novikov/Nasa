@@ -1,4 +1,4 @@
-package com.nasa.app.ui.media_preview
+package com.nasa.app.ui.fragment_media_preview
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,7 +14,7 @@ import com.nasa.app.R
 import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.media_preview.MediaPreview
-import com.nasa.app.ui.SearchParams
+import com.nasa.app.utils.SearchParams
 import com.nasa.app.utils.POST_PER_PAGE
 import com.squareup.picasso.Picasso
 import javax.inject.Inject

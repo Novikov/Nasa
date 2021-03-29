@@ -1,4 +1,4 @@
-package com.nasa.app.ui
+package com.nasa.app.ui.activity
 
 interface Activity {
     fun showProgressBar()

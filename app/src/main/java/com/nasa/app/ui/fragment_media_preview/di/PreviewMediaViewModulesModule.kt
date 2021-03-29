@@ -1,8 +1,8 @@
-package com.nasa.app.ui.media_preview.di
+package com.nasa.app.ui.fragment_media_preview.di
 
 import androidx.lifecycle.ViewModel
 import com.nasa.app.di.view_models.ViewModelKey
-import com.nasa.app.ui.media_preview.PreviewMediaViewModel
+import com.nasa.app.ui.fragment_media_preview.PreviewMediaViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

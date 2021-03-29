@@ -1,4 +1,4 @@
-package com.nasa.app.ui
+package com.nasa.app.utils
 
 import android.content.Context
 import com.google.android.exoplayer2.*

@@ -1,6 +1,6 @@
-package com.nasa.app.ui.media_detail.di
+package com.nasa.app.ui.fragments_media_detail.di
 
-import com.nasa.app.ui.ExoMediaPlayer
+import com.nasa.app.utils.ExoMediaPlayer
 import dagger.Module
 import dagger.Provides
 import io.reactivex.disposables.CompositeDisposable

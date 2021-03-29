@@ -1,7 +1,7 @@
-package com.nasa.app.ui.media_preview.di
+package com.nasa.app.ui.fragment_media_preview.di
 
 import com.nasa.app.di.view_models.ViewModelFactoryModule
-import com.nasa.app.ui.media_preview.PreviewMediaFragment
+import com.nasa.app.ui.fragment_media_preview.PreviewMediaFragment
 import dagger.Subcomponent
 
 @PreviewScope

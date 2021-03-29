@@ -1,4 +1,4 @@
-package com.nasa.app.ui.media_preview
+package com.nasa.app.ui.fragment_media_preview
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

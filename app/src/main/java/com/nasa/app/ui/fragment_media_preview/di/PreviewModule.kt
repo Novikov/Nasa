@@ -1,4 +1,4 @@
-package com.nasa.app.ui.media_preview.di
+package com.nasa.app.ui.fragment_media_preview.di
 
 import dagger.Module
 import dagger.Provides

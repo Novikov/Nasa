@@ -1,4 +1,4 @@
-package com.nasa.app.ui.media_detail
+package com.nasa.app.ui.fragments_media_detail
 
 import android.content.Context
 import android.content.Intent
@@ -16,36 +16,31 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.exoplayer2.ExoPlaybackException
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.flexbox.FlexboxLayout
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.repository.NetworkState
-import com.nasa.app.databinding.FragmentVideoDetailBinding
+import com.nasa.app.databinding.FragmentImageDetailBinding
 import com.nasa.app.di.view_models.ViewModelProviderFactory
-import com.nasa.app.ui.Activity
-import com.nasa.app.ui.DownloadDialogFragment
-import com.nasa.app.ui.ExoMediaPlayer
+import com.nasa.app.ui.activity.Activity
+import com.nasa.app.ui.fragment_download_files.DownloadDialogFragment
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
-class VideoDetailFragment : Fragment() {
-
+class ImageDetailFragment : Fragment() {
     private lateinit var viewModel: DetailMediaViewModel
-    var time: Long? = null
     lateinit var nasaId: String
     lateinit var contentType: ContentType
     var activityContract: Activity? = null
-    var isExoPlayerPrepared = false
 
-    @Inject
-    lateinit var exoMediaPlayer: ExoMediaPlayer
     @Inject
     lateinit var detailMediaRepository: DetailMediaRepository
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
+    @Inject
+    lateinit var picasso: Picasso
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -70,13 +65,11 @@ class VideoDetailFragment : Fragment() {
             .create(nasaId).inject(this)
     }
 
-    val TAG = "VideoDetailFragment"
-    val PLAYER_TIME = "PlayerTime"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i(TAG, "onCreate: ")
-        time = savedInstanceState?.getLong(PLAYER_TIME)
+        Log.i(Companion.TAG, "onCreate: ")
+
         viewModel =
             ViewModelProviders.of(this, providerFactory).get(DetailMediaViewModel::class.java)
     }
@@ -86,10 +79,10 @@ class VideoDetailFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.i(TAG, "onCreateView: ")
-        val binding = DataBindingUtil.inflate<FragmentVideoDetailBinding>(
+        Log.i(Companion.TAG, "onCreateView: ")
+        val binding = DataBindingUtil.inflate<FragmentImageDetailBinding>(
             inflater,
-            R.layout.fragment_video_detail,
+            R.layout.fragment_image_detail,
             container,
             false
         )
@@ -101,68 +94,34 @@ class VideoDetailFragment : Fragment() {
 
         val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
         contentLayout.visibility = View.INVISIBLE
-        val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
-        playerView.player = exoMediaPlayer.getPlayer(requireContext())
         val button = view.findViewById<Button>(R.id.update_results_button)
-
-        exoMediaPlayer.addListener(object : Player.EventListener {
-            override fun onPlaybackStateChanged(state: Int) {
-                super.onPlaybackStateChanged(state)
-                if (state == Player.STATE_READY) {
-                    isExoPlayerPrepared = true
-                    contentLayout.visibility = View.VISIBLE
-                    activityContract?.hideProgressBar()
-                }
-                if (state == Player.STATE_BUFFERING) {
-                    if (!isExoPlayerPrepared) {
-                        activityContract?.showProgressBar()
-                    }
-                }
-            }
-
-            override fun onPlayerError(error: ExoPlaybackException) {
-                super.onPlayerError(error)
-                activityContract?.hideProgressBar()
-                contentLayout.visibility = View.GONE
-                activityContract?.showMsg("ExoPlayer loading error")
-            }
-        })
+        val imageView = view.findViewById<ImageView>(R.id.image_media_view)
 
         val orientation = getResources().getConfiguration().orientation
         Log.i("Device orientation", orientation.toString())
         when (orientation) {
             1 -> {
-                playerView.layoutParams =
-                    ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        ConstraintLayout.LayoutParams.WRAP_CONTENT
-                    )
             }
             2 -> {
-                playerView.layoutParams =
-                    ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        ConstraintLayout.LayoutParams.MATCH_PARENT
-                    )
                 activityContract?.hideActionBar()
             }
         }
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
+            picasso.load(mediaDetailResponse.item.previewUrl).into(
+                imageView,
+                object :
+                    Callback {
+                    override fun onSuccess() {
+                        contentLayout.visibility = View.VISIBLE
+                        activityContract?.hideProgressBar()
+                    }
 
-            var videoUrl = ""
-
-            for (asset in mediaDetailResponse.item.assets!!) {
-                if (asset.value.contains("mp4")) {
-                    videoUrl = asset.value
-                    break
-                }
-            }
-
-            val substring = videoUrl.substringAfter("//")
-            videoUrl = "https://$substring"
-            Log.i("VideoUrl", "videoUrl $videoUrl")
-            exoMediaPlayer.playPlayer(videoUrl, time ?: 0)
+                    override fun onError(e: java.lang.Exception?) {
+                        activityContract?.hideProgressBar()
+                        activityContract?.showMsg("Image loading error: ${e?.message}")
+                    }
+                })
 
             binding.mediaDetail = mediaDetailResponse.item
 
@@ -185,10 +144,10 @@ class VideoDetailFragment : Fragment() {
             }
 
             //editText initialization
-            val keyToOriginalAsset = mediaDetailResponse.item.assets.keys.first().toString()
+            val keyToOriginalAsset = mediaDetailResponse.item.assets?.keys?.first().toString()
             val editText = view.findViewById<EditText>(R.id.url_edit_text)
             editText.setText(
-                mediaDetailResponse.item.assets[keyToOriginalAsset],
+                mediaDetailResponse.item.assets?.get(keyToOriginalAsset),
                 TextView.BufferType.EDITABLE
             )
 
@@ -196,7 +155,8 @@ class VideoDetailFragment : Fragment() {
             val linkImageView = view.findViewById<ImageView>(R.id.link_image_view)
             linkImageView.setOnClickListener {
                 activityContract?.collapseSearchField()
-                val address: Uri = Uri.parse(mediaDetailResponse.item.assets[keyToOriginalAsset])
+                val address: Uri =
+                    Uri.parse(mediaDetailResponse.item.assets?.get(keyToOriginalAsset))
                 val intent = Intent(Intent.ACTION_VIEW, address)
                 startActivity(intent)
             }
@@ -205,7 +165,7 @@ class VideoDetailFragment : Fragment() {
             button.setOnClickListener {
                 activityContract?.collapseSearchField()
                 val urlList = mutableListOf<String>()
-                mediaDetailResponse.item.assets.values.forEach {
+                mediaDetailResponse.item.assets?.values?.forEach {
                     urlList.add(it)
                 }
 
@@ -217,7 +177,6 @@ class VideoDetailFragment : Fragment() {
                     Log.i("MainActivity", ex.message.toString())
                 }
             }
-
         })
 
         //network state status observing
@@ -246,22 +205,7 @@ class VideoDetailFragment : Fragment() {
         return view
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        Log.i(TAG, "onSaveInstanceState: ")
-        outState.putLong(PLAYER_TIME, exoMediaPlayer.getPlayerTime())
-        Log.i(TAG, "time onSavedInstanceState ${exoMediaPlayer.getPlayerTime()}")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.i(TAG, "onPause: ")
-        exoMediaPlayer.pausePlayer()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.i(TAG, "onDestroyView: ")
-        exoMediaPlayer.releasePlayer()
+    companion object {
+        const val TAG = "AudioDetailFragment"
     }
 }

@@ -1,4 +1,4 @@
-package com.nasa.app.ui
+package com.nasa.app.ui.fragment_search_settings
 
 import android.content.Context
 import android.os.Bundle
@@ -13,6 +13,8 @@ import androidx.fragment.app.DialogFragment
 import com.google.android.material.slider.RangeSlider
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
+import com.nasa.app.ui.activity.Activity
+import com.nasa.app.utils.SearchParams
 import javax.inject.Inject
 
 class SearchSettingsFragment @Inject constructor() : DialogFragment() {
