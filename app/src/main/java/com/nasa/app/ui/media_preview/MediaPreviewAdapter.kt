@@ -111,7 +111,7 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
                 val viewHolder = holder as MediaPreviewViewHolder
                 val mediaPreview = dataSource.mediaPreviewList[position-1]
                 val hideDivider = (position-1) == dataSource.mediaPreviewList.lastIndex
-                Log.i("Position", "onBindViewHolder: ${position}")
+                Log.i("Position", "real position : ${position}, position - 1 == ${position-1}")
                 viewHolder.bind(mediaPreview, hideDivider)
                 viewHolder.itemView.setOnClickListener {
                     when (mediaPreview.mediaType) {
@@ -185,33 +185,33 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
             }
 
             //mediaPreviewItem for 1 - 100 position
-            (position <= dataSource.mediaPreviewList.size+1) -> {
+            (position <= dataSource.mediaPreviewList.size) -> {
                 1
             }
 
-//            //navigation view or empty view for 101 position
-//            (position == dataSource.mediaPreviewList.size + 1) -> {
-//                //first page and other doesn't exist
-//                if ((dataSource.page == 1) && (dataSource.totalPages - dataSource.page == 0)) {
-//                    5
-//                }
-//                //first page and other exists
-//                else if (dataSource.page == 1 && (dataSource.totalPages - dataSource.page > 0)) {
-//                    2
-//                }
-//                //middle
-//                else if (dataSource.page > 1 && (dataSource.totalPages - dataSource.page > 0)) {
-//                    3
-//                }
-//                //end
-//                else if (dataSource.page > 1 && (dataSource.totalPages - dataSource.page == 0)) {
-//                    4
-//                }
-//                //unreachable
-//                else {
-//                    5
-//                }
-//            }
+            //navigation view or empty view for 101 position
+            (position == dataSource.mediaPreviewList.size + 1) -> {
+                //first page and other doesn't exist
+                if ((dataSource.page == 1) && (dataSource.totalPages - dataSource.page == 0)) {
+                    5
+                }
+                //first page and other exists
+                else if (dataSource.page == 1 && (dataSource.totalPages - dataSource.page > 0)) {
+                    2
+                }
+                //middle
+                else if (dataSource.page > 1 && (dataSource.totalPages - dataSource.page > 0)) {
+                    3
+                }
+                //end
+                else if (dataSource.page > 1 && (dataSource.totalPages - dataSource.page == 0)) {
+                    4
+                }
+                //unreachable
+                else {
+                    5
+                }
+            }
             else -> {
                 0
             }
@@ -220,7 +220,12 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
 
     //0 - searchInfoTV, 1:100 - mediaPreviewItems, 101 - next|prev_and_next|prev buttons
     override fun getItemCount(): Int {
-        return dataSource.mediaPreviewList.size + 1
+        if (dataSource.mediaPreviewList.size==1){
+            return 2
+        }
+        else {
+            return dataSource.mediaPreviewList.size + 2
+        }
     }
 
     inner class MediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
