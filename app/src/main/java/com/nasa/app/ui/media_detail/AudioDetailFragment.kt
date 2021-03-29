@@ -228,6 +228,14 @@ class AudioDetailFragment : Fragment() {
                     activityContract?.hideProgressBar()
                     activityContract?.showMsg(it.msg)
                 }
+                NetworkState.BAD_REQUEST -> {
+                    activityContract?.hideProgressBar()
+                    activityContract?.showMsg(it.msg)
+                }
+                NetworkState.NOT_FOUND -> {
+                    activityContract?.hideProgressBar()
+                    activityContract?.showMsg(it.msg)
+                }
                 NetworkState.ERROR -> {
                     activityContract?.hideProgressBar()
                     activityContract?.showMsg(it.msg)

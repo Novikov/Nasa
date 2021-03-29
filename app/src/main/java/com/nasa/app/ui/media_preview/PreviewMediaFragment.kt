@@ -68,7 +68,7 @@ class PreviewMediaFragment : Fragment() {
 
         val currentSearchResultHashCode = viewModel.mediaPreviews.value.hashCode()
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
-            if (currentSearchResultHashCode!=it.hashCode()) {
+            if (currentSearchResultHashCode != it.hashCode()) {
                 (mediaPreviewRecyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
                     0,
                     0
