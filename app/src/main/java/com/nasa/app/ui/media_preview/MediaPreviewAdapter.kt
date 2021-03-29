@@ -37,7 +37,7 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
     private val EMPTY_VIEW = 5
 
     var dataSource: MediaPreviewResponse =
-        MediaPreviewResponse(listOf(MediaPreview("", "", ContentType.IMAGE, "", "")), 1, 1, 1)
+        MediaPreviewResponse(listOf(MediaPreview("Apollo 11 For All Mankind", "https://images-assets.nasa.gov/video/Apollo 11 For All Mankind/Apollo 11 For All Mankind~thumb.jpg", ContentType.IMAGE, "2014-07-16T00:00:00Z", "A documentary of the Apollo 11 launch, lunar landing and exploration and return to earth which included a stay in quarantine.")), 1, 1, 1)
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -86,6 +86,7 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
 
         when (holder.itemViewType) {
             0 -> {
+                Log.i("Position", "search: ${position}")
                 val result = searchParams.searchRequestQuery.substring(0, 1)
                     .toUpperCase() + searchParams.searchRequestQuery.substring(1).toLowerCase()
                 val viewHolder = holder as SearchInfoViewHolder
@@ -108,9 +109,9 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
             }
             1 -> {
                 val viewHolder = holder as MediaPreviewViewHolder
-                val mediaPreview = dataSource.mediaPreviewList[position-1]
-                val hideDivider = position == dataSource.mediaPreviewList.lastIndex
-                Log.i("Position", "onBindViewHolder: $position")
+                val mediaPreview = dataSource.mediaPreviewList[position]
+                val hideDivider = (position) == dataSource.mediaPreviewList.lastIndex
+                Log.i("Position", "onBindViewHolder: ${position}")
                 viewHolder.bind(mediaPreview, hideDivider)
                 viewHolder.itemView.setOnClickListener {
                     when (mediaPreview.mediaType) {
@@ -180,46 +181,46 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
         return when {
             //search info textView for 0 position
             (position == 0) -> {
-                0
-            }
-
-            //mediaPreviewItem for 1 - 100 position
-            (position < dataSource.mediaPreviewList.size) -> {
                 1
             }
 
-            //navigation view or empty view for 101 position
-            (position == dataSource.mediaPreviewList.size) -> {
-                //first page and other doesn't exist
-                if ((dataSource.page == 1) && (dataSource.totalPages - dataSource.page == 0)) {
-                    5
-                }
-                //first page and other exists
-                else if (dataSource.page == 1 && (dataSource.totalPages - dataSource.page > 0)) {
-                    2
-                }
-                //middle
-                else if (dataSource.page > 1 && (dataSource.totalPages - dataSource.page > 0)) {
-                    3
-                }
-                //end
-                else if (dataSource.page > 1 && (dataSource.totalPages - dataSource.page == 0)) {
-                    4
-                }
-                //unreachable
-                else {
-                    5
-                }
+            //mediaPreviewItem for 1 - 100 position
+            (position < dataSource.mediaPreviewList.size+2) -> {
+                1
             }
+
+//            //navigation view or empty view for 101 position
+//            (position == dataSource.mediaPreviewList.size + 1) -> {
+//                //first page and other doesn't exist
+//                if ((dataSource.page == 1) && (dataSource.totalPages - dataSource.page == 0)) {
+//                    5
+//                }
+//                //first page and other exists
+//                else if (dataSource.page == 1 && (dataSource.totalPages - dataSource.page > 0)) {
+//                    2
+//                }
+//                //middle
+//                else if (dataSource.page > 1 && (dataSource.totalPages - dataSource.page > 0)) {
+//                    3
+//                }
+//                //end
+//                else if (dataSource.page > 1 && (dataSource.totalPages - dataSource.page == 0)) {
+//                    4
+//                }
+//                //unreachable
+//                else {
+//                    5
+//                }
+//            }
             else -> {
-                5
+                0
             }
         }
     }
 
     //0 - searchInfoTV, 1:100 - mediaPreviewItems, 101 - next|prev_and_next|prev buttons
     override fun getItemCount(): Int {
-        return dataSource.mediaPreviewList.size + 2
+        return dataSource.mediaPreviewList.size
     }
 
     inner class MediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -244,6 +245,7 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
                 ContentType.IMAGE -> {
                     mediaPreviewImageView.visibility = View.VISIBLE
                     audioBackgroundImageView.visibility = View.INVISIBLE
+                    Log.i("Position", "preview url: ${mediaPreview.previewUrl}")
                     picasso
                         .load(mediaPreview.previewUrl)
                         .fit()
@@ -255,6 +257,7 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
                 ContentType.VIDEO -> {
                     mediaPreviewImageView.visibility = View.VISIBLE
                     audioBackgroundImageView.visibility = View.INVISIBLE
+                    Log.i("Position", "preview url: ${mediaPreview.previewUrl}")
                     picasso
                         .load(mediaPreview.previewUrl)
                         .fit()
@@ -265,6 +268,7 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
 
                 }
                 ContentType.AUDIO -> {
+                    Log.i("Position", "preview url: - audio")
                     mediaPreviewImageView.visibility = View.INVISIBLE
                     audioBackgroundImageView.visibility = View.VISIBLE
                     playVideoImageView.visibility = View.INVISIBLE
