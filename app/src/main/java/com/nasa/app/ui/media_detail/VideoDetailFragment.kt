@@ -115,7 +115,6 @@ class VideoDetailFragment : Fragment() {
                 }
                 if (state == Player.STATE_BUFFERING) {
                     if (!isExoPlayerPrepared) {
-                        contentLayout.visibility = View.INVISIBLE
                         activityContract?.showProgressBar()
                     }
                 }
@@ -226,6 +225,14 @@ class VideoDetailFragment : Fragment() {
             when (it) {
                 NetworkState.LOADING -> activityContract?.showProgressBar()
                 NetworkState.NO_INTERNET -> {
+                    activityContract?.hideProgressBar()
+                    activityContract?.showMsg(it.msg)
+                }
+                NetworkState.BAD_REQUEST -> {
+                    activityContract?.hideProgressBar()
+                    activityContract?.showMsg(it.msg)
+                }
+                NetworkState.NOT_FOUND -> {
                     activityContract?.hideProgressBar()
                     activityContract?.showMsg(it.msg)
                 }

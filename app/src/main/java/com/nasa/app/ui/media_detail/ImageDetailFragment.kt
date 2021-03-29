@@ -44,7 +44,7 @@ class ImageDetailFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.i(Companion.TAG, "onAttach: ")
+        Log.i(TAG, "onAttach: ")
         try {
             activityContract = context as Activity
         } catch (e: ClassCastException) {
@@ -184,6 +184,14 @@ class ImageDetailFragment : Fragment() {
             when (it) {
                 NetworkState.LOADING -> activityContract?.showProgressBar()
                 NetworkState.NO_INTERNET -> {
+                    activityContract?.hideProgressBar()
+                    activityContract?.showMsg(it.msg)
+                }
+                NetworkState.BAD_REQUEST -> {
+                    activityContract?.hideProgressBar()
+                    activityContract?.showMsg(it.msg)
+                }
+                NetworkState.NOT_FOUND -> {
                     activityContract?.hideProgressBar()
                     activityContract?.showMsg(it.msg)
                 }

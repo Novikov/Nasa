@@ -69,11 +69,20 @@ class DetailMediaDataSource @Inject constructor(
                         _downloadedMediaDetailsResponse.postValue(MediaDetailResponse(it))
                         _networkState.postValue(NetworkState.LOADED)
                     }, {
-                        if (it.message?.contains("Unable to resolve host")!!) {
-                            _networkState.postValue(NetworkState.NO_INTERNET)
-                        } else {
-                            Log.i("MediaDetailsDataSource", it.message.toString())
-                            _networkState.postValue(NetworkState.ERROR)
+                        when {
+                            it.message?.contains("Unable to resolve host")!! -> {
+                                _networkState.postValue(NetworkState.NO_INTERNET)
+                            }
+                            it.message?.contains("HTTP 400")!! -> {
+                                _networkState.postValue(NetworkState.BAD_REQUEST)
+                            }
+                            it.message?.contains("HTTP 404")!! -> {
+                                _networkState.postValue(NetworkState.NOT_FOUND)
+                            }
+                            else -> {
+                                Log.i("MediaDetailsDataSource", it.message.toString())
+                                _networkState.postValue(NetworkState.ERROR)
+                            }
                         }
                     })
             )
