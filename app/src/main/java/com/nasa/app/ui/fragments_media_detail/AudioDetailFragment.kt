@@ -28,7 +28,7 @@ import com.nasa.app.databinding.FragmentAudioDetailBinding
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.utils.ExoMediaPlayer
 import com.nasa.app.ui.activity.Activity
-import com.nasa.app.ui.fragment_download_files.DownloadDialogFragment
+import com.nasa.app.ui.fragment_download_files.DownloadFilesFragment
 import javax.inject.Inject
 
 class AudioDetailFragment : Fragment() {
@@ -210,7 +210,7 @@ class AudioDetailFragment : Fragment() {
 
                 try {
                     val downloadDialogFragment =
-                        DownloadDialogFragment.newInstance(urlList as ArrayList<String>)
+                        DownloadFilesFragment.newInstance(urlList as ArrayList<String>)
                     downloadDialogFragment.show(parentFragmentManager, "ErrorDialogFragment")
                 } catch (ex: Exception) {
                     Log.i("MainActivity", ex.message.toString())

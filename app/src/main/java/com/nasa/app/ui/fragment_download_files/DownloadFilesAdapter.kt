@@ -3,55 +3,13 @@ package com.nasa.app.ui.fragment_download_files
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import androidx.core.content.ContextCompat.startActivity
-import androidx.fragment.app.DialogFragment
+import android.widget.BaseAdapter
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.nasa.app.R
-
-class DownloadDialogFragment : DialogFragment() {
-    companion object {
-        private val DOWNLOAD_DIALOG_FRAGMET = "app_error_dialog_fragment"
-
-        fun newInstance(urls: ArrayList<String>): DownloadDialogFragment {
-            val args = Bundle()
-            args.putStringArrayList(DOWNLOAD_DIALOG_FRAGMET, urls)
-            val fragment = DownloadDialogFragment()
-            fragment.arguments = args
-            return fragment
-        }
-    }
-
-    private var sUrls: ArrayList<String>? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (arguments != null && requireArguments().containsKey(DOWNLOAD_DIALOG_FRAGMET)) {
-            sUrls = requireArguments().getStringArrayList(DOWNLOAD_DIALOG_FRAGMET)
-        } else {
-            throw IllegalArgumentException("Urls can't be empty")
-        }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_download_dialog, container, false)
-
-        val listView = view.findViewById<ListView>(R.id.files_asset_list_view)
-
-        val adapter = DownloadFilesAdapter(requireContext(), sUrls!!)
-
-        listView.adapter = adapter
-
-        return view
-    }
-}
 
 class DownloadFilesAdapter(
     private val context: Context,
@@ -93,7 +51,7 @@ class DownloadFilesAdapter(
         holder.urlTextView.setOnClickListener {
             val address: Uri = Uri.parse(dataSource.get(position))
             val intent = Intent(Intent.ACTION_VIEW, address)
-            startActivity(context, intent, null)
+            ContextCompat.startActivity(context, intent, null)
         }
 
         return view
@@ -104,4 +62,3 @@ class DownloadFilesAdapter(
     }
 
 }
-

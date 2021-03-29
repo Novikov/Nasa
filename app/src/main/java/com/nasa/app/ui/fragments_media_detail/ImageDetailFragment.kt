@@ -24,7 +24,7 @@ import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.databinding.FragmentImageDetailBinding
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
-import com.nasa.app.ui.fragment_download_files.DownloadDialogFragment
+import com.nasa.app.ui.fragment_download_files.DownloadFilesFragment
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
@@ -171,7 +171,7 @@ class ImageDetailFragment : Fragment() {
 
                 try {
                     val downloadDialogFragment =
-                        DownloadDialogFragment.newInstance(urlList as ArrayList<String>)
+                        DownloadFilesFragment.newInstance(urlList as ArrayList<String>)
                     downloadDialogFragment.show(parentFragmentManager, "ErrorDialogFragment")
                 } catch (ex: Exception) {
                     Log.i("MainActivity", ex.message.toString())
