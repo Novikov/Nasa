@@ -17,6 +17,7 @@ import com.nasa.app.R
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.Activity
+import com.nasa.app.ui.SearchParams
 import javax.inject.Inject
 
 class PreviewMediaFragment : Fragment() {
@@ -28,6 +29,8 @@ class PreviewMediaFragment : Fragment() {
     lateinit var providerFactory: ViewModelProviderFactory
     @Inject
     lateinit var adapter: MediaPreviewAdapter
+    @Inject
+    lateinit var searchParams: SearchParams
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -63,13 +66,16 @@ class PreviewMediaFragment : Fragment() {
         mediaPreviewRecyclerView = view.findViewById(R.id.media_preview_recycler_view)
         initRecyclerView()
 
+        val currentSearchResultHashCode = viewModel.mediaPreviews.value.hashCode()
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
-            if (it.mediaPreviewList.isNotEmpty()) {
-                adapter.dataSource = it
+            if (currentSearchResultHashCode!=it.hashCode()) {
                 (mediaPreviewRecyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
                     0,
                     0
                 )
+            }
+            if (it.mediaPreviewList.isNotEmpty()) {
+                adapter.dataSource = it
                 contentLayout.visibility = View.VISIBLE
             } else {
                 activityContract?.showMsg("Nothing found")
