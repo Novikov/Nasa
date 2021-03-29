@@ -219,7 +219,7 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
 
     //0 - searchInfoTV, 1:100 - mediaPreviewItems, 101 - next|prev_and_next|prev buttons
     override fun getItemCount(): Int {
-        return dataSource.mediaPreviewList.size + 1
+        return dataSource.mediaPreviewList.size + 2
     }
 
     inner class MediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
