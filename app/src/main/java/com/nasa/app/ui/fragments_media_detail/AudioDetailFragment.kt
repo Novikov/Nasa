@@ -99,6 +99,7 @@ class AudioDetailFragment : Fragment() {
 
         val exoPlayerProgressBar = view.findViewById<ProgressBar>(R.id.exo_player_progress_bar)
         val contentDataProgressBar = view.findViewById<ProgressBar>(R.id.content_data_progress_bar)
+        exoPlayerProgressBar.visibility = View.VISIBLE
 
         val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
         playerView.player = exoPlayerWrapper.getPlayer()
@@ -107,7 +108,11 @@ class AudioDetailFragment : Fragment() {
         exoPlayerWrapper.addListener(object : Player.EventListener {
             override fun onPlaybackStateChanged(state: Int) {
                 super.onPlaybackStateChanged(state)
+                if(state==Player.STATE_BUFFERING){
+                    exoPlayerProgressBar.visibility = View.VISIBLE
+                }
                 if (state == Player.STATE_READY) {
+                    exoPlayerProgressBar.visibility = View.INVISIBLE
                     isExoPlayerPrepared = true
                 }
             }
@@ -124,7 +129,6 @@ class AudioDetailFragment : Fragment() {
         when(orientation){
             1 -> {
                 contentDataLayout.visibility = View.INVISIBLE
-                exoPlayerProgressBar.visibility = View.VISIBLE
             }
             2 -> {
                 contentDataLayout.visibility = View.INVISIBLE
