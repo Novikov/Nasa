@@ -28,7 +28,6 @@ import com.nasa.app.databinding.FragmentVideoDetailBinding
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.fragment_download_files.DownloadFilesFragment
-import com.nasa.app.utils.ExoPlayerWrapper
 import javax.inject.Inject
 
 class VideoDetailFragment : Fragment() {

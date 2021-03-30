@@ -26,7 +26,6 @@ import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.databinding.FragmentAudioDetailBinding
 import com.nasa.app.di.view_models.ViewModelProviderFactory
-import com.nasa.app.utils.ExoPlayerWrapper
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.fragment_download_files.DownloadFilesFragment
 import javax.inject.Inject
