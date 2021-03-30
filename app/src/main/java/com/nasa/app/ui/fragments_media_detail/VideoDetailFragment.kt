@@ -96,10 +96,12 @@ class VideoDetailFragment : Fragment() {
         contentLayout.visibility = View.VISIBLE
 
         val contentDataLayout = view.findViewById<ConstraintLayout>(R.id.content_data_layout)
-        contentDataLayout.visibility = View.INVISIBLE
+        val exoPlayerProgressBar = view.findViewById<ProgressBar>(R.id.exo_player_progress_bar)
 
-        val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
-        progressBar.visibility = View.VISIBLE
+
+
+        val contentDataProgressBar = view.findViewById<ProgressBar>(R.id.content_data_progress_bar)
+        contentDataProgressBar.visibility = View.VISIBLE
 
         val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
         playerView.player = exoPlayerWrapper.getPlayer()
@@ -122,8 +124,15 @@ class VideoDetailFragment : Fragment() {
 
         val orientation = resources.configuration.orientation
         Log.i("Device orientation", orientation.toString())
-        if (orientation==2) {
+        when(orientation){
+            1 -> {
+                contentDataLayout.visibility = View.INVISIBLE
+                exoPlayerProgressBar.visibility = View.VISIBLE
+            }
+            2 -> {
+                contentDataLayout.visibility = View.INVISIBLE
                 activityContract?.hideActionBar()
+            }
         }
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
@@ -205,11 +214,11 @@ class VideoDetailFragment : Fragment() {
         viewModel.networkState.observe(viewLifecycleOwner, {
             when (it) {
                 NetworkState.LOADING -> {
-                    progressBar.visibility = View.VISIBLE
+                    contentDataProgressBar.visibility = View.VISIBLE
                 }
                 NetworkState.LOADED -> {
                     contentDataLayout.visibility = View.VISIBLE
-                    progressBar.visibility = View.INVISIBLE
+                    contentDataProgressBar.visibility = View.INVISIBLE
                 }
                 NetworkState.NO_INTERNET -> {
                     contentLayout.visibility = View.INVISIBLE
