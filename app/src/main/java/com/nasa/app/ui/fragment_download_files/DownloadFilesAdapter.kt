@@ -10,13 +10,21 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.nasa.app.R
+import javax.inject.Inject
 
-class DownloadFilesAdapter(
-    private val context: Context,
-    private val dataSource: ArrayList<String>
+class DownloadFilesAdapter @Inject constructor(
+    val context: Context,
 ) : BaseAdapter() {
+
+    var dataSource: List<Uri> = listOf()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
     private val inflater: LayoutInflater =
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
 
     override fun getCount(): Int {
         return dataSource.size
@@ -45,11 +53,11 @@ class DownloadFilesAdapter(
             holder = convertView.tag as ViewHolder
         }
 
-        val textViewText = dataSource.get(position).substringAfter("~")
-        holder.urlTextView.setText(textViewText)
+        val textViewText = dataSource[position].toString().substringAfter("~")
+        holder.urlTextView.text = textViewText
 
         holder.urlTextView.setOnClickListener {
-            val address: Uri = Uri.parse(dataSource.get(position))
+            val address: Uri = dataSource.get(position)
             val intent = Intent(Intent.ACTION_VIEW, address)
             ContextCompat.startActivity(context, intent, null)
         }
