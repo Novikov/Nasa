@@ -8,10 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -95,8 +92,12 @@ class VideoDetailFragment : Fragment() {
 
         val view = binding.root
 
-        val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
+        val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_data_layout)
         contentLayout.visibility = View.INVISIBLE
+
+        val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
+        progressBar.visibility = View.VISIBLE
+
         val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
         playerView.player = exoPlayerWrapper.getPlayer()
         val button = view.findViewById<Button>(R.id.update_results_button)
@@ -111,7 +112,7 @@ class VideoDetailFragment : Fragment() {
                 }
                 if (state == Player.STATE_BUFFERING) {
                     if (!isExoPlayerPrepared) {
-                        activityContract?.showProgressBar()
+//                        activityContract?.showProgressBar()
                     }
                 }
             }
