@@ -8,10 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -96,7 +93,15 @@ class VideoDetailFragment : Fragment() {
         val view = binding.root
 
         val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
-        contentLayout.visibility = View.INVISIBLE
+        contentLayout.visibility = View.VISIBLE
+
+        val contentDataLayout = view.findViewById<ConstraintLayout>(R.id.content_data_layout)
+        val exoPlayerProgressBar = view.findViewById<ProgressBar>(R.id.exo_player_progress_bar)
+        exoPlayerProgressBar.visibility = View.VISIBLE
+
+        val contentDataProgressBar = view.findViewById<ProgressBar>(R.id.content_data_progress_bar)
+        contentDataProgressBar.visibility = View.VISIBLE
+
         val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
         playerView.player = exoPlayerWrapper.getPlayer()
         val button = view.findViewById<Button>(R.id.update_results_button)
@@ -104,42 +109,30 @@ class VideoDetailFragment : Fragment() {
         exoPlayerWrapper.addListener(object : Player.EventListener {
             override fun onPlaybackStateChanged(state: Int) {
                 super.onPlaybackStateChanged(state)
-                if (state == Player.STATE_READY) {
-                    isExoPlayerPrepared = true
-                    contentLayout.visibility = View.VISIBLE
-                    activityContract?.hideProgressBar()
+                if(state==Player.STATE_BUFFERING){
+                    exoPlayerProgressBar.visibility = View.VISIBLE
                 }
-                if (state == Player.STATE_BUFFERING) {
-                    if (!isExoPlayerPrepared) {
-                        activityContract?.showProgressBar()
-                    }
+                if (state == Player.STATE_READY) {
+                    exoPlayerProgressBar.visibility = View.INVISIBLE
+                    isExoPlayerPrepared = true
                 }
             }
 
             override fun onPlayerError(error: ExoPlaybackException) {
                 super.onPlayerError(error)
-                activityContract?.hideProgressBar()
-                contentLayout.visibility = View.GONE
+                contentLayout.visibility = View.INVISIBLE
                 activityContract?.showErrorMessage("ExoPlayer loading error")
             }
         })
 
         val orientation = resources.configuration.orientation
         Log.i("Device orientation", orientation.toString())
-        when (orientation) {
+        when(orientation){
             1 -> {
-                playerView.layoutParams =
-                    ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        ConstraintLayout.LayoutParams.WRAP_CONTENT
-                    )
+                contentDataLayout.visibility = View.INVISIBLE
             }
             2 -> {
-                playerView.layoutParams =
-                    ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        ConstraintLayout.LayoutParams.MATCH_PARENT
-                    )
+                contentDataLayout.visibility = View.INVISIBLE
                 activityContract?.hideActionBar()
             }
         }
@@ -222,21 +215,27 @@ class VideoDetailFragment : Fragment() {
         //network state status observing
         viewModel.networkState.observe(viewLifecycleOwner, {
             when (it) {
-                NetworkState.LOADING -> activityContract?.showProgressBar()
+                NetworkState.LOADING -> {
+                    contentDataProgressBar.visibility = View.VISIBLE
+                }
+                NetworkState.LOADED -> {
+                    contentDataLayout.visibility = View.VISIBLE
+                    contentDataProgressBar.visibility = View.INVISIBLE
+                }
                 NetworkState.NO_INTERNET -> {
-                    activityContract?.hideProgressBar()
+                    contentLayout.visibility = View.INVISIBLE
                     activityContract?.showErrorMessage(it.msg)
                 }
                 NetworkState.BAD_REQUEST -> {
-                    activityContract?.hideProgressBar()
+                    contentLayout.visibility = View.INVISIBLE
                     activityContract?.showErrorMessage(it.msg)
                 }
                 NetworkState.NOT_FOUND -> {
-                    activityContract?.hideProgressBar()
+                    contentLayout.visibility = View.INVISIBLE
                     activityContract?.showErrorMessage(it.msg)
                 }
                 NetworkState.ERROR -> {
-                    activityContract?.hideProgressBar()
+                    contentLayout.visibility = View.INVISIBLE
                     activityContract?.showErrorMessage(it.msg)
                 }
             }
