@@ -15,13 +15,14 @@ import com.nasa.app.BaseApplication
 import com.nasa.app.R
 import com.nasa.app.utils.SearchParams
 import com.nasa.app.ui.fragment_search_settings.SearchSettingsFragment
+import com.nasa.app.utils.EMPTY_SEARCH_STRING
 import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity(), Activity {
-    lateinit var mProgress: ProgressBar
-    lateinit var msgTextView: TextView
-    var menuItem: MenuItem? = null
+    private lateinit var progressBar: ProgressBar
+    private lateinit var errorMessageTextView: TextView
+    private var menuItem: MenuItem? = null
     @Inject
     lateinit var searchParams: SearchParams
 
@@ -29,8 +30,8 @@ class MainActivity : AppCompatActivity(), Activity {
         (application as BaseApplication).appComponent.getActivityComponent().create().inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mProgress = findViewById(R.id.progressBar)
-        msgTextView = findViewById(R.id.msg_text_view)
+        progressBar = findViewById(R.id.progressBar)
+        errorMessageTextView = findViewById(R.id.msg_text_view)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity(), Activity {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 collapseSearchField()
-                searchRequest(query ?: "\"\"")
+                searchRequest(query ?: EMPTY_SEARCH_STRING)
                 return true
             }
 
@@ -69,21 +70,23 @@ class MainActivity : AppCompatActivity(), Activity {
 
     override fun showProgressBar() {
         Log.i("ProgressBar", "Loading")
-        mProgress.visibility = ProgressBar.VISIBLE
+        progressBar.visibility = ProgressBar.VISIBLE
     }
 
     override fun hideProgressBar() {
         Log.i("ProgressBar", "Hide")
-        mProgress.visibility = ProgressBar.INVISIBLE
+        progressBar.visibility = ProgressBar.INVISIBLE
     }
 
     override fun searchRequest(query: String) {
-        clearMsg()
-        searchParams.searchRequestQuery = query
-        searchParams.searchPage = 1
+        if (errorMessageTextView.visibility==View.VISIBLE){
+            clearErrorMessage()
+        }
+        searchParams.initNewSearchRequestParams(query)
+
+        //navigation controller reinitialization
         val navController = findNavController(R.id.nav_host_fragment)
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val inflater = navHostFragment.navController.navInflater
         val graph = inflater.inflate(R.navigation.app_navigation)
         graph.startDestination = R.id.mediaFragment
@@ -98,14 +101,14 @@ class MainActivity : AppCompatActivity(), Activity {
         }
     }
 
-    override fun showMsg(msg: String) {
-        msgTextView.text = msg
-        msgTextView.visibility = View.VISIBLE
+    override fun showErrorMessage(msg: String) {
+        errorMessageTextView.text = msg
+        errorMessageTextView.visibility = View.VISIBLE
     }
 
-    override fun clearMsg() {
-        msgTextView.text = ""
-        msgTextView.visibility = View.INVISIBLE
+    override fun clearErrorMessage() {
+        errorMessageTextView.text = ""
+        errorMessageTextView.visibility = View.INVISIBLE
     }
 
     override fun hideActionBar() {

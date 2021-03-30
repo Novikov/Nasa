@@ -5,8 +5,8 @@ interface Activity {
     fun hideProgressBar()
     fun searchRequest(query: String)
     fun collapseSearchField()
-    fun showMsg(msg: String)
-    fun clearMsg()
+    fun showErrorMessage(msg: String)
+    fun clearErrorMessage()
     fun hideActionBar()
     fun showActionBar()
 }

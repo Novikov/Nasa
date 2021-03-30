@@ -21,7 +21,6 @@ interface NasaApiService {
         @Query("page") page: Int
     ): Single<RawMediaPreviewResponse>
 
-    //MediaDetail
     @GET("search")
     fun getMediaDetailInfo(@Query("nasa_id") nasa_id: String): Single<RawMediaDetailResponse>
 
@@ -30,6 +29,4 @@ interface NasaApiService {
 
     @GET
     fun getMediaMetadata(@Url url: String): Single<MediaDetailMetadataResponse>
-
-
 }

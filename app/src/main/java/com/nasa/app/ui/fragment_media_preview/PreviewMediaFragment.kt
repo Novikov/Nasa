@@ -55,7 +55,7 @@ class PreviewMediaFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        activityContract?.clearMsg()
+        activityContract?.clearErrorMessage()
 
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_media_preview, container, false)
@@ -78,7 +78,7 @@ class PreviewMediaFragment : Fragment() {
                 adapter.dataSource = it
                 contentLayout.visibility = View.VISIBLE
             } else {
-                activityContract?.showMsg("Nothing found")
+                activityContract?.showErrorMessage("Nothing found")
             }
         })
 
@@ -89,11 +89,11 @@ class PreviewMediaFragment : Fragment() {
                 NetworkState.LOADED -> activityContract?.hideProgressBar()
                 NetworkState.NO_INTERNET -> {
                     activityContract?.hideProgressBar()
-                    activityContract?.showMsg(it.msg)
+                    activityContract?.showErrorMessage(it.msg)
                 }
                 NetworkState.ERROR -> {
                     activityContract?.hideProgressBar()
-                    activityContract?.showMsg(it.msg)
+                    activityContract?.showErrorMessage(it.msg)
                 }
             }
         })

@@ -87,7 +87,7 @@ class ImageDetailFragment : Fragment() {
             false
         )
 
-        activityContract?.clearMsg()
+        activityContract?.clearErrorMessage()
         activityContract?.collapseSearchField()
 
         val view = binding.root
@@ -119,7 +119,7 @@ class ImageDetailFragment : Fragment() {
 
                     override fun onError(e: java.lang.Exception?) {
                         activityContract?.hideProgressBar()
-                        activityContract?.showMsg("Image loading error: ${e?.message}")
+                        activityContract?.showErrorMessage("Image loading error: ${e?.message}")
                     }
                 })
 
@@ -185,19 +185,19 @@ class ImageDetailFragment : Fragment() {
                 NetworkState.LOADING -> activityContract?.showProgressBar()
                 NetworkState.NO_INTERNET -> {
                     activityContract?.hideProgressBar()
-                    activityContract?.showMsg(it.msg)
+                    activityContract?.showErrorMessage(it.msg)
                 }
                 NetworkState.BAD_REQUEST -> {
                     activityContract?.hideProgressBar()
-                    activityContract?.showMsg(it.msg)
+                    activityContract?.showErrorMessage(it.msg)
                 }
                 NetworkState.NOT_FOUND -> {
                     activityContract?.hideProgressBar()
-                    activityContract?.showMsg(it.msg)
+                    activityContract?.showErrorMessage(it.msg)
                 }
                 NetworkState.ERROR -> {
                     activityContract?.hideProgressBar()
-                    activityContract?.showMsg(it.msg)
+                    activityContract?.showErrorMessage(it.msg)
                 }
             }
         })

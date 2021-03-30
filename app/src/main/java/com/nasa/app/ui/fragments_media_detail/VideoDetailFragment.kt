@@ -94,7 +94,7 @@ class VideoDetailFragment : Fragment() {
             false
         )
 
-        activityContract?.clearMsg()
+        activityContract?.clearErrorMessage()
         activityContract?.collapseSearchField()
 
         val view = binding.root
@@ -124,7 +124,7 @@ class VideoDetailFragment : Fragment() {
                 super.onPlayerError(error)
                 activityContract?.hideProgressBar()
                 contentLayout.visibility = View.GONE
-                activityContract?.showMsg("ExoPlayer loading error")
+                activityContract?.showErrorMessage("ExoPlayer loading error")
             }
         })
 
@@ -226,19 +226,19 @@ class VideoDetailFragment : Fragment() {
                 NetworkState.LOADING -> activityContract?.showProgressBar()
                 NetworkState.NO_INTERNET -> {
                     activityContract?.hideProgressBar()
-                    activityContract?.showMsg(it.msg)
+                    activityContract?.showErrorMessage(it.msg)
                 }
                 NetworkState.BAD_REQUEST -> {
                     activityContract?.hideProgressBar()
-                    activityContract?.showMsg(it.msg)
+                    activityContract?.showErrorMessage(it.msg)
                 }
                 NetworkState.NOT_FOUND -> {
                     activityContract?.hideProgressBar()
-                    activityContract?.showMsg(it.msg)
+                    activityContract?.showErrorMessage(it.msg)
                 }
                 NetworkState.ERROR -> {
                     activityContract?.hideProgressBar()
-                    activityContract?.showMsg(it.msg)
+                    activityContract?.showErrorMessage(it.msg)
                 }
             }
         })

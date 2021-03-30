@@ -1,8 +1,6 @@
 package com.nasa.app.utils
 
 import com.nasa.app.data.model.ContentType
-import com.nasa.app.utils.EMPTY_SEARCH
-import com.nasa.app.utils.FIRST_PAGE
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,13 +11,18 @@ class SearchParams @Inject constructor() {
     private val endDate = Calendar.getInstance().get(Calendar.YEAR).toString()
 
     //search params
-    var searchRequestQuery = EMPTY_SEARCH
+    var searchRequestQuery = EMPTY_SEARCH_STRING
     var startSearchYear = beginDate
     var endSearchYear = endDate
     var searchImage = true
     var searchVideo = true
     var searchAudio = true
     var searchPage = FIRST_PAGE
+
+    fun initNewSearchRequestParams(query:String){
+        searchRequestQuery = query
+        searchPage = FIRST_PAGE
+    }
 
     fun getSearchMediaTypes(): String {
         var resultString = ""
