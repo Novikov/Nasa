@@ -47,7 +47,7 @@ class AudioDetailFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.i(Companion.TAG, "onAttach: ")
+        Log.i(TAG, "onAttach: ")
         try {
             activityContract = context as Activity
         } catch (e: ClassCastException) {
@@ -147,17 +147,20 @@ class AudioDetailFragment : Fragment() {
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
 
             //audio content initialization
-            var audioUrl = ""
+            var audioUrlString = ""
             for (asset in mediaDetailResponse.item.assets!!) {
                 if (asset.value.contains("mp3")) {
-                    audioUrl = asset.value
+                    audioUrlString = asset.value
                     break
                 }
             }
-            val substring = audioUrl.substringAfter("//")
-            audioUrl = "https://$substring"
-            Log.i("AudioUrl", "audioUrl $audioUrl")
-            exoPlayerWrapper.playPlayer(audioUrl, exoMediaPlayerTime ?: 0)
+            val substring = audioUrlString.substringAfter("//")
+            audioUrlString = "https://$substring"
+            Log.i("AudioUrl", "audioUrl $audioUrlString")
+
+            val audioUri = Uri.parse(audioUrlString)
+
+            exoPlayerWrapper.playPlayer(audioUri, exoMediaPlayerTime ?: 0)
 
             binding.mediaDetail = mediaDetailResponse.item
 

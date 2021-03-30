@@ -146,19 +146,22 @@ class VideoDetailFragment : Fragment() {
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
 
-            var videoUrl = ""
+            var videoUrlString = ""
 
             for (asset in mediaDetailResponse.item.assets!!) {
                 if (asset.value.contains("mp4")) {
-                    videoUrl = asset.value
+                    videoUrlString = asset.value
                     break
                 }
             }
 
-            val substring = videoUrl.substringAfter("//")
-            videoUrl = "https://$substring"
-            Log.i("VideoUrl", "videoUrl $videoUrl")
-            exoPlayerWrapper.playPlayer(videoUrl, exoMediaPlayerTime ?: 0)
+            val substring = videoUrlString.substringAfter("//")
+            videoUrlString = "https://$substring"
+            Log.i("VideoUrl", "videoUrl $videoUrlString")
+
+            val videoUri = Uri.parse(videoUrlString)
+
+            exoPlayerWrapper.playPlayer(videoUri, exoMediaPlayerTime ?: 0)
 
             binding.mediaDetail = mediaDetailResponse.item
 

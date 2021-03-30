@@ -1,5 +1,6 @@
 package com.nasa.app.ui.fragments_media_detail
 
+import android.net.Uri
 import com.google.android.exoplayer2.*
 import com.nasa.app.ui.fragments_media_detail.di.DetailScope
 import javax.inject.Inject
@@ -7,8 +8,8 @@ import javax.inject.Inject
 @DetailScope
 class ExoPlayerWrapper @Inject constructor(private val exoPlayer: ExoPlayer) {
 
-    fun playPlayer(url: String, time: Long) {
-        val mediaItem: MediaItem = MediaItem.fromUri(url)
+    fun playPlayer(uri: Uri, time: Long) {
+        val mediaItem: MediaItem = MediaItem.fromUri(uri)
         exoPlayer.setMediaItem(mediaItem)
         exoPlayer.prepare()
         exoPlayer.seekTo(time)
