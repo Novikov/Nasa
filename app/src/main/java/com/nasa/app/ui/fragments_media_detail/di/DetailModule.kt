@@ -1,6 +1,8 @@
 package com.nasa.app.ui.fragments_media_detail.di
 
-import com.nasa.app.utils.ExoMediaPlayer
+import android.content.Context
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.SimpleExoPlayer
 import dagger.Module
 import dagger.Provides
 import io.reactivex.disposables.CompositeDisposable
@@ -20,7 +22,7 @@ class DetailModule {
     }
 
     @Provides
-    fun provideExoMediaPlayer(): ExoMediaPlayer {
-        return ExoMediaPlayer()
+    fun provideExoPlayerInstance(context:Context): ExoPlayer{
+        return SimpleExoPlayer.Builder(context).build()
     }
 }

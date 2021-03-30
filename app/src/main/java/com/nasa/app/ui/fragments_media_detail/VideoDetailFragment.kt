@@ -28,7 +28,6 @@ import com.nasa.app.databinding.FragmentVideoDetailBinding
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.fragment_download_files.DownloadFilesFragment
-import com.nasa.app.utils.ExoMediaPlayer
 import javax.inject.Inject
 
 class VideoDetailFragment : Fragment() {
@@ -41,7 +40,7 @@ class VideoDetailFragment : Fragment() {
     var isExoPlayerPrepared = false
 
     @Inject
-    lateinit var exoMediaPlayer: ExoMediaPlayer
+    lateinit var exoPlayerWrapper: ExoPlayerWrapper
     @Inject
     lateinit var detailMediaRepository: DetailMediaRepository
     @Inject
@@ -67,7 +66,7 @@ class VideoDetailFragment : Fragment() {
         }
 
         (requireActivity().application as BaseApplication).appComponent.getDetailComponent()
-            .create(nasaId).inject(this)
+            .create(nasaId,requireContext()).inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,10 +98,10 @@ class VideoDetailFragment : Fragment() {
         val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
         contentLayout.visibility = View.INVISIBLE
         val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
-        playerView.player = exoMediaPlayer.getPlayer(requireContext())
+        playerView.player = exoPlayerWrapper.getPlayer()
         val button = view.findViewById<Button>(R.id.update_results_button)
 
-        exoMediaPlayer.addListener(object : Player.EventListener {
+        exoPlayerWrapper.addListener(object : Player.EventListener {
             override fun onPlaybackStateChanged(state: Int) {
                 super.onPlaybackStateChanged(state)
                 if (state == Player.STATE_READY) {
@@ -147,19 +146,22 @@ class VideoDetailFragment : Fragment() {
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
 
-            var videoUrl = ""
+            var videoUrlString = ""
 
             for (asset in mediaDetailResponse.item.assets!!) {
                 if (asset.value.contains("mp4")) {
-                    videoUrl = asset.value
+                    videoUrlString = asset.value
                     break
                 }
             }
 
-            val substring = videoUrl.substringAfter("//")
-            videoUrl = "https://$substring"
-            Log.i("VideoUrl", "videoUrl $videoUrl")
-            exoMediaPlayer.playPlayer(videoUrl, exoMediaPlayerTime ?: 0)
+            val substring = videoUrlString.substringAfter("//")
+            videoUrlString = "https://$substring"
+            Log.i("VideoUrl", "videoUrl $videoUrlString")
+
+            val videoUri = Uri.parse(videoUrlString)
+
+            exoPlayerWrapper.playPlayer(videoUri, exoMediaPlayerTime ?: 0)
 
             binding.mediaDetail = mediaDetailResponse.item
 
@@ -245,21 +247,21 @@ class VideoDetailFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        Log.i(Companion.TAG, "onSaveInstanceState: ")
-        outState.putLong(Companion.EXO_MEDIA_PLAYER_TIME, exoMediaPlayer.getPlayerTime())
-        Log.i(Companion.TAG, "time onSavedInstanceState ${exoMediaPlayer.getPlayerTime()}")
+        Log.i(TAG, "onSaveInstanceState: ")
+        outState.putLong(Companion.EXO_MEDIA_PLAYER_TIME, exoPlayerWrapper.getPlayerTime())
+        Log.i(TAG, "time onSavedInstanceState ${exoPlayerWrapper.getPlayerTime()}")
     }
 
     override fun onPause() {
         super.onPause()
-        Log.i(Companion.TAG, "onPause: ")
-        exoMediaPlayer.pausePlayer()
+        Log.i(TAG, "onPause: ")
+        exoPlayerWrapper.pausePlayer()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.i(Companion.TAG, "onDestroyView: ")
-        exoMediaPlayer.releasePlayer()
+        Log.i(TAG, "onDestroyView: ")
+        exoPlayerWrapper.releasePlayer()
     }
 
     companion object {

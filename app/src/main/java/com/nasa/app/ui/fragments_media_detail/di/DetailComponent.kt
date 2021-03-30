@@ -1,5 +1,6 @@
 package com.nasa.app.ui.fragments_media_detail.di
 
+import android.content.Context
 import com.nasa.app.di.view_models.ViewModelFactoryModule
 import com.nasa.app.ui.fragments_media_detail.AudioDetailFragment
 import com.nasa.app.ui.fragments_media_detail.ImageDetailFragment
@@ -14,7 +15,7 @@ interface DetailComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(@BindsInstance @Named("nasa id") nasaId: String): DetailComponent
+        fun create(@BindsInstance @Named("nasa id") nasaId: String, @BindsInstance context: Context): DetailComponent
     }
 
     fun inject(audioMediaFragment: AudioDetailFragment)

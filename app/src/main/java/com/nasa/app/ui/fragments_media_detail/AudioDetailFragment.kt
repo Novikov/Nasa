@@ -26,7 +26,6 @@ import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.databinding.FragmentAudioDetailBinding
 import com.nasa.app.di.view_models.ViewModelProviderFactory
-import com.nasa.app.utils.ExoMediaPlayer
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.fragment_download_files.DownloadFilesFragment
 import javax.inject.Inject
@@ -40,7 +39,7 @@ class AudioDetailFragment : Fragment() {
     var isExoPlayerPrepared = false
 
     @Inject
-    lateinit var exoMediaPlayer: ExoMediaPlayer
+    lateinit var exoPlayerWrapper: ExoPlayerWrapper
     @Inject
     lateinit var detailMediaRepository: DetailMediaRepository
     @Inject
@@ -48,7 +47,7 @@ class AudioDetailFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.i(Companion.TAG, "onAttach: ")
+        Log.i(TAG, "onAttach: ")
         try {
             activityContract = context as Activity
         } catch (e: ClassCastException) {
@@ -66,7 +65,7 @@ class AudioDetailFragment : Fragment() {
         }
 
         (requireActivity().application as BaseApplication).appComponent.getDetailComponent()
-            .create(nasaId).inject(this)
+            .create(nasaId,requireContext()).inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +74,6 @@ class AudioDetailFragment : Fragment() {
         exoMediaPlayerTime = savedInstanceState?.getLong(EXO_MEDIA_PLAYER_TIME)
         viewModel =
             ViewModelProviders.of(this, providerFactory).get(DetailMediaViewModel::class.java)
-        exoMediaPlayer = ExoMediaPlayer()
     }
 
     override fun onCreateView(
@@ -100,10 +98,10 @@ class AudioDetailFragment : Fragment() {
         contentLayout.visibility = View.INVISIBLE
 
         val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
-        playerView.player = exoMediaPlayer.getPlayer(requireContext())
+        playerView.player = exoPlayerWrapper.getPlayer()
         val button = view.findViewById<Button>(R.id.update_results_button)
 
-        exoMediaPlayer.addListener(object : Player.EventListener {
+        exoPlayerWrapper.addListener(object : Player.EventListener {
             override fun onPlaybackStateChanged(state: Int) {
                 super.onPlaybackStateChanged(state)
                 if (state == Player.STATE_READY) {
@@ -149,17 +147,20 @@ class AudioDetailFragment : Fragment() {
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
 
             //audio content initialization
-            var audioUrl = ""
+            var audioUrlString = ""
             for (asset in mediaDetailResponse.item.assets!!) {
                 if (asset.value.contains("mp3")) {
-                    audioUrl = asset.value
+                    audioUrlString = asset.value
                     break
                 }
             }
-            val substring = audioUrl.substringAfter("//")
-            audioUrl = "https://$substring"
-            Log.i("AudioUrl", "audioUrl $audioUrl")
-            exoMediaPlayer.playPlayer(audioUrl, exoMediaPlayerTime ?: 0)
+            val substring = audioUrlString.substringAfter("//")
+            audioUrlString = "https://$substring"
+            Log.i("AudioUrl", "audioUrl $audioUrlString")
+
+            val audioUri = Uri.parse(audioUrlString)
+
+            exoPlayerWrapper.playPlayer(audioUri, exoMediaPlayerTime ?: 0)
 
             binding.mediaDetail = mediaDetailResponse.item
 
@@ -247,20 +248,20 @@ class AudioDetailFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         Log.i(TAG, "onSaveInstanceState: ")
-        outState.putLong(EXO_MEDIA_PLAYER_TIME, exoMediaPlayer.getPlayerTime())
-        Log.i(TAG, "time onSavedInstanceState ${exoMediaPlayer.getPlayerTime()}")
+        outState.putLong(EXO_MEDIA_PLAYER_TIME, exoPlayerWrapper.getPlayerTime())
+        Log.i(TAG, "time onSavedInstanceState ${exoPlayerWrapper.getPlayerTime()}")
     }
 
     override fun onPause() {
         super.onPause()
         Log.i(TAG, "onPause: ")
-        exoMediaPlayer.pausePlayer()
+        exoPlayerWrapper.pausePlayer()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         Log.i(TAG, "onDestroyView: ")
-        exoMediaPlayer.releasePlayer()
+        exoPlayerWrapper.releasePlayer()
     }
 
     companion object {

@@ -1,23 +1,22 @@
-package com.nasa.app.utils
+package com.nasa.app.ui.fragments_media_detail
 
-import android.content.Context
+import android.net.Uri
 import com.google.android.exoplayer2.*
+import com.nasa.app.ui.fragments_media_detail.di.DetailScope
+import javax.inject.Inject
 
-class ExoMediaPlayer {
-    private lateinit var exoPlayer: ExoPlayer
-    private lateinit var context: Context
+@DetailScope
+class ExoPlayerWrapper @Inject constructor(private val exoPlayer: ExoPlayer) {
 
-    fun playPlayer(url: String, time: Long) {
-        val mediaItem: MediaItem = MediaItem.fromUri(url)
+    fun playPlayer(uri: Uri, time: Long) {
+        val mediaItem: MediaItem = MediaItem.fromUri(uri)
         exoPlayer.setMediaItem(mediaItem)
         exoPlayer.prepare()
         exoPlayer.seekTo(time)
         exoPlayer.playWhenReady = true
     }
 
-    fun getPlayer(context: Context): ExoPlayer {
-        this.context = context
-        exoPlayer = SimpleExoPlayer.Builder(context).build()
+    fun getPlayer(): ExoPlayer {
         return exoPlayer
     }
 
