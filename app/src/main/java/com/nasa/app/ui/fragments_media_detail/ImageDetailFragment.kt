@@ -68,7 +68,7 @@ class ImageDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i(Companion.TAG, "onCreate: ")
+        Log.i(TAG, "onCreate: ")
 
         viewModel =
             ViewModelProviders.of(this, providerFactory).get(DetailMediaViewModel::class.java)
@@ -94,10 +94,11 @@ class ImageDetailFragment : Fragment() {
 
         val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
         contentLayout.visibility = View.INVISIBLE
+
         val button = view.findViewById<Button>(R.id.update_results_button)
         val imageView = view.findViewById<ImageView>(R.id.image_media_view)
 
-        val orientation = getResources().getConfiguration().orientation
+        val orientation = resources.configuration.orientation
         Log.i("Device orientation", orientation.toString())
         when (orientation) {
             1 -> {

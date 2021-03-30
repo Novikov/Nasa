@@ -34,7 +34,7 @@ import javax.inject.Inject
 class VideoDetailFragment : Fragment() {
 
     private lateinit var viewModel: DetailMediaViewModel
-    var time: Long? = null
+    var exoMediaPlayerTime: Long? = null
     lateinit var nasaId: String
     lateinit var contentType: ContentType
     var activityContract: Activity? = null
@@ -70,13 +70,10 @@ class VideoDetailFragment : Fragment() {
             .create(nasaId).inject(this)
     }
 
-    val TAG = "VideoDetailFragment"
-    val PLAYER_TIME = "PlayerTime"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(TAG, "onCreate: ")
-        time = savedInstanceState?.getLong(PLAYER_TIME)
+        exoMediaPlayerTime = savedInstanceState?.getLong(EXO_MEDIA_PLAYER_TIME)
         viewModel =
             ViewModelProviders.of(this, providerFactory).get(DetailMediaViewModel::class.java)
     }
@@ -86,7 +83,7 @@ class VideoDetailFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.i(TAG, "onCreateView: ")
+        Log.i(Companion.TAG, "onCreateView: ")
         val binding = DataBindingUtil.inflate<FragmentVideoDetailBinding>(
             inflater,
             R.layout.fragment_video_detail,
@@ -128,7 +125,7 @@ class VideoDetailFragment : Fragment() {
             }
         })
 
-        val orientation = getResources().getConfiguration().orientation
+        val orientation = resources.configuration.orientation
         Log.i("Device orientation", orientation.toString())
         when (orientation) {
             1 -> {
@@ -162,7 +159,7 @@ class VideoDetailFragment : Fragment() {
             val substring = videoUrl.substringAfter("//")
             videoUrl = "https://$substring"
             Log.i("VideoUrl", "videoUrl $videoUrl")
-            exoMediaPlayer.playPlayer(videoUrl, time ?: 0)
+            exoMediaPlayer.playPlayer(videoUrl, exoMediaPlayerTime ?: 0)
 
             binding.mediaDetail = mediaDetailResponse.item
 
@@ -248,20 +245,25 @@ class VideoDetailFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        Log.i(TAG, "onSaveInstanceState: ")
-        outState.putLong(PLAYER_TIME, exoMediaPlayer.getPlayerTime())
-        Log.i(TAG, "time onSavedInstanceState ${exoMediaPlayer.getPlayerTime()}")
+        Log.i(Companion.TAG, "onSaveInstanceState: ")
+        outState.putLong(Companion.EXO_MEDIA_PLAYER_TIME, exoMediaPlayer.getPlayerTime())
+        Log.i(Companion.TAG, "time onSavedInstanceState ${exoMediaPlayer.getPlayerTime()}")
     }
 
     override fun onPause() {
         super.onPause()
-        Log.i(TAG, "onPause: ")
+        Log.i(Companion.TAG, "onPause: ")
         exoMediaPlayer.pausePlayer()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.i(TAG, "onDestroyView: ")
+        Log.i(Companion.TAG, "onDestroyView: ")
         exoMediaPlayer.releasePlayer()
+    }
+
+    companion object {
+        const val TAG = "VideoDetailFragment"
+        const val EXO_MEDIA_PLAYER_TIME = "ExoMediaPlayerTime"
     }
 }

@@ -21,12 +21,12 @@ class DownloadFilesFragment : DialogFragment() {
         }
     }
 
-    private var sUrls: ArrayList<String>? = null
+    private var fileUrls: ArrayList<String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null && requireArguments().containsKey(DOWNLOAD_DIALOG_FRAGMET)) {
-            sUrls = requireArguments().getStringArrayList(DOWNLOAD_DIALOG_FRAGMET)
+            fileUrls = requireArguments().getStringArrayList(DOWNLOAD_DIALOG_FRAGMET)
         } else {
             throw IllegalArgumentException("Urls can't be empty")
         }
@@ -41,7 +41,7 @@ class DownloadFilesFragment : DialogFragment() {
 
         val listView = view.findViewById<ListView>(R.id.files_asset_list_view)
 
-        val adapter = DownloadFilesAdapter(requireContext(), sUrls!!)
+        val adapter = DownloadFilesAdapter(requireContext(), fileUrls!!)
 
         listView.adapter = adapter
 

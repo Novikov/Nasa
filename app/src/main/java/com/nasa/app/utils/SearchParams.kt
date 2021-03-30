@@ -24,6 +24,14 @@ class SearchParams @Inject constructor() {
         searchPage = FIRST_PAGE
     }
 
+    fun updateSearchParams(startSearchYear:String,endSearchYear:String,searchImage:Boolean,searchVideo:Boolean,searchAudio:Boolean){
+        this.startSearchYear = startSearchYear
+        this.endSearchYear = endSearchYear
+        this.searchImage = searchImage
+        this.searchVideo = searchVideo
+        this.searchAudio = searchAudio
+    }
+
     fun getSearchMediaTypes(): String {
         var resultString = ""
         if (searchImage) {

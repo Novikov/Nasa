@@ -4,11 +4,6 @@ import android.content.Context
 import com.google.android.exoplayer2.*
 
 class ExoMediaPlayer {
-
-    companion object {
-        private const val TAG = "MediaPlayerTag"
-    }
-
     private lateinit var exoPlayer: ExoPlayer
     private lateinit var context: Context
 

@@ -35,7 +35,7 @@ class AudioDetailFragment : Fragment() {
     private lateinit var viewModel: DetailMediaViewModel
     lateinit var nasaId: String
     lateinit var contentType: ContentType
-    var time: Long? = null
+    var exoMediaPlayerTime: Long? = null
     var activityContract: Activity? = null
     var isExoPlayerPrepared = false
 
@@ -45,8 +45,6 @@ class AudioDetailFragment : Fragment() {
     lateinit var detailMediaRepository: DetailMediaRepository
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
-
-    private val PLAYER_TIME = "PlayerTime"
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -73,8 +71,8 @@ class AudioDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i(Companion.TAG, "onCreate: ")
-        time = savedInstanceState?.getLong(PLAYER_TIME)
+        Log.i(TAG, "onCreate: ")
+        exoMediaPlayerTime = savedInstanceState?.getLong(EXO_MEDIA_PLAYER_TIME)
         viewModel =
             ViewModelProviders.of(this, providerFactory).get(DetailMediaViewModel::class.java)
         exoMediaPlayer = ExoMediaPlayer()
@@ -85,7 +83,7 @@ class AudioDetailFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.i(Companion.TAG, "onCreateView: ")
+        Log.i(TAG, "onCreateView: ")
         val binding = DataBindingUtil.inflate<FragmentAudioDetailBinding>(
             inflater,
             R.layout.fragment_audio_detail,
@@ -100,6 +98,7 @@ class AudioDetailFragment : Fragment() {
 
         val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
         contentLayout.visibility = View.INVISIBLE
+
         val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
         playerView.player = exoMediaPlayer.getPlayer(requireContext())
         val button = view.findViewById<Button>(R.id.update_results_button)
@@ -127,7 +126,7 @@ class AudioDetailFragment : Fragment() {
             }
         })
 
-        val orientation = getResources().getConfiguration().orientation
+        val orientation = resources.configuration.orientation
         Log.i("Device orientation", orientation.toString())
         when (orientation) {
             1 -> {
@@ -160,7 +159,7 @@ class AudioDetailFragment : Fragment() {
             val substring = audioUrl.substringAfter("//")
             audioUrl = "https://$substring"
             Log.i("AudioUrl", "audioUrl $audioUrl")
-            exoMediaPlayer.playPlayer(audioUrl, time ?: 0)
+            exoMediaPlayer.playPlayer(audioUrl, exoMediaPlayerTime ?: 0)
 
             binding.mediaDetail = mediaDetailResponse.item
 
@@ -248,7 +247,7 @@ class AudioDetailFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         Log.i(TAG, "onSaveInstanceState: ")
-        outState.putLong(PLAYER_TIME, exoMediaPlayer.getPlayerTime())
+        outState.putLong(EXO_MEDIA_PLAYER_TIME, exoMediaPlayer.getPlayerTime())
         Log.i(TAG, "time onSavedInstanceState ${exoMediaPlayer.getPlayerTime()}")
     }
 
@@ -266,6 +265,7 @@ class AudioDetailFragment : Fragment() {
 
     companion object {
         const val TAG = "AudioDetailFragment"
+        const val EXO_MEDIA_PLAYER_TIME = "ExoMediaPlayerTime"
     }
 }
 

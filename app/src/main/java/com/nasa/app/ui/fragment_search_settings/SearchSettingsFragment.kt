@@ -18,8 +18,8 @@ import com.nasa.app.utils.SearchParams
 import javax.inject.Inject
 
 class SearchSettingsFragment @Inject constructor() : DialogFragment() {
-    private val TAG = "SearchSettingsFragment"
     private var activityContract: Activity? = null
+
     @Inject
     lateinit var searchParams: SearchParams
     lateinit var tmpBeginSearchDateValue: String
@@ -37,7 +37,8 @@ class SearchSettingsFragment @Inject constructor() : DialogFragment() {
         } catch (e: ClassCastException) {
             throw ClassCastException(context.toString() + "Activity have to implement interface IActivityView")
         }
-        (requireActivity().application as BaseApplication).appComponent.getSearchSettingsComponent().create().inject(this)
+        (requireActivity().application as BaseApplication).appComponent.getSearchSettingsComponent()
+            .create().inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +57,6 @@ class SearchSettingsFragment @Inject constructor() : DialogFragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_search_settings, container, false)
 
-        //checkboxes
         val imageCheckBox = view.findViewById<CheckBox>(R.id.images_check_box)
         val videoCheckBox = view.findViewById<CheckBox>(R.id.videos_check_box)
         val audioCheckBox = view.findViewById<CheckBox>(R.id.audio_check_box)
@@ -107,11 +107,13 @@ class SearchSettingsFragment @Inject constructor() : DialogFragment() {
         updateResultsButton.setOnClickListener {
             this.dismiss()
             activityContract?.searchRequest(searchParams.searchRequestQuery)
-            searchParams.startSearchYear = tmpBeginSearchDateValue
-            searchParams.endSearchYear = tmpEndSearchDateValue
-            searchParams.searchImage = tmpIsCheckedImageCheckBox
-            searchParams.searchVideo = tmpIsCheckedVideoCheckBox
-            searchParams.searchAudio = tmpIsCheckedAudioCheckBox
+            searchParams.updateSearchParams(
+                tmpBeginSearchDateValue,
+                tmpEndSearchDateValue,
+                tmpIsCheckedImageCheckBox,
+                tmpIsCheckedVideoCheckBox,
+                tmpIsCheckedAudioCheckBox
+            )
         }
 
         //date text views
@@ -140,5 +142,7 @@ class SearchSettingsFragment @Inject constructor() : DialogFragment() {
             val fragment = SearchSettingsFragment()
             return fragment
         }
+
+        const val TAG = "SearchSettingsFragment"
     }
 }
