@@ -92,8 +92,11 @@ class VideoDetailFragment : Fragment() {
 
         val view = binding.root
 
-        val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_data_layout)
-        contentLayout.visibility = View.INVISIBLE
+        val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
+        contentLayout.visibility = View.VISIBLE
+
+        val contentDataLayout = view.findViewById<ConstraintLayout>(R.id.content_data_layout)
+        contentDataLayout.visibility = View.INVISIBLE
 
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
         progressBar.visibility = View.VISIBLE
@@ -107,20 +110,12 @@ class VideoDetailFragment : Fragment() {
                 super.onPlaybackStateChanged(state)
                 if (state == Player.STATE_READY) {
                     isExoPlayerPrepared = true
-                    contentLayout.visibility = View.VISIBLE
-                    activityContract?.hideProgressBar()
-                }
-                if (state == Player.STATE_BUFFERING) {
-                    if (!isExoPlayerPrepared) {
-//                        activityContract?.showProgressBar()
-                    }
                 }
             }
 
             override fun onPlayerError(error: ExoPlaybackException) {
                 super.onPlayerError(error)
-                activityContract?.hideProgressBar()
-                contentLayout.visibility = View.GONE
+                contentLayout.visibility = View.INVISIBLE
                 activityContract?.showErrorMessage("ExoPlayer loading error")
             }
         })
@@ -132,7 +127,7 @@ class VideoDetailFragment : Fragment() {
                 playerView.layoutParams =
                     ConstraintLayout.LayoutParams(
                         ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        ConstraintLayout.LayoutParams.WRAP_CONTENT
+                        450
                     )
             }
             2 -> {
@@ -223,21 +218,27 @@ class VideoDetailFragment : Fragment() {
         //network state status observing
         viewModel.networkState.observe(viewLifecycleOwner, {
             when (it) {
-                NetworkState.LOADING -> activityContract?.showProgressBar()
+                NetworkState.LOADING -> {
+                    progressBar.visibility = View.VISIBLE
+                }
+                NetworkState.LOADED -> {
+                    contentDataLayout.visibility = View.VISIBLE
+                    progressBar.visibility = View.INVISIBLE
+                }
                 NetworkState.NO_INTERNET -> {
-                    activityContract?.hideProgressBar()
+                    contentLayout.visibility = View.INVISIBLE
                     activityContract?.showErrorMessage(it.msg)
                 }
                 NetworkState.BAD_REQUEST -> {
-                    activityContract?.hideProgressBar()
+                    contentLayout.visibility = View.INVISIBLE
                     activityContract?.showErrorMessage(it.msg)
                 }
                 NetworkState.NOT_FOUND -> {
-                    activityContract?.hideProgressBar()
+                    contentLayout.visibility = View.INVISIBLE
                     activityContract?.showErrorMessage(it.msg)
                 }
                 NetworkState.ERROR -> {
-                    activityContract?.hideProgressBar()
+                    contentLayout.visibility = View.INVISIBLE
                     activityContract?.showErrorMessage(it.msg)
                 }
             }
