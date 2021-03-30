@@ -10,13 +10,21 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.nasa.app.R
+import javax.inject.Inject
 
-class DownloadFilesAdapter(
-    private val context: Context,
-    private val dataSource: ArrayList<String>
+class DownloadFilesAdapter @Inject constructor(
+    val context: Context,
 ) : BaseAdapter() {
+
+    var dataSource: List<String> = listOf("")
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
     private val inflater: LayoutInflater =
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
 
     override fun getCount(): Int {
         return dataSource.size
