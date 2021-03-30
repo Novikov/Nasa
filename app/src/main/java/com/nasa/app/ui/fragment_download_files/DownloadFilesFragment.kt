@@ -1,6 +1,7 @@
 package com.nasa.app.ui.fragment_download_files
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +13,8 @@ import com.nasa.app.R
 import javax.inject.Inject
 
 class DownloadFilesFragment : DialogFragment() {
-    private var fileUrls: ArrayList<String>? = null
+    private var fileStringsUris: ArrayList<String>? = null
+    private val filesUris = arrayListOf<Uri>()
     @Inject
     lateinit var downloadFilesAdapter: DownloadFilesAdapter
 
@@ -24,7 +26,7 @@ class DownloadFilesFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null && requireArguments().containsKey(DOWNLOAD_DIALOG_FRAGMET)) {
-            fileUrls = requireArguments().getStringArrayList(DOWNLOAD_DIALOG_FRAGMET)
+            fileStringsUris = requireArguments().getStringArrayList(DOWNLOAD_DIALOG_FRAGMET)
         } else {
             throw IllegalArgumentException("Urls can't be empty")
         }
@@ -38,8 +40,11 @@ class DownloadFilesFragment : DialogFragment() {
         val view = inflater.inflate(R.layout.fragment_download_dialog, container, false)
 
         val listView = view.findViewById<ListView>(R.id.files_asset_list_view)
+        fileStringsUris?.forEach {
+            filesUris.add(Uri.parse(it))
+        }
 
-        downloadFilesAdapter.dataSource = fileUrls!!
+        downloadFilesAdapter.dataSource = filesUris
 
         listView.adapter = downloadFilesAdapter
 
@@ -47,7 +52,7 @@ class DownloadFilesFragment : DialogFragment() {
     }
 
     companion object {
-        private val DOWNLOAD_DIALOG_FRAGMET = "app_error_dialog_fragment"
+        const val DOWNLOAD_DIALOG_FRAGMET = "app_error_dialog_fragment"
 
         fun newInstance(urls: ArrayList<String>): DownloadFilesFragment {
             val args = Bundle()

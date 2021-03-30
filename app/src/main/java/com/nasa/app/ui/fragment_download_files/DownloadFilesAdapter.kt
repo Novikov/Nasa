@@ -16,7 +16,7 @@ class DownloadFilesAdapter @Inject constructor(
     val context: Context,
 ) : BaseAdapter() {
 
-    var dataSource: List<String> = listOf("")
+    var dataSource: List<Uri> = listOf()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -53,11 +53,11 @@ class DownloadFilesAdapter @Inject constructor(
             holder = convertView.tag as ViewHolder
         }
 
-        val textViewText = dataSource.get(position).substringAfter("~")
-        holder.urlTextView.setText(textViewText)
+        val textViewText = dataSource[position].toString().substringAfter("~")
+        holder.urlTextView.text = textViewText
 
         holder.urlTextView.setOnClickListener {
-            val address: Uri = Uri.parse(dataSource.get(position))
+            val address: Uri = dataSource.get(position)
             val intent = Intent(Intent.ACTION_VIEW, address)
             ContextCompat.startActivity(context, intent, null)
         }
