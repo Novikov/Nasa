@@ -62,7 +62,7 @@ class ImageDetailFragment : Fragment() {
         }
 
         (requireActivity().application as BaseApplication).appComponent.getDetailComponent()
-            .create(nasaId).inject(this)
+            .create(nasaId,requireContext()).inject(this)
     }
 
 

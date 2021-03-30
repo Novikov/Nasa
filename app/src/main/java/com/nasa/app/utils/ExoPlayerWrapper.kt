@@ -2,10 +2,9 @@ package com.nasa.app.utils
 
 import android.content.Context
 import com.google.android.exoplayer2.*
+import javax.inject.Inject
 
-class ExoMediaPlayer {
-    private lateinit var exoPlayer: ExoPlayer
-    private lateinit var context: Context
+class ExoPlayerWrapper @Inject constructor(private val exoPlayer: ExoPlayer) {
 
     fun playPlayer(url: String, time: Long) {
         val mediaItem: MediaItem = MediaItem.fromUri(url)
@@ -15,9 +14,7 @@ class ExoMediaPlayer {
         exoPlayer.playWhenReady = true
     }
 
-    fun getPlayer(context: Context): ExoPlayer {
-        this.context = context
-        exoPlayer = SimpleExoPlayer.Builder(context).build()
+    fun getPlayer(): ExoPlayer {
         return exoPlayer
     }
 
