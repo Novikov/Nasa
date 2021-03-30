@@ -121,22 +121,8 @@ class AudioDetailFragment : Fragment() {
 
         val orientation = resources.configuration.orientation
         Log.i("Device orientation", orientation.toString())
-        when (orientation) {
-            1 -> {
-                playerView.layoutParams =
-                    ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        450
-                    )
-            }
-            2 -> {
-                playerView.layoutParams =
-                    ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        ConstraintLayout.LayoutParams.MATCH_PARENT
-                    )
+        if (orientation == 2) {
                 activityContract?.hideActionBar()
-            }
         }
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
