@@ -6,18 +6,46 @@
     app:startDestination="@id/mediaFragment">
     <fragment
         android:id="@+id/mediaFragment"
-        android:name="com.nasa.app.ui.media_preview.PreviewMediaFragment"
+        android:name="com.nasa.app.ui.fragment_media_preview.PreviewMediaFragment"
         android:label="fragment_media"
         tools:layout="@layout/fragment_media_preview" >
         <action
-            android:id="@+id/action_mediaFragment_to_detailMediaFragment"
-            app:destination="@id/detailMediaFragment" />
+            android:id="@+id/action_mediaFragment_to_videoDetailFragment"
+            app:destination="@id/videoDetailFragment" />
+        <action
+            android:id="@+id/action_mediaFragment_to_imageDetailFragment"
+            app:destination="@id/imageDetailFragment" />
+        <action
+            android:id="@+id/action_mediaFragment_to_audioDetailFragment"
+            app:destination="@id/audioDetailFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/detailMediaFragment"
-        android:name="com.nasa.app.ui.media_detail.DetailMediaFragment"
-        android:label="DetailMediaFragment" >
+        android:id="@+id/audioDetailFragment"
+        android:name="com.nasa.app.ui.fragments_media_detail.AudioDetailFragment"
+        android:label="AudioDetailFragment" >
+        <argument
+            android:name="nasaId"
+            app:argType="string" />
+        <argument
+            android:name="contentType"
+            app:argType="com.nasa.app.data.model.ContentType" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageDetailFragment"
+        android:name="com.nasa.app.ui.fragments_media_detail.ImageDetailFragment"
+        android:label="ImageDetailFragment" >
+        <argument
+            android:name="nasaId"
+            app:argType="string" />
+        <argument
+            android:name="contentType"
+            app:argType="com.nasa.app.data.model.ContentType" />
+    </fragment>
+    <fragment
+        android:id="@+id/videoDetailFragment"
+        android:name="com.nasa.app.ui.fragments_media_detail.VideoDetailFragment"
+        android:label="VideoDetailFragment" >
         <argument
             android:name="nasaId"
             app:argType="string" />

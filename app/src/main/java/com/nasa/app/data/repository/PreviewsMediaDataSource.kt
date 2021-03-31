@@ -4,16 +4,22 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nasa.app.data.api.NasaApiService
-import com.nasa.app.data.api.json.MediaPreviewResponse
-import com.nasa.app.data.model.MediaPreview
-import com.nasa.app.ui.*
+import com.nasa.app.data.model.media_preview.MediaPreviewResponse
+import com.nasa.app.data.model.media_preview.raw_media_preview.RawMediaPreviewResponseConverter
+import com.nasa.app.utils.SearchParams
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class PreviewsMediaDataSource(
+class PreviewsMediaDataSource @Inject constructor(
     private val apiService: NasaApiService,
     private val compositeDisposable: CompositeDisposable
 ) {
+    @Inject
+    lateinit var searchParams: SearchParams
+    @Inject
+    lateinit var rawMediaPreviewResponseConverter: RawMediaPreviewResponseConverter
+
     private val _networkState = MutableLiveData<NetworkState>()
     val networkState: LiveData<NetworkState>
         get() = _networkState
@@ -22,23 +28,24 @@ class PreviewsMediaDataSource(
     val downloadedMediaPreviewsResponse: LiveData<MediaPreviewResponse>
         get() = _downloadedMediaPreviewsResponse
 
-    fun fetchMediaPreviews() {
+    fun getMediaPreviews() {
         _networkState.postValue(NetworkState.LOADING)
 
         try {
             compositeDisposable.add(
-                apiService.mediaPreview(
-                    SEARCH_REQUEST_QUERY,
-                    getSearchMediaTypes(),
-                    SEARCH_YEAR_START,
-                    SEARCH_YEAR_END,
-                    SEARCH_PAGE
+                apiService.getMediaPreviews(
+                    searchParams.searchRequestQuery,
+                    searchParams.getSearchMediaTypes(),
+                    searchParams.startSearchYear,
+                    searchParams.endSearchYear,
+                    searchParams.searchPage
                 )
                     .observeOn(Schedulers.io())
                     .subscribeOn(Schedulers.io())
                     .subscribe({
-                        Log.i("MediaPreviewsDataSource", it.mediaPreviewList.size.toString())
-                        _downloadedMediaPreviewsResponse.postValue(it)
+                        val mediaPreviewResponse =
+                            rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
+                        _downloadedMediaPreviewsResponse.postValue(mediaPreviewResponse)
                         _networkState.postValue(NetworkState.LOADED)
                     }, {
                         if (it.message?.contains("Unable to resolve host")!!) {
