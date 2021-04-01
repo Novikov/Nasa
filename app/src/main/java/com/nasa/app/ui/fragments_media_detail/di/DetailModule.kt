@@ -12,11 +12,6 @@ import io.reactivex.disposables.CompositeDisposable
 @Module
 class DetailModule {
 
-    @Provides
-    fun provideNasaId(nasaId: String): String {
-        return nasaId
-    }
-
     @DetailScope
     @Provides
     fun providesCompositeDisposable(): CompositeDisposable {
