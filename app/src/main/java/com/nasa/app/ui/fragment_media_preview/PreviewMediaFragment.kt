@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -51,6 +52,20 @@ class PreviewMediaFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel =
             ViewModelProviders.of(this, providerFactory).get(PreviewMediaViewModel::class.java)
+
+        //Custom back navigation callback
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            //If the back button has been pressed - show initial media previews!
+            if (adapter.dataSource!=viewModel.initialMediaPreviews.value){
+                adapter.dataSource = viewModel.initialMediaPreviews.value!!
+                rewindRecyclerViewToBegining(mediaPreviewRecyclerView)
+                searchParams.clearSearchParams()
+            }
+            //If the back button has been pressed again - close application!
+            else{
+                requireActivity().finish()
+            }
+        }
     }
 
     override fun onCreateView(
@@ -69,12 +84,14 @@ class PreviewMediaFragment : Fragment() {
         initRecyclerView()
 
         val currentSearchResultHashCode = viewModel.mediaPreviews.value.hashCode()
+
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
+            if (viewModel.initialMediaPreviews.value == null){
+                viewModel.initialMediaPreviews.postValue(it)
+            }
+
             if (currentSearchResultHashCode != it.hashCode()) {
-                (mediaPreviewRecyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
-                    0,
-                    0
-                )
+                rewindRecyclerViewToBegining(mediaPreviewRecyclerView)
             }
             if (it.mediaPreviewList.isNotEmpty()) {
                 adapter.dataSource = it
@@ -87,8 +104,14 @@ class PreviewMediaFragment : Fragment() {
         //network state status observing
         viewModel.networkState.observe(viewLifecycleOwner, {
             when (it) {
-                NetworkState.LOADING -> activityContract?.showProgressBar()
-                NetworkState.LOADED -> activityContract?.hideProgressBar()
+                NetworkState.LOADING -> {
+                    contentLayout.visibility = View.INVISIBLE
+                    activityContract?.showProgressBar()
+                }
+                NetworkState.LOADED -> {
+                    contentLayout.visibility = View.VISIBLE
+                    activityContract?.hideProgressBar()
+                }
                 NetworkState.NO_INTERNET -> {
                     activityContract?.hideProgressBar()
                     activityContract?.showErrorMessage(it.msg)
@@ -103,13 +126,20 @@ class PreviewMediaFragment : Fragment() {
         return view
     }
 
+    private fun rewindRecyclerViewToBegining(mediaPreviewRecyclerView:RecyclerView) {
+        (mediaPreviewRecyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
+            0,
+            0
+        )
+    }
+
     private fun initRecyclerView() {
         mediaPreviewRecyclerView.layoutManager = LinearLayoutManager(context)
         adapter = MediaPreviewAdapter(picasso,searchParams,callback = {updateMediaPreviews()})
         mediaPreviewRecyclerView.adapter = adapter
     }
 
-    private fun updateMediaPreviews(){
+    fun updateMediaPreviews(){
         viewModel.updateMediaPreviews()
     }
 

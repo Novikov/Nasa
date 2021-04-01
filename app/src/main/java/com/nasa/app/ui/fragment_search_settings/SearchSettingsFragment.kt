@@ -107,7 +107,6 @@ class SearchSettingsFragment : DialogFragment() {
         val updateResultsButton = view.findViewById<Button>(R.id.update_results_button)
         updateResultsButton.setOnClickListener {
             this.dismiss()
-            activityContract?.searchRequest(searchParams.searchRequestQuery)
             searchParams.updateSearchParams(
                 tmpBeginSearchDateValue,
                 tmpEndSearchDateValue,
@@ -115,6 +114,7 @@ class SearchSettingsFragment : DialogFragment() {
                 tmpIsCheckedVideoCheckBox,
                 tmpIsCheckedAudioCheckBox
             )
+            activityContract?.searchRequest(searchParams.searchRequestQuery)
         }
 
         //date text views
