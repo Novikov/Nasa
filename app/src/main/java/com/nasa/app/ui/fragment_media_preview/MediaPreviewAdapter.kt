@@ -17,16 +17,9 @@ import com.nasa.app.data.model.media_preview.MediaPreview
 import com.nasa.app.utils.SearchParams
 import com.nasa.app.utils.POST_PER_PAGE
 import com.squareup.picasso.Picasso
-import javax.inject.Inject
 
-
-class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaRepository) :
+class MediaPreviewAdapter (private val picasso: Picasso, private val searchParams: SearchParams,private val callback:()-> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    @Inject
-    lateinit var picasso: Picasso
-    @Inject
-    lateinit var searchParams: SearchParams
 
     private val SEARCH_INFO_TEXTVIEW_VIEW = 0
     private val MEDIA_PREVIEW_VIEW = 1
@@ -148,7 +141,7 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
                 val viewHolder = holder as NextButtonNavigationViewHolder
                 searchParams.searchPage = dataSource.page + 1
                 viewHolder.nextButton.setOnClickListener {
-                    mediaRepository.updateMediaPreviews()
+                    callback()
                 }
             }
             3 -> {
@@ -156,19 +149,19 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
                 val viewHolder = holder as TwoButtonNavigationViewHolder
                 viewHolder.nextButton.setOnClickListener {
                     searchParams.searchPage = dataSource.page + 1
-                    mediaRepository.updateMediaPreviews()
+                    callback()
                 }
 
                 viewHolder.previousButton.setOnClickListener {
                     searchParams.searchPage = dataSource.page - 1
-                    mediaRepository.updateMediaPreviews()
+                    callback()
                 }
             }
             4 -> {
                 val viewHolder = holder as BackButtonNavigationViewHolder
                 viewHolder.backButton.setOnClickListener {
                     searchParams.searchPage = dataSource.page - 1
-                    mediaRepository.updateMediaPreviews()
+                    callback()
                 }
             }
             5 -> {
