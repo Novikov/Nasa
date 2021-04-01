@@ -25,6 +25,7 @@ class DownloadFilesAdapter @Inject constructor(
     private val inflater: LayoutInflater =
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
+    private val textDividerSymbol = "~"
 
     override fun getCount(): Int {
         return dataSource.size
@@ -53,7 +54,7 @@ class DownloadFilesAdapter @Inject constructor(
             holder = convertView.tag as ViewHolder
         }
 
-        val textViewText = dataSource[position].toString().substringAfter("~")
+        val textViewText = dataSource[position].toString().substringAfter(textDividerSymbol)
         holder.urlTextView.text = textViewText
 
         holder.urlTextView.setOnClickListener {

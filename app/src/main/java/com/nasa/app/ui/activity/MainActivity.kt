@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity(), Activity {
     private lateinit var progressBar: ProgressBar
     private lateinit var errorMessageTextView: TextView
     private var menuItem: MenuItem? = null
+
     @Inject
     lateinit var searchParams: SearchParams
 
@@ -60,7 +61,10 @@ class MainActivity : AppCompatActivity(), Activity {
             collapseSearchField()
             try {
                 val searchSettingsFragment = SearchSettingsFragment.newInstance()
-                searchSettingsFragment.show(supportFragmentManager, getString(R.string.SearchSettingsFragmentTag))
+                searchSettingsFragment.show(
+                    supportFragmentManager,
+                    getString(R.string.SearchSettingsFragmentTag)
+                )
             } catch (ex: Exception) {
                 Log.i(TAG, ex.message.toString())
             }
@@ -77,14 +81,16 @@ class MainActivity : AppCompatActivity(), Activity {
     }
 
     override fun searchRequest(query: String) {
-        if (errorMessageTextView.visibility==View.VISIBLE){
+        if (errorMessageTextView.visibility == View.VISIBLE) {
             clearErrorMessage()
         }
         searchParams.initNewSearchRequestParams(query)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navHostFragment.childFragmentManager.popBackStackImmediate()
-        val previewFragment = navHostFragment.childFragmentManager.primaryNavigationFragment as PreviewMediaFragment
+        val previewFragment =
+            navHostFragment.childFragmentManager.primaryNavigationFragment as PreviewMediaFragment
         previewFragment.updateMediaPreviews()
     }
 
