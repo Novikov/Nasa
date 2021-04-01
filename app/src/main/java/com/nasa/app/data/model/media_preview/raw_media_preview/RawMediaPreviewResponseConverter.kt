@@ -3,6 +3,7 @@ package com.nasa.app.data.model.media_preview.raw_media_preview
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.media_preview.MediaPreview
 import com.nasa.app.data.model.media_preview.MediaPreviewResponse
+import com.nasa.app.utils.EMPTY_STRING
 import com.nasa.app.utils.POST_PER_PAGE
 import java.text.SimpleDateFormat
 import java.util.*
@@ -14,6 +15,8 @@ class RawMediaPreviewResponseConverter @Inject constructor() {
     lateinit var mediaType: ContentType
     lateinit var dateCreated: String
     lateinit var description: String
+
+    private val maxDescriptionSymbolsCount = 200
 
     fun getMediaPreviewResponse(rawMediaPreviewResponse: RawMediaPreviewResponse): MediaPreviewResponse {
         val page = rawMediaPreviewResponse.collection.href.substringAfter("page=").toInt()
@@ -34,7 +37,7 @@ class RawMediaPreviewResponseConverter @Inject constructor() {
             previewUrl = if (tmpLinks != null) {
                 item.links.first().href
             } else {
-                ""
+                EMPTY_STRING
             }
 
             nasaId = item.data.first().nasa_id
@@ -42,13 +45,13 @@ class RawMediaPreviewResponseConverter @Inject constructor() {
             val tmpMediaType = item.data.first().media_type
 
             when (tmpMediaType) {
-                "image" -> {
+                ContentType.IMAGE.contentType -> {
                     mediaType = ContentType.IMAGE
                 }
-                "audio" -> {
+                ContentType.AUDIO.contentType -> {
                     mediaType = ContentType.AUDIO
                 }
-                "video" -> {
+                ContentType.VIDEO.contentType -> {
                     mediaType = ContentType.VIDEO
                 }
             }
@@ -59,13 +62,13 @@ class RawMediaPreviewResponseConverter @Inject constructor() {
             val tmpDescription: String? = item.data.first().description
             description = if (tmpDescription != null) {
                 val rawDescription = item.data.first().description
-                if (rawDescription.length > 200) {
-                    rawDescription.substring(0, 200)
+                if (rawDescription.length > maxDescriptionSymbolsCount) {
+                    rawDescription.substring(0, maxDescriptionSymbolsCount)
                 } else {
                     item.data.first().description
                 }
             } else {
-                ""
+                EMPTY_STRING
             }
             val mediaPreview = MediaPreview(nasaId, previewUrl, mediaType, dateCreated, description)
 
@@ -97,7 +100,7 @@ class RawMediaPreviewResponseConverter @Inject constructor() {
             return dateCreated
 
         } else {
-            return ""
+            return EMPTY_STRING
         }
     }
 }
