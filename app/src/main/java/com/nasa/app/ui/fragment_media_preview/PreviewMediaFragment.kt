@@ -109,7 +109,7 @@ class PreviewMediaFragment : Fragment() {
         mediaPreviewRecyclerView.adapter = adapter
     }
 
-    private fun updateMediaPreviews(){
+    fun updateMediaPreviews(){
         viewModel.updateMediaPreviews()
     }
 

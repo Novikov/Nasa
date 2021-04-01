@@ -13,6 +13,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
+import com.nasa.app.ui.fragment_media_preview.PreviewMediaFragment
 import com.nasa.app.utils.SearchParams
 import com.nasa.app.ui.fragment_search_settings.SearchSettingsFragment
 import com.nasa.app.utils.EMPTY_SEARCH_STRING
@@ -83,14 +84,10 @@ class MainActivity : AppCompatActivity(), Activity {
             clearErrorMessage()
         }
         searchParams.initNewSearchRequestParams(query)
-
-        //navigation controller reinitialization
-        val navController = findNavController(R.id.nav_host_fragment)
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val inflater = navHostFragment.navController.navInflater
-        val graph = inflater.inflate(R.navigation.app_navigation)
-        graph.startDestination = R.id.mediaFragment
-        navController.graph = graph
+        navHostFragment.childFragmentManager.popBackStackImmediate()
+        val previewFragment = navHostFragment.childFragmentManager.primaryNavigationFragment as PreviewMediaFragment
+        previewFragment.updateMediaPreviews()
     }
 
     override fun collapseSearchField() {
