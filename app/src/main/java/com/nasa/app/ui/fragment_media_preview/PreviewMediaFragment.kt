@@ -29,10 +29,8 @@ class PreviewMediaFragment : Fragment() {
 
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
-
     @Inject
     lateinit var searchParams: SearchParams
-
     @Inject
     lateinit var picasso: Picasso
 
@@ -107,8 +105,12 @@ class PreviewMediaFragment : Fragment() {
 
     private fun initRecyclerView() {
         mediaPreviewRecyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = MediaPreviewAdapter(viewModel,picasso,searchParams)
+        adapter = MediaPreviewAdapter(picasso,searchParams,callback = {updateMediaPreviews()})
         mediaPreviewRecyclerView.adapter = adapter
+    }
+
+    private fun updateMediaPreviews(){
+        viewModel.updateMediaPreviews()
     }
 
     companion object {

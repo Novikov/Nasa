@@ -14,13 +14,11 @@ import com.nasa.app.R
 import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.media_preview.MediaPreview
-import com.nasa.app.ui.activity.di.ActivityScope
 import com.nasa.app.utils.SearchParams
 import com.nasa.app.utils.POST_PER_PAGE
 import com.squareup.picasso.Picasso
-import javax.inject.Inject
 
-class MediaPreviewAdapter (val viewModel:PreviewMediaViewModel, val picasso: Picasso, val searchParams: SearchParams) :
+class MediaPreviewAdapter (private val picasso: Picasso, private val searchParams: SearchParams,private val callback:()-> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val SEARCH_INFO_TEXTVIEW_VIEW = 0
@@ -143,7 +141,7 @@ class MediaPreviewAdapter (val viewModel:PreviewMediaViewModel, val picasso: Pic
                 val viewHolder = holder as NextButtonNavigationViewHolder
                 searchParams.searchPage = dataSource.page + 1
                 viewHolder.nextButton.setOnClickListener {
-                    viewModel.updateMediaPreviews()
+                    callback()
                 }
             }
             3 -> {
@@ -151,19 +149,19 @@ class MediaPreviewAdapter (val viewModel:PreviewMediaViewModel, val picasso: Pic
                 val viewHolder = holder as TwoButtonNavigationViewHolder
                 viewHolder.nextButton.setOnClickListener {
                     searchParams.searchPage = dataSource.page + 1
-                    viewModel.updateMediaPreviews()
+                    callback()
                 }
 
                 viewHolder.previousButton.setOnClickListener {
                     searchParams.searchPage = dataSource.page - 1
-                    viewModel.updateMediaPreviews()
+                    callback()
                 }
             }
             4 -> {
                 val viewHolder = holder as BackButtonNavigationViewHolder
                 viewHolder.backButton.setOnClickListener {
                     searchParams.searchPage = dataSource.page - 1
-                    viewModel.updateMediaPreviews()
+                    callback()
                 }
             }
             5 -> {
