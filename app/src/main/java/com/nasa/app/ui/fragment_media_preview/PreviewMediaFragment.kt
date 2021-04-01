@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -51,6 +52,16 @@ class PreviewMediaFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel =
             ViewModelProviders.of(this, providerFactory).get(PreviewMediaViewModel::class.java)
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            if (adapter.dataSource!=viewModel.initialMediaPreviews.value){
+                adapter.dataSource = viewModel.initialMediaPreviews.value!!
+                searchParams.clearSearchParams()
+            }
+            else{
+                requireActivity().finish()
+            }
+        }
     }
 
     override fun onCreateView(
@@ -69,7 +80,12 @@ class PreviewMediaFragment : Fragment() {
         initRecyclerView()
 
         val currentSearchResultHashCode = viewModel.mediaPreviews.value.hashCode()
+
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
+            if (viewModel.initialMediaPreviews.value == null){
+                viewModel.initialMediaPreviews.postValue(it)
+            }
+
             if (currentSearchResultHashCode != it.hashCode()) {
                 (mediaPreviewRecyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
                     0,

@@ -24,6 +24,11 @@ class SearchParams @Inject constructor() {
         searchPage = FIRST_PAGE
     }
 
+    fun clearSearchParams(){
+        searchRequestQuery = EMPTY_SEARCH_STRING
+        searchPage = FIRST_PAGE
+    }
+
     fun updateSearchParams(startSearchYear:String,endSearchYear:String,searchImage:Boolean,searchVideo:Boolean,searchAudio:Boolean){
         this.startSearchYear = startSearchYear
         this.endSearchYear = endSearchYear
