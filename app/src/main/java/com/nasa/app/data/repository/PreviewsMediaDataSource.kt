@@ -7,6 +7,7 @@ import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.data.model.media_preview.raw_media_preview.RawMediaPreviewResponseConverter
 import com.nasa.app.ui.fragment_media_preview.di.PreviewScope
+import com.nasa.app.utils.NO_INTERNET_ERROR_MSG_SUBSTRING
 import com.nasa.app.utils.SearchParams
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -48,7 +49,7 @@ class PreviewsMediaDataSource @Inject constructor(
                         _downloadedMediaPreviewsResponse.postValue(mediaPreviewResponse)
                         _networkState.postValue(NetworkState.LOADED)
                     }, {
-                        if (it.message?.contains("Unable to resolve host")!!) {
+                        if (it.message?.contains(NO_INTERNET_ERROR_MSG_SUBSTRING)!!) {
                             _networkState.postValue(NetworkState.NO_INTERNET)
                         } else {
                             _networkState.postValue(NetworkState.ERROR)
@@ -56,7 +57,11 @@ class PreviewsMediaDataSource @Inject constructor(
                     })
             )
         } catch (e: Exception) {
-            Log.e("MediaPreviewsDataSource", e.message.toString())
+            Log.e(TAG, e.message.toString())
         }
+    }
+
+    companion object {
+        private const val TAG = "PreviewsMediaDataSource"
     }
 }
