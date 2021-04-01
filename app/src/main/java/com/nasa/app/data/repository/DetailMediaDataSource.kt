@@ -7,6 +7,9 @@ import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.model.media_detail.MediaDetailResponse
 import com.nasa.app.data.model.media_detail.raw_media_asset.RawMediaAssetsConverter
 import com.nasa.app.data.model.media_detail.raw_media_detail.RawMediaDetailResponseConverter
+import com.nasa.app.utils.HTTP_400_ERROR_MSG_SUBSTRING
+import com.nasa.app.utils.HTTP_404_ERROR_MSG_SUBSTRING
+import com.nasa.app.utils.NO_INTERNET_ERROR_MSG_SUBSTRING
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -15,7 +18,10 @@ import javax.inject.Named
 class DetailMediaDataSource @Inject constructor(
     private val apiService: NasaApiService,
     private val compositeDisposable: CompositeDisposable,
-    @Named("nasa id") private val nasaId: String
+    @Named("nasa id") private val nasaId: String,
+    private val rawMediaDetailConverter: RawMediaDetailResponseConverter,
+    private val rawMediaAssetConverter: RawMediaAssetsConverter
+
 ) {
     private val _networkState = MutableLiveData<NetworkState>()
     val networkState: LiveData<NetworkState>
@@ -24,11 +30,6 @@ class DetailMediaDataSource @Inject constructor(
     private val _downloadedMediaDetailsResponse = MutableLiveData<MediaDetailResponse>()
     val downloadedMediaResponse: LiveData<MediaDetailResponse>
         get() = _downloadedMediaDetailsResponse
-
-    @Inject
-    lateinit var rawMediaDetailConverter: RawMediaDetailResponseConverter
-    @Inject
-    lateinit var rawMediaAssetConverter: RawMediaAssetsConverter
 
     fun getMediaDetail() {
         _networkState.postValue(NetworkState.LOADING)
@@ -41,7 +42,7 @@ class DetailMediaDataSource @Inject constructor(
                     .flatMap {
                         val rawMediaDetailResponse =
                             rawMediaDetailConverter.getMediaDetailResponseWithInfoData(it)
-                        Log.i("MediaDetailsDataSource", rawMediaDetailResponse.item.toString())
+                        Log.i(TAG, rawMediaDetailResponse.item.toString())
                         apiService.getMediaDetailAsset(rawMediaDetailResponse.item.nasaId)
                             .observeOn(Schedulers.io())
                             .subscribeOn(Schedulers.io())
@@ -53,7 +54,7 @@ class DetailMediaDataSource @Inject constructor(
                             }
                     }
                     .flatMap { rawMediaDetailResponse ->
-                        Log.i("MediaDetailsDataSource", rawMediaDetailResponse.toString())
+                        Log.i(TAG, rawMediaDetailResponse.toString())
                         apiService.getMediaMetadata(rawMediaDetailResponse.metadataUrl!!)
                             .observeOn(Schedulers.io())
                             .subscribeOn(Schedulers.io())
@@ -65,29 +66,33 @@ class DetailMediaDataSource @Inject constructor(
                             }
                     }
                     .subscribe({
-                        Log.i("MediaDetailsDataSource", it.toString())
+                        Log.i(TAG, it.toString())
                         _downloadedMediaDetailsResponse.postValue(MediaDetailResponse(it))
                         _networkState.postValue(NetworkState.LOADED)
                     }, {
                         when {
-                            it.message?.contains("Unable to resolve host")!! -> {
+                            it.message?.contains(NO_INTERNET_ERROR_MSG_SUBSTRING)!! -> {
                                 _networkState.postValue(NetworkState.NO_INTERNET)
                             }
-                            it.message?.contains("HTTP 400")!! -> {
+                            it.message?.contains(HTTP_400_ERROR_MSG_SUBSTRING)!! -> {
                                 _networkState.postValue(NetworkState.BAD_REQUEST)
                             }
-                            it.message?.contains("HTTP 404")!! -> {
+                            it.message?.contains(HTTP_404_ERROR_MSG_SUBSTRING)!! -> {
                                 _networkState.postValue(NetworkState.NOT_FOUND)
                             }
                             else -> {
-                                Log.i("MediaDetailsDataSource", it.message.toString())
+                                Log.i(TAG, it.message.toString())
                                 _networkState.postValue(NetworkState.ERROR)
                             }
                         }
                     })
             )
         } catch (e: Exception) {
-            Log.e("MediaDetailsDataSource", e.message.toString())
+            Log.e(TAG, e.message.toString())
         }
+    }
+
+    companion object {
+        private const val TAG = "DetailMediaDataSource"
     }
 }
