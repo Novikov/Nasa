@@ -20,6 +20,10 @@ class PreviewMediaViewModel @Inject constructor(
         mediaRepository.getMediaPreviewNetworkState()
     }
 
+    fun updateMediaPreviews(){
+        mediaRepository.updateMediaPreviews()
+    }
+
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.dispose()

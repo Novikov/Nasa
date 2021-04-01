@@ -18,19 +18,23 @@ import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.utils.SearchParams
+import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
 class PreviewMediaFragment : Fragment() {
     private var activityContract: Activity? = null
     private lateinit var viewModel: PreviewMediaViewModel
     lateinit var mediaPreviewRecyclerView: RecyclerView
+    lateinit var adapter: MediaPreviewAdapter
 
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
-    @Inject
-    lateinit var adapter: MediaPreviewAdapter
+
     @Inject
     lateinit var searchParams: SearchParams
+
+    @Inject
+    lateinit var picasso: Picasso
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -103,6 +107,7 @@ class PreviewMediaFragment : Fragment() {
 
     private fun initRecyclerView() {
         mediaPreviewRecyclerView.layoutManager = LinearLayoutManager(context)
+        adapter = MediaPreviewAdapter(viewModel,picasso,searchParams)
         mediaPreviewRecyclerView.adapter = adapter
     }
 

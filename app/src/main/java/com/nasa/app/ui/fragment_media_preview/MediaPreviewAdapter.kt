@@ -14,19 +14,14 @@ import com.nasa.app.R
 import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.media_preview.MediaPreview
+import com.nasa.app.ui.activity.di.ActivityScope
 import com.nasa.app.utils.SearchParams
 import com.nasa.app.utils.POST_PER_PAGE
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
-
-class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaRepository) :
+class MediaPreviewAdapter (val viewModel:PreviewMediaViewModel, val picasso: Picasso, val searchParams: SearchParams) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    @Inject
-    lateinit var picasso: Picasso
-    @Inject
-    lateinit var searchParams: SearchParams
 
     private val SEARCH_INFO_TEXTVIEW_VIEW = 0
     private val MEDIA_PREVIEW_VIEW = 1
@@ -148,7 +143,7 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
                 val viewHolder = holder as NextButtonNavigationViewHolder
                 searchParams.searchPage = dataSource.page + 1
                 viewHolder.nextButton.setOnClickListener {
-                    mediaRepository.updateMediaPreviews()
+                    viewModel.updateMediaPreviews()
                 }
             }
             3 -> {
@@ -156,19 +151,19 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
                 val viewHolder = holder as TwoButtonNavigationViewHolder
                 viewHolder.nextButton.setOnClickListener {
                     searchParams.searchPage = dataSource.page + 1
-                    mediaRepository.updateMediaPreviews()
+                    viewModel.updateMediaPreviews()
                 }
 
                 viewHolder.previousButton.setOnClickListener {
                     searchParams.searchPage = dataSource.page - 1
-                    mediaRepository.updateMediaPreviews()
+                    viewModel.updateMediaPreviews()
                 }
             }
             4 -> {
                 val viewHolder = holder as BackButtonNavigationViewHolder
                 viewHolder.backButton.setOnClickListener {
                     searchParams.searchPage = dataSource.page - 1
-                    mediaRepository.updateMediaPreviews()
+                    viewModel.updateMediaPreviews()
                 }
             }
             5 -> {
