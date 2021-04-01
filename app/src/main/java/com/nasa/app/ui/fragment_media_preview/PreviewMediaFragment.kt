@@ -53,11 +53,15 @@ class PreviewMediaFragment : Fragment() {
         viewModel =
             ViewModelProviders.of(this, providerFactory).get(PreviewMediaViewModel::class.java)
 
+        //Custom back navigation callback
         requireActivity().onBackPressedDispatcher.addCallback(this) {
+            //If the back button has been pressed - show initial media previews!
             if (adapter.dataSource!=viewModel.initialMediaPreviews.value){
                 adapter.dataSource = viewModel.initialMediaPreviews.value!!
+                rewindRecyclerViewToBegining(mediaPreviewRecyclerView)
                 searchParams.clearSearchParams()
             }
+            //If the back button has been pressed again - close application!
             else{
                 requireActivity().finish()
             }
@@ -87,10 +91,7 @@ class PreviewMediaFragment : Fragment() {
             }
 
             if (currentSearchResultHashCode != it.hashCode()) {
-                (mediaPreviewRecyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
-                    0,
-                    0
-                )
+                rewindRecyclerViewToBegining(mediaPreviewRecyclerView)
             }
             if (it.mediaPreviewList.isNotEmpty()) {
                 adapter.dataSource = it
@@ -103,8 +104,14 @@ class PreviewMediaFragment : Fragment() {
         //network state status observing
         viewModel.networkState.observe(viewLifecycleOwner, {
             when (it) {
-                NetworkState.LOADING -> activityContract?.showProgressBar()
-                NetworkState.LOADED -> activityContract?.hideProgressBar()
+                NetworkState.LOADING -> {
+                    contentLayout.visibility = View.INVISIBLE
+                    activityContract?.showProgressBar()
+                }
+                NetworkState.LOADED -> {
+                    contentLayout.visibility = View.VISIBLE
+                    activityContract?.hideProgressBar()
+                }
                 NetworkState.NO_INTERNET -> {
                     activityContract?.hideProgressBar()
                     activityContract?.showErrorMessage(it.msg)
@@ -117,6 +124,13 @@ class PreviewMediaFragment : Fragment() {
         })
 
         return view
+    }
+
+    private fun rewindRecyclerViewToBegining(mediaPreviewRecyclerView:RecyclerView) {
+        (mediaPreviewRecyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
+            0,
+            0
+        )
     }
 
     private fun initRecyclerView() {
