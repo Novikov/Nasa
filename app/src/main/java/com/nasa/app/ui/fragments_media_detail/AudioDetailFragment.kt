@@ -25,6 +25,9 @@ import com.nasa.app.databinding.FragmentAudioDetailBinding
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.fragment_download_files.DownloadFilesFragment
+import com.nasa.app.utils.DOWNLOAD_DIALOG_FRAGMENT_TAG
+import com.nasa.app.utils.EMPTY_STRING
+import com.nasa.app.utils.EXO_PLAYER_INITIAL_TIME
 import javax.inject.Inject
 
 class AudioDetailFragment : Fragment() {
@@ -37,8 +40,10 @@ class AudioDetailFragment : Fragment() {
 
     @Inject
     lateinit var exoPlayerWrapper: ExoPlayerWrapper
+
     @Inject
     lateinit var detailMediaRepository: DetailMediaRepository
+
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
 
@@ -58,11 +63,11 @@ class AudioDetailFragment : Fragment() {
             contentType = args.contentType
 
         } else {
-            throw Exception("arguments can't be null")
+            throw Exception("Fragment arguments can't be null")
         }
 
         (requireActivity().application as BaseApplication).appComponent.getDetailComponent()
-            .create(nasaId,requireContext()).inject(this)
+            .create(nasaId, requireContext()).inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,7 +113,7 @@ class AudioDetailFragment : Fragment() {
         exoPlayerWrapper.addListener(object : Player.EventListener {
             override fun onPlaybackStateChanged(state: Int) {
                 super.onPlaybackStateChanged(state)
-                if(state==Player.STATE_BUFFERING){
+                if (state == Player.STATE_BUFFERING) {
                     exoPlayerProgressBar.visibility = View.VISIBLE
                 }
                 if (state == Player.STATE_READY) {
@@ -120,13 +125,12 @@ class AudioDetailFragment : Fragment() {
             override fun onPlayerError(error: ExoPlaybackException) {
                 super.onPlayerError(error)
                 contentLayout.visibility = View.INVISIBLE
-                activityContract?.showErrorMessage("ExoPlayer loading error")
+                activityContract?.showErrorMessage(getString(R.string.Exo_player_error_message))
             }
         })
 
         val orientation = resources.configuration.orientation
-        Log.i("Device orientation", orientation.toString())
-        when(orientation){
+        when (orientation) {
             1 -> {
                 contentDataLayout.visibility = View.INVISIBLE
             }
@@ -139,24 +143,21 @@ class AudioDetailFragment : Fragment() {
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
 
             //audio content initialization
-            var audioUrlString = ""
+            var audioUrlString = EMPTY_STRING
             for (asset in mediaDetailResponse.item.assets!!) {
-                if (asset.value.contains("mp3")) {
+                if (asset.value.contains(getString(R.string.mp3_uri_substring))) {
                     audioUrlString = asset.value
                     break
                 }
             }
             val substring = audioUrlString.substringAfter("//")
             audioUrlString = "https://$substring"
-            Log.i("AudioUrl", "audioUrl $audioUrlString")
 
             val audioUri = Uri.parse(audioUrlString)
-
-            exoPlayerWrapper.playPlayer(audioUri, exoMediaPlayerTime ?: 0)
-
+            exoPlayerWrapper.playPlayer(audioUri, exoMediaPlayerTime ?: EXO_PLAYER_INITIAL_TIME)
             binding.mediaDetail = mediaDetailResponse.item
 
-            if (mediaDetailResponse.item.description == "") {
+            if (mediaDetailResponse.item.description == EMPTY_STRING) {
                 val secondDivider = view.findViewById<View>(R.id.second_divider)
                 secondDivider.visibility = View.INVISIBLE
             }
@@ -168,9 +169,9 @@ class AudioDetailFragment : Fragment() {
                 var keywordTextView =
                     TextView(requireContext(), null, 0, R.style.key_word_text_view_style)
                 if (i < mediaDetailResponse.item.keywords.size - 1) {
-                    keywordTextView.text = "${mediaDetailResponse.item.keywords.get(i)}, "
+                    keywordTextView.text = "${mediaDetailResponse.item.keywords[i]}, "
                 } else {
-                    keywordTextView.text = "${mediaDetailResponse.item.keywords.get(i)}"
+                    keywordTextView.text = "${mediaDetailResponse.item.keywords[i]}"
                 }
                 keyWordFlexBox.addView(keywordTextView)
             }
@@ -203,9 +204,9 @@ class AudioDetailFragment : Fragment() {
                 try {
                     val downloadDialogFragment =
                         DownloadFilesFragment.newInstance(urlList as ArrayList<String>)
-                    downloadDialogFragment.show(parentFragmentManager, "ErrorDialogFragment")
+                    downloadDialogFragment.show(parentFragmentManager, DOWNLOAD_DIALOG_FRAGMENT_TAG)
                 } catch (ex: Exception) {
-                    Log.i("MainActivity", ex.message.toString())
+                    Log.i(TAG, ex.message.toString())
                 }
             }
 

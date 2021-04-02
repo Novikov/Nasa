@@ -18,6 +18,8 @@
     <string name="search_info_text">53 results returned for "Hello":</string>
     <string name="Type_here_to_search">Type here to search</string>
     <string name="SearchSettingsFragmentTag">SearchSettingsFragment</string>
+    <string name="Exo_player_error_message">ExoPlayer loading error</string>
+    <string name="mp3_uri_substring">mp3</string>
 
     <string-array name="list">
         <item>Small</item>
