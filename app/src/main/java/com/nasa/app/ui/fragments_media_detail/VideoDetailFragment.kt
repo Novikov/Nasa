@@ -25,6 +25,9 @@ import com.nasa.app.databinding.FragmentVideoDetailBinding
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.fragment_download_files.DownloadFilesFragment
+import com.nasa.app.utils.DOWNLOAD_DIALOG_FRAGMENT_TAG
+import com.nasa.app.utils.EMPTY_STRING
+import com.nasa.app.utils.EXO_MEDIA_PLAYER_INITIAL_TIME
 import javax.inject.Inject
 
 class VideoDetailFragment : Fragment() {
@@ -121,12 +124,11 @@ class VideoDetailFragment : Fragment() {
             override fun onPlayerError(error: ExoPlaybackException) {
                 super.onPlayerError(error)
                 contentLayout.visibility = View.INVISIBLE
-                activityContract?.showErrorMessage("ExoPlayer loading error")
+                activityContract?.showErrorMessage(getString(R.string.Exo_player_error_message))
             }
         })
 
         val orientation = resources.configuration.orientation
-        Log.i("Device orientation", orientation.toString())
         when(orientation){
             1 -> {
                 contentDataLayout.visibility = View.INVISIBLE
@@ -139,10 +141,10 @@ class VideoDetailFragment : Fragment() {
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
 
-            var videoUrlString = ""
+            var videoUrlString = EMPTY_STRING
 
             for (asset in mediaDetailResponse.item.assets!!) {
-                if (asset.value.contains("mp4")) {
+                if (asset.value.contains(getString(R.string.mp4_uri_substring))) {
                     videoUrlString = asset.value
                     break
                 }
@@ -150,15 +152,14 @@ class VideoDetailFragment : Fragment() {
 
             val substring = videoUrlString.substringAfter("//")
             videoUrlString = "https://$substring"
-            Log.i("VideoUrl", "videoUrl $videoUrlString")
 
             val videoUri = Uri.parse(videoUrlString)
 
-            exoPlayerWrapper.playPlayer(videoUri, exoMediaPlayerTime ?: 0)
+            exoPlayerWrapper.playPlayer(videoUri, exoMediaPlayerTime ?: EXO_MEDIA_PLAYER_INITIAL_TIME)
 
             binding.mediaDetail = mediaDetailResponse.item
 
-            if (mediaDetailResponse.item.description == "") {
+            if (mediaDetailResponse.item.description == EMPTY_STRING) {
                 val secondDivider = view.findViewById<View>(R.id.second_divider)
                 secondDivider.visibility = View.INVISIBLE
             }
@@ -169,9 +170,9 @@ class VideoDetailFragment : Fragment() {
                 var keywordTextView =
                     TextView(requireContext(), null, 0, R.style.key_word_text_view_style)
                 if (i < mediaDetailResponse.item.keywords.size - 1) {
-                    keywordTextView.text = "${mediaDetailResponse.item.keywords.get(i)}, "
+                    keywordTextView.text = "${mediaDetailResponse.item.keywords[i]}, "
                 } else {
-                    keywordTextView.text = "${mediaDetailResponse.item.keywords.get(i)}"
+                    keywordTextView.text = "${mediaDetailResponse.item.keywords[i]}"
                 }
                 keyWordFlexBox.addView(keywordTextView)
             }
@@ -204,9 +205,9 @@ class VideoDetailFragment : Fragment() {
                 try {
                     val downloadDialogFragment =
                         DownloadFilesFragment.newInstance(urlList as ArrayList<String>)
-                    downloadDialogFragment.show(parentFragmentManager, "ErrorDialogFragment")
+                    downloadDialogFragment.show(parentFragmentManager, DOWNLOAD_DIALOG_FRAGMENT_TAG)
                 } catch (ex: Exception) {
-                    Log.i("MainActivity", ex.message.toString())
+                    Log.i(TAG, ex.message.toString())
                 }
             }
 

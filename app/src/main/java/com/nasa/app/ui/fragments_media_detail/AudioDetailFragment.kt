@@ -27,7 +27,7 @@ import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.fragment_download_files.DownloadFilesFragment
 import com.nasa.app.utils.DOWNLOAD_DIALOG_FRAGMENT_TAG
 import com.nasa.app.utils.EMPTY_STRING
-import com.nasa.app.utils.EXO_PLAYER_INITIAL_TIME
+import com.nasa.app.utils.EXO_MEDIA_PLAYER_INITIAL_TIME
 import javax.inject.Inject
 
 class AudioDetailFragment : Fragment() {
@@ -154,7 +154,7 @@ class AudioDetailFragment : Fragment() {
             audioUrlString = "https://$substring"
 
             val audioUri = Uri.parse(audioUrlString)
-            exoPlayerWrapper.playPlayer(audioUri, exoMediaPlayerTime ?: EXO_PLAYER_INITIAL_TIME)
+            exoPlayerWrapper.playPlayer(audioUri, exoMediaPlayerTime ?: EXO_MEDIA_PLAYER_INITIAL_TIME)
             binding.mediaDetail = mediaDetailResponse.item
 
             if (mediaDetailResponse.item.description == EMPTY_STRING) {
