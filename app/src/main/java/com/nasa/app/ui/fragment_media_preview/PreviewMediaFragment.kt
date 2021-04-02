@@ -68,6 +68,7 @@ class PreviewMediaFragment : Fragment() {
             }
             //If the back button has been pressed again - close application!
             else{
+                searchParams.clearSearchParams()
                 requireActivity().finish()
             }
         }
