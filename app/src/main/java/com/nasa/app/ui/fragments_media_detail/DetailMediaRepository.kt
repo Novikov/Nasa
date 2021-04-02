@@ -8,9 +8,7 @@ import com.nasa.app.ui.fragments_media_detail.di.DetailScope
 import javax.inject.Inject
 
 @DetailScope
-class DetailMediaRepository @Inject constructor() {
-    @Inject
-    lateinit var detailMediaDataSource: DetailMediaDataSource
+class DetailMediaRepository @Inject constructor(private val detailMediaDataSource: DetailMediaDataSource) {
 
     fun getMediaDetail(
     ): LiveData<MediaDetailResponse> {
