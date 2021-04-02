@@ -82,7 +82,7 @@ class VideoDetailFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.i(Companion.TAG, "onCreateView: ")
+        Log.i(TAG, "onCreateView: ")
         val binding = DataBindingUtil.inflate<FragmentVideoDetailBinding>(
             inflater,
             R.layout.fragment_video_detail,
