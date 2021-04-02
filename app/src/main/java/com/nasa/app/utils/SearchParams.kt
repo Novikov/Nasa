@@ -43,7 +43,7 @@ class SearchParams @Inject constructor() {
     }
 
     fun getSearchMediaTypes(): String {
-        var resultString = ""
+        var resultString = EMPTY_STRING
         if (searchImage) {
             resultString = resultString + ContentType.IMAGE.contentType + ","
         }
