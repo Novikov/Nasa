@@ -24,7 +24,6 @@ class PreviewsMediaDataSource @Inject constructor(
     @Named("media previews") private val _downloadedMediaPreviewsResponse: MutableLiveData<MediaPreviewResponse>,
     @Named("media previews network state") private val _networkState: MutableLiveData<NetworkState>
 ) {
-
     val networkState: LiveData<NetworkState>
         get() = _networkState
 
