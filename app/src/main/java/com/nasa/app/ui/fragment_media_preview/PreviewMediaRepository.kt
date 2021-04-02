@@ -24,4 +24,12 @@ class PreviewMediaRepository @Inject constructor() {
     fun getMediaPreviewNetworkState(): LiveData<NetworkState> {
         return previewMediaDataSource.networkState
     }
+
+    fun getInitialMediaPreviews(): LiveData<MediaPreviewResponse> {
+        return previewMediaDataSource.initialDownloadedMediaPreviewsResponse
+    }
+
+    fun putInitialDataToMediaPreviews() {
+        previewMediaDataSource.putInitialDataToDownloadedMediaResponse()
+    }
 }

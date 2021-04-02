@@ -12,22 +12,27 @@ import com.nasa.app.utils.SearchParams
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
+import javax.inject.Named
 
 @PreviewScope
 class PreviewsMediaDataSource @Inject constructor(
     private val apiService: NasaApiService,
     private val compositeDisposable: CompositeDisposable,
     private val searchParams: SearchParams,
-    private val rawMediaPreviewResponseConverter: RawMediaPreviewResponseConverter
+    private val rawMediaPreviewResponseConverter: RawMediaPreviewResponseConverter,
+    @Named("initial media previews") private val _initialDownloadedMediaPreviewsResponse: MutableLiveData<MediaPreviewResponse>,
+    @Named("media previews") private val _downloadedMediaPreviewsResponse: MutableLiveData<MediaPreviewResponse>,
+    @Named("media previews network state") private val _networkState: MutableLiveData<NetworkState>
 ) {
 
-    private val _networkState = MutableLiveData<NetworkState>()
     val networkState: LiveData<NetworkState>
         get() = _networkState
 
-    private val _downloadedMediaPreviewsResponse = MutableLiveData<MediaPreviewResponse>()
     val downloadedMediaPreviewsResponse: LiveData<MediaPreviewResponse>
         get() = _downloadedMediaPreviewsResponse
+
+    val initialDownloadedMediaPreviewsResponse: LiveData<MediaPreviewResponse>
+        get() = _initialDownloadedMediaPreviewsResponse
 
     fun getMediaPreviews() {
         _networkState.postValue(NetworkState.LOADING)
@@ -47,10 +52,14 @@ class PreviewsMediaDataSource @Inject constructor(
                         val mediaPreviewResponse =
                             rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
                         _downloadedMediaPreviewsResponse.postValue(mediaPreviewResponse)
-                        if (mediaPreviewResponse.mediaPreviewList.isNotEmpty()){
-                            _networkState.postValue(NetworkState.LOADED)
+
+                        if (_initialDownloadedMediaPreviewsResponse.value == null) {
+                            _initialDownloadedMediaPreviewsResponse.postValue(mediaPreviewResponse)
                         }
-                        else {
+
+                        if (mediaPreviewResponse.mediaPreviewList.isNotEmpty()) {
+                            _networkState.postValue(NetworkState.LOADED)
+                        } else {
                             _networkState.postValue(NetworkState.NOTHING_FOUND)
                         }
                     }, {
@@ -64,6 +73,10 @@ class PreviewsMediaDataSource @Inject constructor(
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
         }
+    }
+
+    fun putInitialDataToDownloadedMediaResponse() {
+        _downloadedMediaPreviewsResponse.postValue(_initialDownloadedMediaPreviewsResponse.value)
     }
 
     companion object {

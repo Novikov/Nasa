@@ -17,7 +17,9 @@ class PreviewMediaViewModel @Inject constructor(
         mediaRepository.getMediaPreviews()
     }
 
-    val initialMediaPreviews = MutableLiveData<MediaPreviewResponse>()
+    val initialMediaPreviews : LiveData<MediaPreviewResponse> by lazy {
+        mediaRepository.getInitialMediaPreviews()
+    }
 
     val networkState: LiveData<NetworkState> by lazy {
         mediaRepository.getMediaPreviewNetworkState()
@@ -30,5 +32,9 @@ class PreviewMediaViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.dispose()
+    }
+
+    fun putInitialDataToMediaPreviews() {
+        mediaRepository.putInitialDataToMediaPreviews()
     }
 }

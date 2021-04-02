@@ -56,10 +56,9 @@ class PreviewMediaFragment : Fragment() {
 
         //Custom back navigation callback
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-            Log.i(TAG, "adapter value: ${adapter.dataSource.hashCode()}, initial values: ${viewModel.initialMediaPreviews.hashCode()}")
             //If the back button has been pressed - show initial media previews!
-            if (adapter.dataSource!=viewModel.initialMediaPreviews.value){
-                adapter.dataSource = viewModel.initialMediaPreviews.value!!
+            if (viewModel.mediaPreviews.value!=viewModel.initialMediaPreviews.value){
+                viewModel.putInitialDataToMediaPreviews()
                 rewindRecyclerViewToBegining(mediaPreviewRecyclerView)
                 searchParams.clearSearchParams()
                 if (contentLayout.visibility == View.INVISIBLE) {
@@ -90,10 +89,6 @@ class PreviewMediaFragment : Fragment() {
         initRecyclerView()
 
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
-            if (viewModel.initialMediaPreviews.value == null){
-                viewModel.initialMediaPreviews.postValue(it)
-            }
-
             val currentSearchResultHashCode = viewModel.mediaPreviews.value.hashCode()
 
             if (currentSearchResultHashCode != it.hashCode()) {
