@@ -27,6 +27,7 @@ class PreviewMediaFragment : Fragment() {
     private lateinit var viewModel: PreviewMediaViewModel
     lateinit var mediaPreviewRecyclerView: RecyclerView
     lateinit var adapter: MediaPreviewAdapter
+    lateinit var contentLayout:ConstraintLayout
 
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
@@ -56,10 +57,14 @@ class PreviewMediaFragment : Fragment() {
         //Custom back navigation callback
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             //If the back button has been pressed - show initial media previews!
-            if (adapter.dataSource!=viewModel.initialMediaPreviews.value){
-                adapter.dataSource = viewModel.initialMediaPreviews.value!!
+            if (viewModel.mediaPreviews.value!=viewModel.initialMediaPreviews.value){
+                viewModel.putInitialDataToMediaPreviews()
                 rewindRecyclerViewToBegining(mediaPreviewRecyclerView)
                 searchParams.clearSearchParams()
+                if (contentLayout.visibility == View.INVISIBLE) {
+                    contentLayout.visibility = View.VISIBLE
+                    activityContract?.clearErrorMessage()
+                }
             }
             //If the back button has been pressed again - close application!
             else{
@@ -77,28 +82,20 @@ class PreviewMediaFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_media_preview, container, false)
 
-        val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
+        contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
         contentLayout.visibility = View.INVISIBLE
 
         mediaPreviewRecyclerView = view.findViewById(R.id.media_preview_recycler_view)
         initRecyclerView()
 
-        val currentSearchResultHashCode = viewModel.mediaPreviews.value.hashCode()
-
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
-            if (viewModel.initialMediaPreviews.value == null){
-                viewModel.initialMediaPreviews.postValue(it)
-            }
+            val currentSearchResultHashCode = viewModel.mediaPreviews.value.hashCode()
 
             if (currentSearchResultHashCode != it.hashCode()) {
                 rewindRecyclerViewToBegining(mediaPreviewRecyclerView)
             }
-            if (it.mediaPreviewList.isNotEmpty()) {
-                adapter.dataSource = it
-                contentLayout.visibility = View.VISIBLE
-            } else {
-                activityContract?.showErrorMessage("Nothing found")
-            }
+
+            adapter.dataSource = it
         })
 
         //network state status observing
@@ -111,6 +108,10 @@ class PreviewMediaFragment : Fragment() {
                 NetworkState.LOADED -> {
                     contentLayout.visibility = View.VISIBLE
                     activityContract?.hideProgressBar()
+                }
+                NetworkState.NOTHING_FOUND -> {
+                    activityContract?.hideProgressBar()
+                    activityContract?.showErrorMessage(it.msg)
                 }
                 NetworkState.NO_INTERNET -> {
                     activityContract?.hideProgressBar()

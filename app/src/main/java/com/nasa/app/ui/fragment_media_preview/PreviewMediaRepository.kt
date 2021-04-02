@@ -8,9 +8,7 @@ import com.nasa.app.ui.fragment_media_preview.di.PreviewScope
 import javax.inject.Inject
 
 @PreviewScope
-class PreviewMediaRepository @Inject constructor() {
-    @Inject
-    lateinit var previewMediaDataSource: PreviewsMediaDataSource
+class PreviewMediaRepository @Inject constructor(private val previewMediaDataSource: PreviewsMediaDataSource) {
 
     fun getMediaPreviews(): LiveData<MediaPreviewResponse> {
         previewMediaDataSource.getMediaPreviews()
@@ -23,5 +21,13 @@ class PreviewMediaRepository @Inject constructor() {
 
     fun getMediaPreviewNetworkState(): LiveData<NetworkState> {
         return previewMediaDataSource.networkState
+    }
+
+    fun getInitialMediaPreviews(): LiveData<MediaPreviewResponse> {
+        return previewMediaDataSource.initialDownloadedMediaPreviewsResponse
+    }
+
+    fun putInitialDataToMediaPreviews() {
+        previewMediaDataSource.putInitialDataToDownloadedMediaResponse()
     }
 }
