@@ -47,7 +47,12 @@ class PreviewsMediaDataSource @Inject constructor(
                         val mediaPreviewResponse =
                             rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
                         _downloadedMediaPreviewsResponse.postValue(mediaPreviewResponse)
-                        _networkState.postValue(NetworkState.LOADED)
+                        if (mediaPreviewResponse.mediaPreviewList.isNotEmpty()){
+                            _networkState.postValue(NetworkState.LOADED)
+                        }
+                        else {
+                            _networkState.postValue(NetworkState.NOTHING_FOUND)
+                        }
                     }, {
                         if (it.message?.contains(NO_INTERNET_ERROR_MSG_SUBSTRING)!!) {
                             _networkState.postValue(NetworkState.NO_INTERNET)
