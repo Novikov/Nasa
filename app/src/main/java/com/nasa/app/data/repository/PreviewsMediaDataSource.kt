@@ -76,6 +76,7 @@ class PreviewsMediaDataSource @Inject constructor(
 
     fun putInitialDataToDownloadedMediaResponse() {
         _downloadedMediaPreviewsResponse.postValue(_initialDownloadedMediaPreviewsResponse.value)
+        _networkState.postValue(NetworkState.LOADED)
     }
 
     companion object {
