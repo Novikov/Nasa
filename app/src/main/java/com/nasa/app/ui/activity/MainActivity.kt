@@ -9,6 +9,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
@@ -86,12 +87,13 @@ class MainActivity : AppCompatActivity(), Activity {
         }
         searchParams.initNewSearchRequestParams(query)
 
+        val navController = findNavController(R.id.nav_host_fragment)
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navHostFragment.childFragmentManager.popBackStackImmediate()
-        val previewFragment =
-            navHostFragment.childFragmentManager.primaryNavigationFragment as PreviewMediaFragment
-        previewFragment.updateMediaPreviews()
+        val inflater = navHostFragment.navController.navInflater
+        val graph = inflater.inflate(R.navigation.app_navigation)
+        graph.startDestination = R.id.mediaFragment
+        navController.graph = graph
     }
 
     override fun collapseSearchField() {

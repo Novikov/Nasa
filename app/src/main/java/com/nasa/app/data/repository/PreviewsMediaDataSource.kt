@@ -7,6 +7,8 @@ import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.data.model.media_preview.raw_media_preview.RawMediaPreviewResponseConverter
 import com.nasa.app.ui.fragment_media_preview.di.PreviewScope
+import com.nasa.app.utils.EMPTY_SEARCH_STRING
+import com.nasa.app.utils.FIRST_PAGE
 import com.nasa.app.utils.NO_INTERNET_ERROR_MSG_SUBSTRING
 import com.nasa.app.utils.SearchParams
 import io.reactivex.disposables.CompositeDisposable
@@ -52,16 +54,45 @@ class PreviewsMediaDataSource @Inject constructor(
                             rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
                         _downloadedMediaPreviewsResponse.postValue(mediaPreviewResponse)
 
-                        if (_initialDownloadedMediaPreviewsResponse.value == null) {
-                            _initialDownloadedMediaPreviewsResponse.postValue(mediaPreviewResponse)
-                        }
-
                         if (mediaPreviewResponse.mediaPreviewList.isNotEmpty()) {
                             _networkState.postValue(NetworkState.LOADED)
                         } else {
                             _networkState.postValue(NetworkState.NOTHING_FOUND)
                         }
                     }, {
+                        if (it.message?.contains(NO_INTERNET_ERROR_MSG_SUBSTRING)!!) {
+                            _networkState.postValue(NetworkState.NO_INTERNET)
+                        } else {
+                            _networkState.postValue(NetworkState.ERROR)
+                        }
+                    })
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+        }
+    }
+
+
+    fun getInitialMediaPreviews(){
+        try {
+            compositeDisposable.add(
+                apiService.getMediaPreviews(
+                    EMPTY_SEARCH_STRING,
+                    searchParams.defaultSearchParams,
+                    searchParams.beginDate,
+                    searchParams.endDate,
+                    FIRST_PAGE
+                )
+                    .observeOn(Schedulers.io())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({
+                        val mediaPreviewResponse =
+                            rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
+                        Log.i(TAG, "getInitialMediaPreviews: $mediaPreviewResponse")
+                        _initialDownloadedMediaPreviewsResponse.postValue(mediaPreviewResponse)
+
+                    }, {
+                        Log.i(TAG, "getInitialMediaPreviews: $it")
                         if (it.message?.contains(NO_INTERNET_ERROR_MSG_SUBSTRING)!!) {
                             _networkState.postValue(NetworkState.NO_INTERNET)
                         } else {

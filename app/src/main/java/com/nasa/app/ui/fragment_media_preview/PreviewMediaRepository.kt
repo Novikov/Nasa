@@ -15,16 +15,17 @@ class PreviewMediaRepository @Inject constructor(private val previewMediaDataSou
         return previewMediaDataSource.downloadedMediaPreviewsResponse
     }
 
+    fun getInitialMediaPreviews(): LiveData<MediaPreviewResponse> {
+        previewMediaDataSource.getInitialMediaPreviews()
+        return previewMediaDataSource.initialDownloadedMediaPreviewsResponse
+    }
+
     fun updateMediaPreviews() {
         previewMediaDataSource.getMediaPreviews()
     }
 
     fun getMediaPreviewNetworkState(): LiveData<NetworkState> {
         return previewMediaDataSource.networkState
-    }
-
-    fun getInitialMediaPreviews(): LiveData<MediaPreviewResponse> {
-        return previewMediaDataSource.initialDownloadedMediaPreviewsResponse
     }
 
     fun putInitialDataToMediaPreviews() {

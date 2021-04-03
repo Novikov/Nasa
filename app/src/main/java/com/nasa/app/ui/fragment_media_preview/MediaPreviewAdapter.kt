@@ -45,6 +45,7 @@ class MediaPreviewAdapter (private val picasso: Picasso, private val searchParam
     var navController: NavController? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        navController = Navigation.findNavController(parent)
         return when (viewType) {
             0 -> {
                 val view = LayoutInflater.from(parent.context)
@@ -54,7 +55,6 @@ class MediaPreviewAdapter (private val picasso: Picasso, private val searchParam
             1 -> {
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.media_preview_item, parent, false)
-                navController = Navigation.findNavController(parent)
                 MediaPreviewViewHolder(view)
             }
             2 -> {
