@@ -208,6 +208,6 @@ class ImageDetailFragment : Fragment() {
     }
 
     companion object {
-        const val TAG = "AudioDetailFragment"
+        const val TAG = "ImageDetailFragment"
     }
 }

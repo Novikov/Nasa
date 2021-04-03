@@ -13,7 +13,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
-import com.nasa.app.ui.fragment_media_preview.PreviewMediaFragment
 import com.nasa.app.ui.fragment_search_settings.SearchSettingsFragment
 import com.nasa.app.utils.EMPTY_SEARCH_STRING
 import com.nasa.app.utils.EMPTY_STRING
