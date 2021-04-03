@@ -18,6 +18,7 @@ class SearchParams @Inject constructor() {
     var searchVideo = true
     var searchAudio = true
     var searchPage = FIRST_PAGE
+    val defaultSearchParams = "image,video,audio"
 
     fun initNewSearchRequestParams(query:String){
         searchRequestQuery = query

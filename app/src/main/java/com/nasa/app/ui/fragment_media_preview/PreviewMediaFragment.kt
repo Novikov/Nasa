@@ -18,6 +18,7 @@ import com.nasa.app.R
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
+import com.nasa.app.utils.EMPTY_SEARCH_STRING
 import com.nasa.app.utils.SearchParams
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
@@ -56,8 +57,12 @@ class PreviewMediaFragment : Fragment() {
 
         //Custom back navigation callback
         requireActivity().onBackPressedDispatcher.addCallback(this) {
+            if (searchParams.searchRequestQuery.equals(EMPTY_SEARCH_STRING)){
+                searchParams.clearSearchParams()
+                requireActivity().finish()
+            }
             //If the back button has been pressed - show initial media previews!
-            if (viewModel.mediaPreviews.value!=viewModel.initialMediaPreviews.value){
+            else if (viewModel.mediaPreviews.value!=viewModel.initialMediaPreviews.value){
                 viewModel.putInitialDataToMediaPreviews()
                 rewindRecyclerViewToBegining(mediaPreviewRecyclerView)
                 searchParams.clearSearchParams()

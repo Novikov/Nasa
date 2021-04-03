@@ -54,10 +54,6 @@ class PreviewsMediaDataSource @Inject constructor(
                             rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
                         _downloadedMediaPreviewsResponse.postValue(mediaPreviewResponse)
 
-//                        if (_initialDownloadedMediaPreviewsResponse.value == null) {
-//                            _initialDownloadedMediaPreviewsResponse.postValue(mediaPreviewResponse)
-//                        }
-
                         if (mediaPreviewResponse.mediaPreviewList.isNotEmpty()) {
                             _networkState.postValue(NetworkState.LOADED)
                         } else {
@@ -82,7 +78,7 @@ class PreviewsMediaDataSource @Inject constructor(
             compositeDisposable.add(
                 apiService.getMediaPreviews(
                     EMPTY_SEARCH_STRING,
-                    "video,audio,image,",
+                    searchParams.defaultSearchParams,
                     searchParams.beginDate,
                     searchParams.endDate,
                     FIRST_PAGE
