@@ -14,30 +14,29 @@ import com.nasa.app.R
 import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.media_preview.MediaPreview
+import com.nasa.app.utils.EMPTY_SEARCH_STRING
 import com.nasa.app.utils.SearchParams
 import com.nasa.app.utils.POST_PER_PAGE
 import com.squareup.picasso.Picasso
-import javax.inject.Inject
 
-
-class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaRepository) :
+class MediaPreviewAdapter (private val picasso: Picasso, private val searchParams: SearchParams,private val callback:()-> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    @Inject
-    lateinit var picasso: Picasso
-    @Inject
-    lateinit var searchParams: SearchParams
 
     private val SEARCH_INFO_TEXTVIEW_VIEW = 0
     private val MEDIA_PREVIEW_VIEW = 1
     private val NEXT_BUTTON_VIEW = 2
     private val BACK_AND_NEXT_BUTTON_VIEW = 3
     private val BACK_BUTTON_VIEW = 4
-
     private val EMPTY_VIEW = 5
-
+    
+    //initial data
     var dataSource: MediaPreviewResponse =
-        MediaPreviewResponse(listOf(MediaPreview("Apollo 11 For All Mankind", "https://images-assets.nasa.gov/video/Apollo 11 For All Mankind/Apollo 11 For All Mankind~thumb.jpg", ContentType.IMAGE, "2014-07-16T00:00:00Z", "A documentary of the Apollo 11 launch, lunar landing and exploration and return to earth which included a stay in quarantine.")), 1, 1, 1)
+        MediaPreviewResponse(listOf(MediaPreview("Apollo 11 For All Mankind",
+            "https://images-assets.nasa.gov/video/Apollo 11 For All Mankind/Apollo 11 For All Mankind~thumb.jpg",
+            ContentType.IMAGE, "2014-07-16T00:00:00Z", "A documentary of the Apollo 11 launch, lunar landing and exploration and return to earth which included a stay in quarantine.")),
+            1,
+            1,
+            1)
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -46,6 +45,7 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
     var navController: NavController? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        navController = Navigation.findNavController(parent)
         return when (viewType) {
             0 -> {
                 val view = LayoutInflater.from(parent.context)
@@ -55,7 +55,6 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
             1 -> {
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.media_preview_item, parent, false)
-                navController = Navigation.findNavController(parent)
                 MediaPreviewViewHolder(view)
             }
             2 -> {
@@ -86,32 +85,37 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
 
         when (holder.itemViewType) {
             0 -> {
-                Log.i("Position", "search: ${position}")
+                //Search results view initialization
                 val result = searchParams.searchRequestQuery.substring(0, 1)
                     .toUpperCase() + searchParams.searchRequestQuery.substring(1).toLowerCase()
                 val viewHolder = holder as SearchInfoViewHolder
-                if (searchParams.searchRequestQuery == "\"\"") {
-                    viewHolder.searchInfoTextView.text = "Random uploads"
-                } else if (dataSource.totalResults < 100) {
-                    viewHolder.searchInfoTextView.text =
-                        "${dataSource.totalResults} results returned for \"$result\""
-                } else if (dataSource.totalResults > 100) {
-                    var endResult = dataSource.page * POST_PER_PAGE
-                    var startResult = endResult - 99
-                    if (endResult > dataSource.totalResults) {
-                        endResult = dataSource.totalResults
+                when {
+                    searchParams.searchRequestQuery == EMPTY_SEARCH_STRING -> {
+                        viewHolder.searchInfoTextView.text = "Random uploads"
                     }
-                    viewHolder.searchInfoTextView.text =
-                        "$startResult - $endResult of ${dataSource.totalResults} for \"$result\""
-                } else {
-                    viewHolder.searchInfoTextView.text = ""
+                    dataSource.totalResults < 100 -> {
+                        viewHolder.searchInfoTextView.text =
+                            "${dataSource.totalResults} results returned for \"$result\""
+                    }
+                    dataSource.totalResults > 100 -> {
+                        var endResult = dataSource.page * POST_PER_PAGE
+                        var startResult = endResult - 99
+                        if (endResult > dataSource.totalResults) {
+                            endResult = dataSource.totalResults
+                        }
+                        viewHolder.searchInfoTextView.text =
+                            "$startResult - $endResult of ${dataSource.totalResults} for \"$result\""
+                    }
+                    else -> {
+                        viewHolder.searchInfoTextView.text = ""
+                    }
                 }
             }
             1 -> {
+                //Media preview view initialization
                 val viewHolder = holder as MediaPreviewViewHolder
                 val mediaPreview = dataSource.mediaPreviewList[position-1]
                 val hideDivider = (position-1) == dataSource.mediaPreviewList.lastIndex
-                Log.i("Position", "real position : ${position}, position - 1 == ${position-1}")
                 viewHolder.bind(mediaPreview, hideDivider)
                 viewHolder.itemView.setOnClickListener {
                     when (mediaPreview.mediaType) {
@@ -144,31 +148,32 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
                 }
             }
             2 -> {
-                //next button
+                //Next button view initialization
                 val viewHolder = holder as NextButtonNavigationViewHolder
                 searchParams.searchPage = dataSource.page + 1
                 viewHolder.nextButton.setOnClickListener {
-                    mediaRepository.updateMediaPreviews()
+                    callback()
                 }
             }
             3 -> {
-                //back and next buttons
+                //Back and next buttons view initialization
                 val viewHolder = holder as TwoButtonNavigationViewHolder
                 viewHolder.nextButton.setOnClickListener {
                     searchParams.searchPage = dataSource.page + 1
-                    mediaRepository.updateMediaPreviews()
+                    callback()
                 }
 
                 viewHolder.previousButton.setOnClickListener {
                     searchParams.searchPage = dataSource.page - 1
-                    mediaRepository.updateMediaPreviews()
+                    callback()
                 }
             }
             4 -> {
+                //Back button view initialization
                 val viewHolder = holder as BackButtonNavigationViewHolder
                 viewHolder.backButton.setOnClickListener {
                     searchParams.searchPage = dataSource.page - 1
-                    mediaRepository.updateMediaPreviews()
+                    callback()
                 }
             }
             5 -> {
@@ -179,17 +184,17 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
 
     override fun getItemViewType(position: Int): Int {
         return when {
-            //search info textView for 0 position
+            //Search results view for 0 position
             (position == 0) -> {
                 0
             }
 
-            //mediaPreviewItem for 1 - 100 position
+            //MediaPreviewItem view for 1 - 100 position
             (position <= dataSource.mediaPreviewList.size) -> {
                 1
             }
 
-            //navigation view or empty view for 101 position
+            //Navigation view or empty view for 101 position
             (position == dataSource.mediaPreviewList.size + 1) -> {
                 //first page and other doesn't exist
                 if ((dataSource.page == 1) && (dataSource.totalPages - dataSource.page == 0)) {
@@ -218,21 +223,21 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
         }
     }
 
-    //0 - searchInfoTV, 100 - mediaPreviewItems, 101 - next|prev_and_next|prev buttons
+    //0 - searchInfoView, 100 - mediaPreviewItemsViews, 101 - next|prev_and_next|prev buttons views
     override fun getItemCount(): Int {
             return dataSource.mediaPreviewList.size + 2
     }
 
     inner class MediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val mediaPreviewImageView: ImageView =
+        private val mediaPreviewImageView: ImageView =
             view.findViewById(R.id.media_preview_recycler_view_image)
-        val audioBackgroundImageView: ImageView =
+        private val audioBackgroundImageView: ImageView =
             view.findViewById(R.id.audio_background_image_view)
-        val playVideoImageView: ImageView = view.findViewById(R.id.play_video_image_view)
-        val playAudioImageView: ImageView = view.findViewById(R.id.play_audio_image_view)
-        val descriptionTextView: TextView = view.findViewById(R.id.description_text_view)
-        val dateCreatedTextView: TextView = view.findViewById(R.id.date_created_text_view)
-        val divider: View = view.findViewById(R.id.divider)
+        private val playVideoImageView: ImageView = view.findViewById(R.id.play_video_image_view)
+        private val playAudioImageView: ImageView = view.findViewById(R.id.play_audio_image_view)
+        private val descriptionTextView: TextView = view.findViewById(R.id.description_text_view)
+        private val dateCreatedTextView: TextView = view.findViewById(R.id.date_created_text_view)
+        private val divider: View = view.findViewById(R.id.divider)
 
         fun bind(mediaPreview: MediaPreview, hideDivider: Boolean) {
             descriptionTextView.text = mediaPreview.description
@@ -245,7 +250,7 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
                 ContentType.IMAGE -> {
                     mediaPreviewImageView.visibility = View.VISIBLE
                     audioBackgroundImageView.visibility = View.INVISIBLE
-                    Log.i("Position", "preview url: ${mediaPreview.previewUrl}")
+
                     picasso
                         .load(mediaPreview.previewUrl)
                         .fit()
@@ -257,7 +262,7 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
                 ContentType.VIDEO -> {
                     mediaPreviewImageView.visibility = View.VISIBLE
                     audioBackgroundImageView.visibility = View.INVISIBLE
-                    Log.i("Position", "preview url: ${mediaPreview.previewUrl}")
+
                     picasso
                         .load(mediaPreview.previewUrl)
                         .fit()
@@ -268,7 +273,6 @@ class MediaPreviewAdapter @Inject constructor(val mediaRepository: PreviewMediaR
 
                 }
                 ContentType.AUDIO -> {
-                    Log.i("Position", "preview url: - audio")
                     mediaPreviewImageView.visibility = View.INVISIBLE
                     audioBackgroundImageView.visibility = View.VISIBLE
                     playVideoImageView.visibility = View.INVISIBLE

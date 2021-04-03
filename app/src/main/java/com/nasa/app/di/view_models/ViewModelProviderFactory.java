@@ -2,9 +2,7 @@ package com.nasa.app.di.view_models;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-
 import java.util.Map;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 

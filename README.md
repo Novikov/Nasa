@@ -8,6 +8,7 @@
 * [ExoPlayer](https://exoplayer.dev/) for playing video and audio content;
 * Navigation component;
 * DataBinding and Picasso for UI creation;
+* Dagger for DI
 
-[Video presentation](https://youtu.be/FUchc017RFE)
+[Video presentation](https://youtu.be/FjamDAN3y5g)
 

@@ -25,6 +25,8 @@ import com.nasa.app.databinding.FragmentImageDetailBinding
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.fragment_download_files.DownloadFilesFragment
+import com.nasa.app.utils.DOWNLOAD_DIALOG_FRAGMENT_TAG
+import com.nasa.app.utils.EMPTY_STRING
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
@@ -79,7 +81,7 @@ class ImageDetailFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.i(Companion.TAG, "onCreateView: ")
+        Log.i(TAG, "onCreateView: ")
         val binding = DataBindingUtil.inflate<FragmentImageDetailBinding>(
             inflater,
             R.layout.fragment_image_detail,
@@ -99,7 +101,6 @@ class ImageDetailFragment : Fragment() {
         val imageView = view.findViewById<ImageView>(R.id.image_media_view)
 
         val orientation = resources.configuration.orientation
-        Log.i("Device orientation", orientation.toString())
         when (orientation) {
             1 -> {
             }
@@ -126,7 +127,7 @@ class ImageDetailFragment : Fragment() {
 
             binding.mediaDetail = mediaDetailResponse.item
 
-            if (mediaDetailResponse.item.description == "") {
+            if (mediaDetailResponse.item.description == EMPTY_STRING) {
                 val secondDivider = view.findViewById<View>(R.id.second_divider)
                 secondDivider.visibility = View.INVISIBLE
             }
@@ -137,9 +138,9 @@ class ImageDetailFragment : Fragment() {
                 var keywordTextView =
                     TextView(requireContext(), null, 0, R.style.key_word_text_view_style)
                 if (i < mediaDetailResponse.item.keywords.size - 1) {
-                    keywordTextView.text = "${mediaDetailResponse.item.keywords.get(i)}, "
+                    keywordTextView.text = "${mediaDetailResponse.item.keywords[i]}, "
                 } else {
-                    keywordTextView.text = "${mediaDetailResponse.item.keywords.get(i)}"
+                    keywordTextView.text = "${mediaDetailResponse.item.keywords[i]}"
                 }
                 keyWordFlexBox.addView(keywordTextView)
             }
@@ -173,9 +174,9 @@ class ImageDetailFragment : Fragment() {
                 try {
                     val downloadDialogFragment =
                         DownloadFilesFragment.newInstance(urlList as ArrayList<String>)
-                    downloadDialogFragment.show(parentFragmentManager, "ErrorDialogFragment")
+                    downloadDialogFragment.show(parentFragmentManager, DOWNLOAD_DIALOG_FRAGMENT_TAG)
                 } catch (ex: Exception) {
-                    Log.i("MainActivity", ex.message.toString())
+                    Log.i(TAG, ex.message.toString())
                 }
             }
         })
@@ -207,6 +208,6 @@ class ImageDetailFragment : Fragment() {
     }
 
     companion object {
-        const val TAG = "AudioDetailFragment"
+        const val TAG = "ImageDetailFragment"
     }
 }

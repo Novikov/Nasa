@@ -6,27 +6,34 @@ import androidx.lifecycle.MutableLiveData
 import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.data.model.media_preview.raw_media_preview.RawMediaPreviewResponseConverter
+import com.nasa.app.ui.fragment_media_preview.di.PreviewScope
+import com.nasa.app.utils.EMPTY_SEARCH_STRING
+import com.nasa.app.utils.FIRST_PAGE
+import com.nasa.app.utils.NO_INTERNET_ERROR_MSG_SUBSTRING
 import com.nasa.app.utils.SearchParams
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
+import javax.inject.Named
 
+@PreviewScope
 class PreviewsMediaDataSource @Inject constructor(
     private val apiService: NasaApiService,
-    private val compositeDisposable: CompositeDisposable
+    private val compositeDisposable: CompositeDisposable,
+    private val searchParams: SearchParams,
+    private val rawMediaPreviewResponseConverter: RawMediaPreviewResponseConverter,
+    @Named("initial media previews") private val _initialDownloadedMediaPreviewsResponse: MutableLiveData<MediaPreviewResponse>,
+    @Named("media previews") private val _downloadedMediaPreviewsResponse: MutableLiveData<MediaPreviewResponse>,
+    @Named("media previews network state") private val _networkState: MutableLiveData<NetworkState>
 ) {
-    @Inject
-    lateinit var searchParams: SearchParams
-    @Inject
-    lateinit var rawMediaPreviewResponseConverter: RawMediaPreviewResponseConverter
-
-    private val _networkState = MutableLiveData<NetworkState>()
     val networkState: LiveData<NetworkState>
         get() = _networkState
 
-    private val _downloadedMediaPreviewsResponse = MutableLiveData<MediaPreviewResponse>()
     val downloadedMediaPreviewsResponse: LiveData<MediaPreviewResponse>
         get() = _downloadedMediaPreviewsResponse
+
+    val initialDownloadedMediaPreviewsResponse: LiveData<MediaPreviewResponse>
+        get() = _initialDownloadedMediaPreviewsResponse
 
     fun getMediaPreviews() {
         _networkState.postValue(NetworkState.LOADING)
@@ -46,9 +53,14 @@ class PreviewsMediaDataSource @Inject constructor(
                         val mediaPreviewResponse =
                             rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
                         _downloadedMediaPreviewsResponse.postValue(mediaPreviewResponse)
-                        _networkState.postValue(NetworkState.LOADED)
+
+                        if (mediaPreviewResponse.mediaPreviewList.isNotEmpty()) {
+                            _networkState.postValue(NetworkState.LOADED)
+                        } else {
+                            _networkState.postValue(NetworkState.NOTHING_FOUND)
+                        }
                     }, {
-                        if (it.message?.contains("Unable to resolve host")!!) {
+                        if (it.message?.contains(NO_INTERNET_ERROR_MSG_SUBSTRING)!!) {
                             _networkState.postValue(NetworkState.NO_INTERNET)
                         } else {
                             _networkState.postValue(NetworkState.ERROR)
@@ -56,7 +68,49 @@ class PreviewsMediaDataSource @Inject constructor(
                     })
             )
         } catch (e: Exception) {
-            Log.e("MediaPreviewsDataSource", e.message.toString())
+            Log.e(TAG, e.message.toString())
         }
+    }
+
+
+    fun getInitialMediaPreviews(){
+        try {
+            compositeDisposable.add(
+                apiService.getMediaPreviews(
+                    EMPTY_SEARCH_STRING,
+                    searchParams.defaultSearchParams,
+                    searchParams.beginDate,
+                    searchParams.endDate,
+                    FIRST_PAGE
+                )
+                    .observeOn(Schedulers.io())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({
+                        val mediaPreviewResponse =
+                            rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
+                        Log.i(TAG, "getInitialMediaPreviews: $mediaPreviewResponse")
+                        _initialDownloadedMediaPreviewsResponse.postValue(mediaPreviewResponse)
+
+                    }, {
+                        Log.i(TAG, "getInitialMediaPreviews: $it")
+                        if (it.message?.contains(NO_INTERNET_ERROR_MSG_SUBSTRING)!!) {
+                            _networkState.postValue(NetworkState.NO_INTERNET)
+                        } else {
+                            _networkState.postValue(NetworkState.ERROR)
+                        }
+                    })
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+        }
+    }
+
+    fun putInitialDataToDownloadedMediaResponse() {
+        _downloadedMediaPreviewsResponse.postValue(_initialDownloadedMediaPreviewsResponse.value)
+        _networkState.postValue(NetworkState.LOADED)
+    }
+
+    companion object {
+        private const val TAG = "PreviewsMediaDataSource"
     }
 }

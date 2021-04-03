@@ -1,6 +1,7 @@
 package com.nasa.app.ui.fragment_media_preview
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.data.repository.NetworkState
@@ -16,12 +17,24 @@ class PreviewMediaViewModel @Inject constructor(
         mediaRepository.getMediaPreviews()
     }
 
+    val initialMediaPreviews : LiveData<MediaPreviewResponse> by lazy {
+        mediaRepository.getInitialMediaPreviews()
+    }
+
     val networkState: LiveData<NetworkState> by lazy {
         mediaRepository.getMediaPreviewNetworkState()
+    }
+
+    fun updateMediaPreviews(){
+        mediaRepository.updateMediaPreviews()
     }
 
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.dispose()
+    }
+
+    fun putInitialDataToMediaPreviews() {
+        mediaRepository.putInitialDataToMediaPreviews()
     }
 }

@@ -17,7 +17,7 @@ import com.nasa.app.ui.activity.Activity
 import com.nasa.app.utils.SearchParams
 import javax.inject.Inject
 
-class SearchSettingsFragment @Inject constructor() : DialogFragment() {
+class SearchSettingsFragment : DialogFragment() {
     private var activityContract: Activity? = null
 
     @Inject
@@ -35,7 +35,7 @@ class SearchSettingsFragment @Inject constructor() : DialogFragment() {
         try {
             activityContract = context as Activity
         } catch (e: ClassCastException) {
-            throw ClassCastException(context.toString() + "Activity have to implement interface IActivityView")
+            throw ClassCastException(context.toString() + "Activity have to implement interface Activity")
         }
         (requireActivity().application as BaseApplication).appComponent.getSearchSettingsComponent()
             .create().inject(this)
@@ -43,6 +43,7 @@ class SearchSettingsFragment @Inject constructor() : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.i(TAG, "onCreate: ${searchParams.hashCode()}")
         tmpIsCheckedImageCheckBox = searchParams.searchImage
         tmpIsCheckedVideoCheckBox = searchParams.searchVideo
         tmpIsCheckedAudioCheckBox = searchParams.searchAudio
@@ -106,7 +107,6 @@ class SearchSettingsFragment @Inject constructor() : DialogFragment() {
         val updateResultsButton = view.findViewById<Button>(R.id.update_results_button)
         updateResultsButton.setOnClickListener {
             this.dismiss()
-            activityContract?.searchRequest(searchParams.searchRequestQuery)
             searchParams.updateSearchParams(
                 tmpBeginSearchDateValue,
                 tmpEndSearchDateValue,
@@ -114,6 +114,7 @@ class SearchSettingsFragment @Inject constructor() : DialogFragment() {
                 tmpIsCheckedVideoCheckBox,
                 tmpIsCheckedAudioCheckBox
             )
+            activityContract?.searchRequest(searchParams.searchRequestQuery)
         }
 
         //date text views

@@ -13,16 +13,17 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
-import com.nasa.app.utils.SearchParams
 import com.nasa.app.ui.fragment_search_settings.SearchSettingsFragment
 import com.nasa.app.utils.EMPTY_SEARCH_STRING
+import com.nasa.app.utils.EMPTY_STRING
+import com.nasa.app.utils.SearchParams
 import javax.inject.Inject
-
 
 class MainActivity : AppCompatActivity(), Activity {
     private lateinit var progressBar: ProgressBar
     private lateinit var errorMessageTextView: TextView
     private var menuItem: MenuItem? = null
+
     @Inject
     lateinit var searchParams: SearchParams
 
@@ -60,33 +61,34 @@ class MainActivity : AppCompatActivity(), Activity {
             collapseSearchField()
             try {
                 val searchSettingsFragment = SearchSettingsFragment.newInstance()
-                searchSettingsFragment.show(supportFragmentManager, "SearchSettingsFragment")
+                searchSettingsFragment.show(
+                    supportFragmentManager,
+                    getString(R.string.SearchSettingsFragmentTag)
+                )
             } catch (ex: Exception) {
-                Log.i("MainActivity", ex.message.toString())
+                Log.i(TAG, ex.message.toString())
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
     override fun showProgressBar() {
-        Log.i("ProgressBar", "Loading")
         progressBar.visibility = ProgressBar.VISIBLE
     }
 
     override fun hideProgressBar() {
-        Log.i("ProgressBar", "Hide")
         progressBar.visibility = ProgressBar.INVISIBLE
     }
 
     override fun searchRequest(query: String) {
-        if (errorMessageTextView.visibility==View.VISIBLE){
+        if (errorMessageTextView.visibility == View.VISIBLE) {
             clearErrorMessage()
         }
         searchParams.initNewSearchRequestParams(query)
 
-        //navigation controller reinitialization
         val navController = findNavController(R.id.nav_host_fragment)
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val inflater = navHostFragment.navController.navInflater
         val graph = inflater.inflate(R.navigation.app_navigation)
         graph.startDestination = R.id.mediaFragment
@@ -107,7 +109,7 @@ class MainActivity : AppCompatActivity(), Activity {
     }
 
     override fun clearErrorMessage() {
-        errorMessageTextView.text = ""
+        errorMessageTextView.text = EMPTY_STRING
         errorMessageTextView.visibility = View.INVISIBLE
     }
 
@@ -117,5 +119,9 @@ class MainActivity : AppCompatActivity(), Activity {
 
     override fun showActionBar() {
         supportActionBar?.show()
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
     }
 }

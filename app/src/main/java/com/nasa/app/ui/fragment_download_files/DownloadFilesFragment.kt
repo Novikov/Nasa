@@ -13,6 +13,7 @@ import com.nasa.app.R
 import javax.inject.Inject
 
 class DownloadFilesFragment : DialogFragment() {
+    private var emptyArgumentsErrorMessage = "Urls can't be empty"
     private var fileStringsUris: ArrayList<String>? = null
     private val filesUris = arrayListOf<Uri>()
     @Inject
@@ -28,7 +29,7 @@ class DownloadFilesFragment : DialogFragment() {
         if (arguments != null && requireArguments().containsKey(DOWNLOAD_DIALOG_FRAGMET)) {
             fileStringsUris = requireArguments().getStringArrayList(DOWNLOAD_DIALOG_FRAGMET)
         } else {
-            throw IllegalArgumentException("Urls can't be empty")
+            throw IllegalArgumentException(emptyArgumentsErrorMessage)
         }
     }
 
@@ -52,7 +53,7 @@ class DownloadFilesFragment : DialogFragment() {
     }
 
     companion object {
-        const val DOWNLOAD_DIALOG_FRAGMET = "app_error_dialog_fragment"
+        const val DOWNLOAD_DIALOG_FRAGMET = "files_download_dialog_fragment"
 
         fun newInstance(urls: ArrayList<String>): DownloadFilesFragment {
             val args = Bundle()
