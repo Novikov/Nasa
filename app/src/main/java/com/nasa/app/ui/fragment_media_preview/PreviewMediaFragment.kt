@@ -99,6 +99,10 @@ class PreviewMediaFragment : Fragment() {
             adapter.dataSource = it
         })
 
+        viewModel.initialMediaPreviews.observe(viewLifecycleOwner, {
+            Log.i(TAG, "onCreateView: $it")
+        })
+
         //network state status observing
         viewModel.networkState.observe(viewLifecycleOwner, {
             when (it) {
