@@ -90,13 +90,8 @@ class PreviewMediaFragment : Fragment() {
         initRecyclerView()
 
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
-            val currentSearchResultHashCode = viewModel.mediaPreviews.value.hashCode()
-
-            if (currentSearchResultHashCode != it.hashCode()) {
-                rewindRecyclerViewToBegining(mediaPreviewRecyclerView)
-            }
-
             adapter.dataSource = it
+            rewindRecyclerViewToBegining(mediaPreviewRecyclerView)
         })
 
         viewModel.initialMediaPreviews.observe(viewLifecycleOwner, {

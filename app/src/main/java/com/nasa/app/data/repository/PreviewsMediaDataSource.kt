@@ -8,6 +8,7 @@ import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.data.model.media_preview.raw_media_preview.RawMediaPreviewResponseConverter
 import com.nasa.app.ui.fragment_media_preview.di.PreviewScope
 import com.nasa.app.utils.EMPTY_SEARCH_STRING
+import com.nasa.app.utils.FIRST_PAGE
 import com.nasa.app.utils.NO_INTERNET_ERROR_MSG_SUBSTRING
 import com.nasa.app.utils.SearchParams
 import io.reactivex.disposables.CompositeDisposable
@@ -82,9 +83,9 @@ class PreviewsMediaDataSource @Inject constructor(
                 apiService.getMediaPreviews(
                     EMPTY_SEARCH_STRING,
                     "video,audio,image,",
-                    searchParams.startSearchYear,
-                    searchParams.endSearchYear,
-                    searchParams.searchPage
+                    searchParams.beginDate,
+                    searchParams.endDate,
+                    FIRST_PAGE
                 )
                     .observeOn(Schedulers.io())
                     .subscribeOn(Schedulers.io())

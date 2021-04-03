@@ -7,8 +7,8 @@ import javax.inject.Singleton
 
 @Singleton
 class SearchParams @Inject constructor() {
-    private val beginDate = 1920.toString()
-    private val endDate = Calendar.getInstance().get(Calendar.YEAR).toString()
+    val beginDate = 1920.toString()
+    val endDate = Calendar.getInstance().get(Calendar.YEAR).toString()
 
     //search params
     var searchRequestQuery = EMPTY_SEARCH_STRING
