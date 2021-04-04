@@ -8,5 +8,6 @@ const val EMPTY_STRING = ""
 const val NO_INTERNET_ERROR_MSG_SUBSTRING = "Unable to resolve host"
 const val HTTP_400_ERROR_MSG_SUBSTRING = "HTTP 400"
 const val HTTP_404_ERROR_MSG_SUBSTRING = "HTTP 404"
+const val TIMEOUT_ERROR_SUBSTRING = "timeout"
 const val EXO_MEDIA_PLAYER_INITIAL_TIME:Long = 0
 const val DOWNLOAD_DIALOG_FRAGMENT_TAG = "DownloadDialogFragment"

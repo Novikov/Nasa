@@ -10,6 +10,7 @@ import com.nasa.app.data.model.media_detail.raw_media_detail.RawMediaDetailRespo
 import com.nasa.app.utils.HTTP_400_ERROR_MSG_SUBSTRING
 import com.nasa.app.utils.HTTP_404_ERROR_MSG_SUBSTRING
 import com.nasa.app.utils.NO_INTERNET_ERROR_MSG_SUBSTRING
+import com.nasa.app.utils.TIMEOUT_ERROR_SUBSTRING
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -72,6 +73,9 @@ class DetailMediaDataSource @Inject constructor(
                         when {
                             it.message?.contains(NO_INTERNET_ERROR_MSG_SUBSTRING)!! -> {
                                 _networkState.postValue(NetworkState.NO_INTERNET)
+                            }
+                            it.message?.contains(TIMEOUT_ERROR_SUBSTRING)!! -> {
+                                _networkState.postValue(NetworkState.TIMEOUT)
                             }
                             it.message?.contains(HTTP_400_ERROR_MSG_SUBSTRING)!! -> {
                                 _networkState.postValue(NetworkState.BAD_REQUEST)
