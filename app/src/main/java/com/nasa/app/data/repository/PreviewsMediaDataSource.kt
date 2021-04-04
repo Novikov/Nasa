@@ -51,6 +51,10 @@ class PreviewsMediaDataSource @Inject constructor(
                             rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
                         _downloadedMediaPreviewsResponse.postValue(mediaPreviewResponse)
 
+                        if(_initialDownloadedMediaPreviewsResponse.value==null){
+                            _initialDownloadedMediaPreviewsResponse.postValue(mediaPreviewResponse)
+                        }
+
                         if (mediaPreviewResponse.mediaPreviewList.isNotEmpty()) {
                             _networkState.postValue(NetworkState.LOADED)
                         } else {
@@ -61,45 +65,6 @@ class PreviewsMediaDataSource @Inject constructor(
                             _networkState.postValue(NetworkState.NO_INTERNET)
                         } else {
                             _networkState.postValue(NetworkState.ERROR)
-                        }
-                    })
-            )
-        } catch (e: Exception) {
-            Log.e(TAG, e.message.toString())
-        }
-    }
-
-
-    fun getInitialMediaPreviews(){
-        try {
-            compositeDisposable.add(
-                apiService.getMediaPreviews(
-                    EMPTY_SEARCH_STRING,
-                    searchParams.defaultSearchParams,
-                    searchParams.beginDate,
-                    searchParams.endDate,
-                    FIRST_PAGE
-                )
-                    .observeOn(Schedulers.io())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe({
-                        val mediaPreviewResponse =
-                            rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
-                        Log.i(TAG, "getInitialMediaPreviews: $mediaPreviewResponse")
-                        _initialDownloadedMediaPreviewsResponse.postValue(mediaPreviewResponse)
-
-                    }, {
-                        Log.i(TAG, "getInitialMediaPreviews: $it")
-                        when {
-                            it.message?.contains(NO_INTERNET_ERROR_MSG_SUBSTRING)!! -> {
-                                _networkState.postValue(NetworkState.NO_INTERNET)
-                            }
-                            it.message?.contains(TIMEOUT_ERROR_SUBSTRING)!! -> {
-                                _networkState.postValue(NetworkState.TIMEOUT)
-                            }
-                            else -> {
-                                _networkState.postValue(NetworkState.ERROR)
-                            }
                         }
                     })
             )

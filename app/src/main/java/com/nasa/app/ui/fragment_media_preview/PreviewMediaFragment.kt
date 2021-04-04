@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
+import com.nasa.app.data.model.ContentType
+import com.nasa.app.data.model.media_preview.MediaPreview
+import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
@@ -94,6 +97,7 @@ class PreviewMediaFragment : Fragment() {
 
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
             adapter.dataSource = it
+            adapter.notifyDataSetChanged()
             rewindRecyclerViewToBegining(mediaPreviewRecyclerView)
         })
 
@@ -143,7 +147,8 @@ class PreviewMediaFragment : Fragment() {
 
     private fun initRecyclerView() {
         mediaPreviewRecyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = MediaPreviewAdapter(picasso,searchParams,callback = {updateMediaPreviews()})
+        val tmpMediaPreviewResponse = MediaPreviewResponse(listOf(MediaPreview("", "https://images-assets.nasa.gov/image/ARC-2002-ACD02-0056-22/ARC-2002-ACD02-0056-22~thumb.jpg", ContentType.IMAGE, "", "")), 1, 1, 1)
+        adapter = MediaPreviewAdapter(tmpMediaPreviewResponse,picasso,searchParams,callback = {updateMediaPreviews()})
         mediaPreviewRecyclerView.adapter = adapter
     }
 

@@ -52,7 +52,7 @@ class SearchParams @Inject constructor() {
             resultString = resultString + ContentType.VIDEO.contentType + ","
         }
         if (searchAudio) {
-            resultString = resultString + ContentType.AUDIO.contentType + ","
+            resultString = resultString + ContentType.AUDIO.contentType
         }
         return resultString
     }

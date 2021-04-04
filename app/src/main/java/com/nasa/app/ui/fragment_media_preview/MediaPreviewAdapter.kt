@@ -19,7 +19,7 @@ import com.nasa.app.utils.SearchParams
 import com.nasa.app.utils.POST_PER_PAGE
 import com.squareup.picasso.Picasso
 
-class MediaPreviewAdapter (private val picasso: Picasso, private val searchParams: SearchParams,private val callback:()-> Unit) :
+class MediaPreviewAdapter (var dataSource: MediaPreviewResponse, private val picasso: Picasso, private val searchParams: SearchParams,private val callback:()-> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val SEARCH_INFO_TEXTVIEW_VIEW = 0
@@ -28,20 +28,6 @@ class MediaPreviewAdapter (private val picasso: Picasso, private val searchParam
     private val BACK_AND_NEXT_BUTTON_VIEW = 3
     private val BACK_BUTTON_VIEW = 4
     private val EMPTY_VIEW = 5
-    
-    //initial data
-    var dataSource: MediaPreviewResponse =
-        MediaPreviewResponse(listOf(MediaPreview("Apollo 11 For All Mankind",
-            "https://images-assets.nasa.gov/video/Apollo 11 For All Mankind/Apollo 11 For All Mankind~thumb.jpg",
-            ContentType.IMAGE, "2014-07-16T00:00:00Z", "A documentary of the Apollo 11 launch, lunar landing and exploration and return to earth which included a stay in quarantine.")),
-            1,
-            1,
-            1)
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
-
     var navController: NavController? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
