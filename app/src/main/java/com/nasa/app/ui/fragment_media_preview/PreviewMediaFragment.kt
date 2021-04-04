@@ -96,13 +96,11 @@ class PreviewMediaFragment : Fragment() {
         initRecyclerView()
 
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
+            Log.i(TAG, "media preview: ${it.hashCode()}")
+
             adapter.dataSource = it
             adapter.notifyDataSetChanged()
             rewindRecyclerViewToBegining(mediaPreviewRecyclerView)
-        })
-
-        viewModel.initialMediaPreviews.observe(viewLifecycleOwner, {
-            Log.i(TAG, "onCreateView: $it")
         })
 
         //network state status observing

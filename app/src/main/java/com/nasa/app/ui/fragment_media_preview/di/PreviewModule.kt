@@ -24,12 +24,7 @@ class PreviewModule {
         return MutableLiveData<MediaPreviewResponse>()
     }
 
-    @PreviewScope
-    @Named("initial media previews")
-    @Provides
-    fun provideInitialMediaPreviewResponseMutableLiveData(): MutableLiveData<MediaPreviewResponse> {
-        return MutableLiveData<MediaPreviewResponse>()
-    }
+
 
     @PreviewScope
     @Named("media previews network state")
