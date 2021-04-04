@@ -122,6 +122,10 @@ class PreviewMediaFragment : Fragment() {
                     activityContract?.hideProgressBar()
                     activityContract?.showErrorMessage(it.msg)
                 }
+                NetworkState.TIMEOUT -> {
+                    activityContract?.hideProgressBar()
+                    activityContract?.showErrorMessage(it.msg)
+                }
                 NetworkState.ERROR -> {
                     activityContract?.hideProgressBar()
                     activityContract?.showErrorMessage(it.msg)

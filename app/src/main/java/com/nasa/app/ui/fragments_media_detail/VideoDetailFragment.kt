@@ -227,6 +227,10 @@ class VideoDetailFragment : Fragment() {
                     contentLayout.visibility = View.INVISIBLE
                     activityContract?.showErrorMessage(it.msg)
                 }
+                NetworkState.TIMEOUT -> {
+                    contentLayout.visibility = View.INVISIBLE
+                    activityContract?.showErrorMessage(it.msg)
+                }
                 NetworkState.BAD_REQUEST -> {
                     contentLayout.visibility = View.INVISIBLE
                     activityContract?.showErrorMessage(it.msg)

@@ -193,6 +193,10 @@ class ImageDetailFragment : Fragment() {
                     activityContract?.hideProgressBar()
                     activityContract?.showErrorMessage(it.msg)
                 }
+                NetworkState.TIMEOUT -> {
+                    activityContract?.hideProgressBar()
+                    activityContract?.showErrorMessage(it.msg)
+                }
                 NetworkState.NOT_FOUND -> {
                     activityContract?.hideProgressBar()
                     activityContract?.showErrorMessage(it.msg)

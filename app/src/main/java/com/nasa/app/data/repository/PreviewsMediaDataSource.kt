@@ -7,10 +7,7 @@ import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.data.model.media_preview.raw_media_preview.RawMediaPreviewResponseConverter
 import com.nasa.app.ui.fragment_media_preview.di.PreviewScope
-import com.nasa.app.utils.EMPTY_SEARCH_STRING
-import com.nasa.app.utils.FIRST_PAGE
-import com.nasa.app.utils.NO_INTERNET_ERROR_MSG_SUBSTRING
-import com.nasa.app.utils.SearchParams
+import com.nasa.app.utils.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -93,10 +90,16 @@ class PreviewsMediaDataSource @Inject constructor(
 
                     }, {
                         Log.i(TAG, "getInitialMediaPreviews: $it")
-                        if (it.message?.contains(NO_INTERNET_ERROR_MSG_SUBSTRING)!!) {
-                            _networkState.postValue(NetworkState.NO_INTERNET)
-                        } else {
-                            _networkState.postValue(NetworkState.ERROR)
+                        when {
+                            it.message?.contains(NO_INTERNET_ERROR_MSG_SUBSTRING)!! -> {
+                                _networkState.postValue(NetworkState.NO_INTERNET)
+                            }
+                            it.message?.contains(TIMEOUT_ERROR_SUBSTRING)!! -> {
+                                _networkState.postValue(NetworkState.TIMEOUT)
+                            }
+                            else -> {
+                                _networkState.postValue(NetworkState.ERROR)
+                            }
                         }
                     })
             )
