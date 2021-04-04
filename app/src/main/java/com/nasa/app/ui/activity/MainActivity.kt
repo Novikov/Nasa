@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity(), Activity {
     private lateinit var progressBar: ProgressBar
     private lateinit var errorMessageTextView: TextView
     private var menuItem: MenuItem? = null
+    private var isErrorMessageShoved = false
 
     @Inject
     lateinit var searchParams: SearchParams
@@ -106,11 +107,13 @@ class MainActivity : AppCompatActivity(), Activity {
     override fun showErrorMessage(msg: String) {
         errorMessageTextView.text = msg
         errorMessageTextView.visibility = View.VISIBLE
+        isErrorMessageShoved = true
     }
 
     override fun clearErrorMessage() {
         errorMessageTextView.text = EMPTY_STRING
         errorMessageTextView.visibility = View.INVISIBLE
+        isErrorMessageShoved = false
     }
 
     override fun hideActionBar() {
@@ -119,6 +122,10 @@ class MainActivity : AppCompatActivity(), Activity {
 
     override fun showActionBar() {
         supportActionBar?.show()
+    }
+
+    override fun isErrorMessageShoved(): Boolean {
+        return isErrorMessageShoved
     }
 
     companion object {

@@ -28,7 +28,6 @@ class PreviewMediaFragment : Fragment() {
     private lateinit var viewModel: PreviewMediaViewModel
     lateinit var mediaPreviewRecyclerView: RecyclerView
     lateinit var adapter: MediaPreviewAdapter
-    lateinit var contentLayout:ConstraintLayout
 
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
@@ -66,9 +65,8 @@ class PreviewMediaFragment : Fragment() {
                 viewModel.putInitialDataToMediaPreviews()
                 rewindRecyclerViewToBegining(mediaPreviewRecyclerView)
                 searchParams.clearSearchParams()
-                if (contentLayout.visibility == View.INVISIBLE) {
-                    contentLayout.visibility = View.VISIBLE
-                    activityContract?.clearErrorMessage()
+                if (activityContract!!.isErrorMessageShoved()) {
+                    activityContract!!.clearErrorMessage()
                 }
             }
             //If the back button has been pressed again - close application!
@@ -88,7 +86,7 @@ class PreviewMediaFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_media_preview, container, false)
 
-        contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
+        val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
         contentLayout.visibility = View.INVISIBLE
 
         mediaPreviewRecyclerView = view.findViewById(R.id.media_preview_recycler_view)

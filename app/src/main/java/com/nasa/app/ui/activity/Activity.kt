@@ -9,4 +9,5 @@ interface Activity {
     fun clearErrorMessage()
     fun hideActionBar()
     fun showActionBar()
+    fun isErrorMessageShoved():Boolean
 }
