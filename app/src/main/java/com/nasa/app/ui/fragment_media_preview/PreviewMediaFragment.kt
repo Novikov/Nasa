@@ -97,10 +97,8 @@ class PreviewMediaFragment : Fragment() {
 
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
             Log.i(TAG, "media preview: ${it.hashCode()}")
-
             adapter.dataSource = it
             adapter.notifyDataSetChanged()
-            rewindRecyclerViewToBegining(mediaPreviewRecyclerView)
         })
 
         //network state status observing
@@ -152,6 +150,7 @@ class PreviewMediaFragment : Fragment() {
 
     fun updateMediaPreviews(){
         viewModel.updateMediaPreviews()
+        rewindRecyclerViewToBegining(mediaPreviewRecyclerView)
     }
 
     companion object {
