@@ -27,7 +27,7 @@ class RawMediaPreviewResponseConverter @Inject constructor() {
             (totalResults / POST_PER_PAGE)
         }
 
-        val previewsList = ArrayList<MediaPreview>()
+        val previewsList = LinkedList<MediaPreview>()
 
         rawMediaPreviewResponse.collection.items.forEach { item ->
 

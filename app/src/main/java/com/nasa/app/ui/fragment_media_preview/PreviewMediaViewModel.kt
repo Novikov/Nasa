@@ -5,9 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.data.repository.NetworkState
+import com.nasa.app.ui.fragment_media_preview.di.PreviewScope
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
+@PreviewScope
 class PreviewMediaViewModel @Inject constructor(
     private val mediaRepository: PreviewMediaRepository,
     private val compositeDisposable: CompositeDisposable
