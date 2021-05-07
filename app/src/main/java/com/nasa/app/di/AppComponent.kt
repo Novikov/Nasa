@@ -9,7 +9,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class])
+@Component(modules = [AppModule::class, SubcomponentsModule::class])
 interface AppComponent {
 
     @Component.Factory
@@ -17,9 +17,5 @@ interface AppComponent {
         fun create(): AppComponent
     }
 
-    fun getPreviewComponent(): PreviewComponent.Factory
-    fun getDetailComponent(): DetailComponent.Factory
     fun getActivityComponent():ActivityComponent.Factory
-    fun getSearchSettingsComponent():SearchSettingsComponent.Factory
-    fun getDownloadFilesComponent():DownloadFilesComponent.Factory
 }

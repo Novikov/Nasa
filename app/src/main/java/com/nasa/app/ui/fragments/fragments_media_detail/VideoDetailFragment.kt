@@ -24,7 +24,9 @@ import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.databinding.FragmentVideoDetailBinding
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
+import com.nasa.app.ui.activity.MainActivity
 import com.nasa.app.ui.fragments.fragment_download_files.DownloadFilesFragment
+import com.nasa.app.ui.fragments.fragments_media_detail.di.DetailComponent
 import com.nasa.app.utils.DOWNLOAD_DIALOG_FRAGMENT_TAG
 import com.nasa.app.utils.EMPTY_STRING
 import com.nasa.app.utils.EXO_MEDIA_PLAYER_INITIAL_TIME
@@ -38,6 +40,8 @@ class VideoDetailFragment : Fragment() {
     lateinit var contentType: ContentType
     var activityContract: Activity? = null
     var isExoPlayerPrepared = false
+
+    lateinit var detailComponent:DetailComponent
 
     @Inject
     lateinit var exoPlayerWrapper: ExoPlayerWrapper
@@ -65,8 +69,8 @@ class VideoDetailFragment : Fragment() {
             throw Exception("arguments can't be null")
         }
 
-        (requireActivity().application as BaseApplication).appComponent.getDetailComponent()
-            .create(nasaId,requireContext()).inject(this)
+        detailComponent =  (requireActivity() as MainActivity).activityComponent.getDetailComponent().create(nasaId, requireContext())
+        detailComponent.inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

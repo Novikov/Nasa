@@ -24,7 +24,9 @@ import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.databinding.FragmentImageDetailBinding
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
+import com.nasa.app.ui.activity.MainActivity
 import com.nasa.app.ui.fragments.fragment_download_files.DownloadFilesFragment
+import com.nasa.app.ui.fragments.fragments_media_detail.di.DetailComponent
 import com.nasa.app.utils.DOWNLOAD_DIALOG_FRAGMENT_TAG
 import com.nasa.app.utils.EMPTY_STRING
 import com.squareup.picasso.Callback
@@ -36,6 +38,8 @@ class ImageDetailFragment : Fragment() {
     lateinit var nasaId: String
     lateinit var contentType: ContentType
     var activityContract: Activity? = null
+
+    lateinit var detailComponent: DetailComponent
 
     @Inject
     lateinit var detailMediaRepository: DetailMediaRepository
@@ -63,8 +67,8 @@ class ImageDetailFragment : Fragment() {
             throw Exception("arguments can't be null")
         }
 
-        (requireActivity().application as BaseApplication).appComponent.getDetailComponent()
-            .create(nasaId,requireContext()).inject(this)
+        detailComponent =  (requireActivity() as MainActivity).activityComponent.getDetailComponent().create(nasaId, requireContext())
+        detailComponent.inject(this)
     }
 
 

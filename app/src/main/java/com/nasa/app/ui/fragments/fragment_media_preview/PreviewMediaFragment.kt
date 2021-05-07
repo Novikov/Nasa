@@ -21,6 +21,8 @@ import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
+import com.nasa.app.ui.activity.MainActivity
+import com.nasa.app.ui.fragments.fragment_media_preview.di.PreviewComponent
 import com.nasa.app.utils.EMPTY_SEARCH_STRING
 import com.nasa.app.utils.SearchParams
 import com.squareup.picasso.Picasso
@@ -31,6 +33,8 @@ class PreviewMediaFragment : Fragment() {
     private lateinit var viewModel: PreviewMediaViewModel
     lateinit var mediaPreviewRecyclerView: RecyclerView
     lateinit var adapter: MediaPreviewAdapter
+
+    lateinit var mediaPreviewComponent: PreviewComponent
 
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
@@ -48,8 +52,8 @@ class PreviewMediaFragment : Fragment() {
             throw ClassCastException(context.toString() + "Activity have to implement interface Activity")
         }
 
-        (requireActivity().application as BaseApplication).appComponent.getPreviewComponent()
-            .create().inject(this)
+        mediaPreviewComponent =  (requireActivity() as MainActivity).activityComponent.getPreviewComponent().create()
+        mediaPreviewComponent.inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
