@@ -1,4 +1,4 @@
-package com.nasa.app.ui.fragment_media_preview
+package com.nasa.app.ui.fragments.fragment_media_preview
 
 
 import android.content.Context

@@ -1,6 +1,5 @@
-package com.nasa.app.ui.fragment_media_preview
+package com.nasa.app.ui.fragments.fragment_media_preview
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

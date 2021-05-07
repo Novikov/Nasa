@@ -1,4 +1,4 @@
-package com.nasa.app.ui.fragment_search_settings
+package com.nasa.app.ui.fragments.fragment_search_settings
 
 import android.content.Context
 import android.os.Bundle

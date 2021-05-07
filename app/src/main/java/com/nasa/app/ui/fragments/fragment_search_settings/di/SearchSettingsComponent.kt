@@ -1,6 +1,6 @@
-package com.nasa.app.ui.fragment_search_settings.di
+package com.nasa.app.ui.fragments.fragment_search_settings.di
 
-import com.nasa.app.ui.fragment_search_settings.SearchSettingsFragment
+import com.nasa.app.ui.fragments.fragment_search_settings.SearchSettingsFragment
 import dagger.Subcomponent
 
 

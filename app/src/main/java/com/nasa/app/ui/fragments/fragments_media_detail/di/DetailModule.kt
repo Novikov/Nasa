@@ -1,13 +1,12 @@
-package com.nasa.app.ui.fragments_media_detail.di
+package com.nasa.app.ui.fragments.fragments_media_detail.di
 
 import android.content.Context
-import android.media.MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT
-import android.media.MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
 import androidx.lifecycle.MutableLiveData
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.nasa.app.data.model.media_detail.MediaDetailResponse
 import com.nasa.app.data.repository.NetworkState
+import com.nasa.app.ui.fragments.di.FragmentScope
 import dagger.Module
 import dagger.Provides
 import io.reactivex.disposables.CompositeDisposable
@@ -16,7 +15,7 @@ import javax.inject.Named
 @Module
 class DetailModule {
 
-    @DetailScope
+    @FragmentScope
     @Provides
     fun providesCompositeDisposable(): CompositeDisposable {
         return CompositeDisposable()
@@ -27,13 +26,13 @@ class DetailModule {
         return SimpleExoPlayer.Builder(context).build()
     }
 
-    @DetailScope
+    @FragmentScope
     @Provides
     fun providesDownloadMediaDetailMutableLiveData(): MutableLiveData<MediaDetailResponse> {
        return MutableLiveData<MediaDetailResponse>()
     }
 
-    @DetailScope
+    @FragmentScope
     @Named("media detail network state")
     @Provides
     fun provideDetailNetworkState(): MutableLiveData<NetworkState> {
