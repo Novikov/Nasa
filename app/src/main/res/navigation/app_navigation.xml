@@ -6,7 +6,7 @@
     app:startDestination="@id/mediaFragment">
     <fragment
         android:id="@+id/mediaFragment"
-        android:name="com.nasa.app.ui.fragment_media_preview.PreviewMediaFragment"
+        android:name="com.nasa.app.ui.fragments.fragment_media_preview.PreviewMediaFragment"
         android:label="fragment_media"
         tools:layout="@layout/fragment_media_preview" >
         <action
@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/audioDetailFragment"
-        android:name="com.nasa.app.ui.fragments_media_detail.AudioDetailFragment"
+        android:name="com.nasa.app.ui.fragments.fragments_media_detail.AudioDetailFragment"
         android:label="AudioDetailFragment" >
         <argument
             android:name="nasaId"
@@ -33,7 +33,7 @@
     </fragment>
     <fragment
         android:id="@+id/imageDetailFragment"
-        android:name="com.nasa.app.ui.fragments_media_detail.ImageDetailFragment"
+        android:name="com.nasa.app.ui.fragments.fragments_media_detail.ImageDetailFragment"
         android:label="ImageDetailFragment" >
         <argument
             android:name="nasaId"
@@ -44,7 +44,7 @@
     </fragment>
     <fragment
         android:id="@+id/videoDetailFragment"
-        android:name="com.nasa.app.ui.fragments_media_detail.VideoDetailFragment"
+        android:name="com.nasa.app.ui.fragments.fragments_media_detail.VideoDetailFragment"
         android:label="VideoDetailFragment" >
         <argument
             android:name="nasaId"

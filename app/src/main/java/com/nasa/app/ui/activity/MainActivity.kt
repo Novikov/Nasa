@@ -13,7 +13,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
-import com.nasa.app.ui.fragment_search_settings.SearchSettingsFragment
+import com.nasa.app.ui.activity.di.ActivityComponent
+import com.nasa.app.ui.fragments.fragment_search_settings.SearchSettingsFragment
 import com.nasa.app.utils.EMPTY_SEARCH_STRING
 import com.nasa.app.utils.EMPTY_STRING
 import com.nasa.app.utils.SearchParams
@@ -24,12 +25,14 @@ class MainActivity : AppCompatActivity(), Activity {
     private lateinit var errorMessageTextView: TextView
     private var menuItem: MenuItem? = null
     private var isErrorMessageShoved = false
+    lateinit var activityComponent:ActivityComponent
 
     @Inject
     lateinit var searchParams: SearchParams
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as BaseApplication).appComponent.getActivityComponent().create().inject(this)
+        activityComponent = (application as BaseApplication).appComponent.getActivityComponent().create()
+        activityComponent.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         progressBar = findViewById(R.id.progressBar)
