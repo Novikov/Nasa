@@ -7,7 +7,7 @@ import com.nasa.app.ui.fragments.fragment_search_settings.di.SearchSettingsCompo
 import com.nasa.app.ui.fragments.fragments_media_detail.di.DetailComponent
 import dagger.Subcomponent
 
-@Subcomponent(modules = [SubcomponentsModule::class])
+@Subcomponent
 interface ActivityComponent {
 
     @Subcomponent.Factory
