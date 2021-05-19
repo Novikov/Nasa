@@ -31,7 +31,7 @@ import javax.inject.Inject
 class PreviewMediaFragment : Fragment() {
     private var activityContract: Activity? = null
     private lateinit var viewModel: PreviewMediaViewModel
-    lateinit var mediaPreviewRecyclerView: RecyclerView
+    var mediaPreviewRecyclerView: RecyclerView? = null
     lateinit var adapter: MediaPreviewAdapter
 
     lateinit var mediaPreviewComponent: PreviewComponent
@@ -70,7 +70,7 @@ class PreviewMediaFragment : Fragment() {
             //If the back button has been pressed - show initial media previews!
             else if (viewModel.mediaPreviews.value!=viewModel.initialMediaPreviews.value){
                 viewModel.putInitialDataToMediaPreviews()
-                rewindRecyclerViewToBegining(mediaPreviewRecyclerView)
+                rewindRecyclerViewToBegining(mediaPreviewRecyclerView!!)
                 searchParams.clearSearchParams()
                 if (activityContract!!.isErrorMessageShoved()) {
                     activityContract!!.clearErrorMessage()
@@ -146,15 +146,20 @@ class PreviewMediaFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        mediaPreviewRecyclerView.layoutManager = LinearLayoutManager(context)
+        mediaPreviewRecyclerView!!.layoutManager = LinearLayoutManager(context)
         val tmpMediaPreviewResponse = MediaPreviewResponse(listOf(MediaPreview("", "https://images-assets.nasa.gov/image/ARC-2002-ACD02-0056-22/ARC-2002-ACD02-0056-22~thumb.jpg", ContentType.IMAGE, "", "")), 1, 1, 1)
         adapter = MediaPreviewAdapter(tmpMediaPreviewResponse,picasso,searchParams,callback = {updateMediaPreviews()})
-        mediaPreviewRecyclerView.adapter = adapter
+        mediaPreviewRecyclerView!!.adapter = adapter
     }
 
     fun updateMediaPreviews(){
         viewModel.updateMediaPreviews()
-        rewindRecyclerViewToBegining(mediaPreviewRecyclerView)
+        rewindRecyclerViewToBegining(mediaPreviewRecyclerView!!)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPreviewRecyclerView = null
     }
 
     companion object {
