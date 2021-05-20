@@ -1,7 +1,7 @@
-package com.nasa.app.ui.fragment_download_files.di
+package com.nasa.app.ui.fragments.fragment_download_files.di
 
 import android.content.Context
-import com.nasa.app.ui.fragment_download_files.DownloadFilesFragment
+import com.nasa.app.ui.fragments.fragment_download_files.DownloadFilesFragment
 import dagger.BindsInstance
 import dagger.Subcomponent
 

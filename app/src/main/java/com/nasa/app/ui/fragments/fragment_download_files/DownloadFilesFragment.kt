@@ -1,4 +1,4 @@
-package com.nasa.app.ui.fragment_download_files
+package com.nasa.app.ui.fragments.fragment_download_files
 
 import android.content.Context
 import android.net.Uri
@@ -8,20 +8,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.DialogFragment
-import com.nasa.app.BaseApplication
 import com.nasa.app.R
+import com.nasa.app.ui.activity.MainActivity
+import com.nasa.app.ui.fragments.fragment_download_files.di.DownloadFilesComponent
 import javax.inject.Inject
 
 class DownloadFilesFragment : DialogFragment() {
     private var emptyArgumentsErrorMessage = "Urls can't be empty"
     private var fileStringsUris: ArrayList<String>? = null
     private val filesUris = arrayListOf<Uri>()
+
+    lateinit var downloadFilesComponent:DownloadFilesComponent
+
     @Inject
     lateinit var downloadFilesAdapter: DownloadFilesAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (requireActivity().application as BaseApplication).appComponent.getDownloadFilesComponent().create(requireContext()).inject(this)
+        downloadFilesComponent = (requireActivity() as MainActivity).activityComponent.getDownloadFilesComponent().create(requireContext())
+        downloadFilesComponent.inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

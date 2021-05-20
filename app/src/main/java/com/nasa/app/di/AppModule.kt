@@ -5,7 +5,6 @@ import com.nasa.app.data.api.NasaApiService
 import dagger.Provides
 import com.google.gson.GsonBuilder
 import com.nasa.app.data.model.media_preview.MediaPreviewResponse
-import com.nasa.app.ui.fragment_media_preview.di.PreviewScope
 import com.nasa.app.utils.NASA_BASE_URL
 import com.squareup.picasso.Picasso
 import dagger.Module

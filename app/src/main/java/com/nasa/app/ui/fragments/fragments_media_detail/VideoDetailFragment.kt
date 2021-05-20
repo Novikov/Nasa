@@ -1,4 +1,4 @@
-package com.nasa.app.ui.fragments_media_detail
+package com.nasa.app.ui.fragments.fragments_media_detail
 
 import android.content.Context
 import android.content.Intent
@@ -21,29 +21,32 @@ import com.nasa.app.BaseApplication
 import com.nasa.app.R
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.repository.NetworkState
-import com.nasa.app.databinding.FragmentAudioDetailBinding
+import com.nasa.app.databinding.FragmentVideoDetailBinding
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
-import com.nasa.app.ui.fragment_download_files.DownloadFilesFragment
+import com.nasa.app.ui.activity.MainActivity
+import com.nasa.app.ui.fragments.fragment_download_files.DownloadFilesFragment
+import com.nasa.app.ui.fragments.fragments_media_detail.di.DetailComponent
 import com.nasa.app.utils.DOWNLOAD_DIALOG_FRAGMENT_TAG
 import com.nasa.app.utils.EMPTY_STRING
 import com.nasa.app.utils.EXO_MEDIA_PLAYER_INITIAL_TIME
 import javax.inject.Inject
 
-class AudioDetailFragment : Fragment() {
+class VideoDetailFragment : Fragment() {
+
     private lateinit var viewModel: DetailMediaViewModel
+    var exoMediaPlayerTime: Long? = null
     lateinit var nasaId: String
     lateinit var contentType: ContentType
-    var exoMediaPlayerTime: Long? = null
     var activityContract: Activity? = null
     var isExoPlayerPrepared = false
 
+    lateinit var detailComponent:DetailComponent
+
     @Inject
     lateinit var exoPlayerWrapper: ExoPlayerWrapper
-
     @Inject
     lateinit var detailMediaRepository: DetailMediaRepository
-
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
 
@@ -63,11 +66,11 @@ class AudioDetailFragment : Fragment() {
             contentType = args.contentType
 
         } else {
-            throw Exception("Fragment arguments can't be null")
+            throw Exception("arguments can't be null")
         }
 
-        (requireActivity().application as BaseApplication).appComponent.getDetailComponent()
-            .create(nasaId, requireContext()).inject(this)
+        detailComponent =  (requireActivity() as MainActivity).activityComponent.getDetailComponent().create(nasaId, requireContext())
+        detailComponent.inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,9 +87,9 @@ class AudioDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         Log.i(TAG, "onCreateView: ")
-        val binding = DataBindingUtil.inflate<FragmentAudioDetailBinding>(
+        val binding = DataBindingUtil.inflate<FragmentVideoDetailBinding>(
             inflater,
-            R.layout.fragment_audio_detail,
+            R.layout.fragment_video_detail,
             container,
             false
         )
@@ -100,11 +103,11 @@ class AudioDetailFragment : Fragment() {
         contentLayout.visibility = View.VISIBLE
 
         val contentDataLayout = view.findViewById<ConstraintLayout>(R.id.content_data_layout)
-        contentDataLayout.visibility = View.INVISIBLE
-
         val exoPlayerProgressBar = view.findViewById<ProgressBar>(R.id.exo_player_progress_bar)
-        val contentDataProgressBar = view.findViewById<ProgressBar>(R.id.content_data_progress_bar)
         exoPlayerProgressBar.visibility = View.VISIBLE
+
+        val contentDataProgressBar = view.findViewById<ProgressBar>(R.id.content_data_progress_bar)
+        contentDataProgressBar.visibility = View.VISIBLE
 
         val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
         playerView.player = exoPlayerWrapper.getPlayer()
@@ -113,7 +116,7 @@ class AudioDetailFragment : Fragment() {
         exoPlayerWrapper.addListener(object : Player.EventListener {
             override fun onPlaybackStateChanged(state: Int) {
                 super.onPlaybackStateChanged(state)
-                if (state == Player.STATE_BUFFERING) {
+                if(state==Player.STATE_BUFFERING){
                     exoPlayerProgressBar.visibility = View.VISIBLE
                 }
                 if (state == Player.STATE_READY) {
@@ -130,7 +133,7 @@ class AudioDetailFragment : Fragment() {
         })
 
         val orientation = resources.configuration.orientation
-        when (orientation) {
+        when(orientation){
             1 -> {
                 contentDataLayout.visibility = View.INVISIBLE
             }
@@ -142,19 +145,22 @@ class AudioDetailFragment : Fragment() {
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
 
-            //audio content initialization
-            var audioUrlString = EMPTY_STRING
+            var videoUrlString = EMPTY_STRING
+
             for (asset in mediaDetailResponse.item.assets!!) {
-                if (asset.value.contains(getString(R.string.mp3_uri_substring))) {
-                    audioUrlString = asset.value
+                if (asset.value.contains(getString(R.string.mp4_uri_substring))) {
+                    videoUrlString = asset.value
                     break
                 }
             }
-            val substring = audioUrlString.substringAfter("//")
-            audioUrlString = "https://$substring"
 
-            val audioUri = Uri.parse(audioUrlString)
-            exoPlayerWrapper.playPlayer(audioUri, exoMediaPlayerTime ?: EXO_MEDIA_PLAYER_INITIAL_TIME)
+            val substring = videoUrlString.substringAfter("//")
+            videoUrlString = "https://$substring"
+
+            val videoUri = Uri.parse(videoUrlString)
+
+            exoPlayerWrapper.playPlayer(videoUri, exoMediaPlayerTime ?: EXO_MEDIA_PLAYER_INITIAL_TIME)
+
             binding.mediaDetail = mediaDetailResponse.item
 
             if (mediaDetailResponse.item.description == EMPTY_STRING) {
@@ -163,8 +169,7 @@ class AudioDetailFragment : Fragment() {
             }
 
             //Keywords initialization
-            val keyWordFlexBox =
-                view.findViewById<FlexboxLayout>(R.id.key_word_flex_box_container)
+            val keyWordFlexBox = view.findViewById<FlexboxLayout>(R.id.key_word_flex_box_container)
             for (i in mediaDetailResponse.item.keywords.indices) {
                 var keywordTextView =
                     TextView(requireContext(), null, 0, R.style.key_word_text_view_style)
@@ -251,7 +256,7 @@ class AudioDetailFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         Log.i(TAG, "onSaveInstanceState: ")
-        outState.putLong(EXO_MEDIA_PLAYER_TIME, exoPlayerWrapper.getPlayerTime())
+        outState.putLong(Companion.EXO_MEDIA_PLAYER_TIME, exoPlayerWrapper.getPlayerTime())
         Log.i(TAG, "time onSavedInstanceState ${exoPlayerWrapper.getPlayerTime()}")
     }
 
@@ -268,9 +273,7 @@ class AudioDetailFragment : Fragment() {
     }
 
     companion object {
-        const val TAG = "AudioDetailFragment"
+        const val TAG = "VideoDetailFragment"
         const val EXO_MEDIA_PLAYER_TIME = "ExoMediaPlayerTime"
     }
 }
-
-

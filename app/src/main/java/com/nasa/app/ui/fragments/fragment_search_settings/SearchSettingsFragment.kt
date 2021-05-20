@@ -1,4 +1,4 @@
-package com.nasa.app.ui.fragment_search_settings
+package com.nasa.app.ui.fragments.fragment_search_settings
 
 import android.content.Context
 import android.os.Bundle
@@ -14,11 +14,15 @@ import com.google.android.material.slider.RangeSlider
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
 import com.nasa.app.ui.activity.Activity
+import com.nasa.app.ui.activity.MainActivity
+import com.nasa.app.ui.fragments.fragment_search_settings.di.SearchSettingsComponent
 import com.nasa.app.utils.SearchParams
 import javax.inject.Inject
 
 class SearchSettingsFragment : DialogFragment() {
     private var activityContract: Activity? = null
+
+    lateinit var searchSettingsComponent:SearchSettingsComponent
 
     @Inject
     lateinit var searchParams: SearchParams
@@ -37,8 +41,8 @@ class SearchSettingsFragment : DialogFragment() {
         } catch (e: ClassCastException) {
             throw ClassCastException(context.toString() + "Activity have to implement interface Activity")
         }
-        (requireActivity().application as BaseApplication).appComponent.getSearchSettingsComponent()
-            .create().inject(this)
+        searchSettingsComponent = (requireActivity() as MainActivity).activityComponent.getSearchSettingsComponent().create()
+        searchSettingsComponent.inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

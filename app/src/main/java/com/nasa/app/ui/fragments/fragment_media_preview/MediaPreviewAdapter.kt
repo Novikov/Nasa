@@ -1,11 +1,11 @@
-package com.nasa.app.ui.fragment_media_preview
+package com.nasa.app.ui.fragments.fragment_media_preview
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -17,7 +17,9 @@ import com.nasa.app.data.model.media_preview.MediaPreview
 import com.nasa.app.utils.EMPTY_SEARCH_STRING
 import com.nasa.app.utils.SearchParams
 import com.nasa.app.utils.POST_PER_PAGE
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import java.lang.Exception
 
 class MediaPreviewAdapter (var dataSource: MediaPreviewResponse, private val picasso: Picasso, private val searchParams: SearchParams,private val callback:()-> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -225,10 +227,17 @@ class MediaPreviewAdapter (var dataSource: MediaPreviewResponse, private val pic
         private val dateCreatedTextView: TextView = view.findViewById(R.id.date_created_text_view)
         private val divider: View = view.findViewById(R.id.divider)
 
+        private val progressBar:ProgressBar = view.findViewById(R.id.item_progress_bar)
+
         fun bind(mediaPreview: MediaPreview, hideDivider: Boolean) {
+            playAudioImageView.visibility = View.INVISIBLE
+            playVideoImageView.visibility = View.INVISIBLE
+
             descriptionTextView.text = mediaPreview.description
             dateCreatedTextView.text = mediaPreview.dateCreated
             divider.visibility = View.VISIBLE
+            progressBar.visibility = View.VISIBLE
+
             if (hideDivider) {
                 divider.visibility = View.INVISIBLE
             }
@@ -241,9 +250,17 @@ class MediaPreviewAdapter (var dataSource: MediaPreviewResponse, private val pic
                         .load(mediaPreview.previewUrl)
                         .fit()
                         .centerCrop()
-                        .into(mediaPreviewImageView)
-                    playVideoImageView.visibility = View.INVISIBLE
-                    playAudioImageView.visibility = View.INVISIBLE
+                        .into(mediaPreviewImageView, object : Callback{
+                            override fun onSuccess() {
+                                progressBar.visibility = View.GONE
+                                playVideoImageView.visibility = View.INVISIBLE
+                                playAudioImageView.visibility = View.INVISIBLE
+                            }
+
+                            override fun onError(e: Exception?) {
+
+                            }
+                        })
                 }
                 ContentType.VIDEO -> {
                     mediaPreviewImageView.visibility = View.VISIBLE
@@ -253,12 +270,21 @@ class MediaPreviewAdapter (var dataSource: MediaPreviewResponse, private val pic
                         .load(mediaPreview.previewUrl)
                         .fit()
                         .centerCrop()
-                        .into(mediaPreviewImageView);
-                    playVideoImageView.visibility = View.VISIBLE
-                    playAudioImageView.visibility = View.INVISIBLE
+                        .into(mediaPreviewImageView, object : Callback{
+                            override fun onSuccess() {
+                                progressBar.visibility = View.GONE
+                                playVideoImageView.visibility = View.VISIBLE
+                                playAudioImageView.visibility = View.INVISIBLE
+                            }
 
+                            override fun onError(e: Exception?) {
+
+                            }
+
+                        })
                 }
                 ContentType.AUDIO -> {
+                    progressBar.visibility = View.GONE
                     mediaPreviewImageView.visibility = View.INVISIBLE
                     audioBackgroundImageView.visibility = View.VISIBLE
                     playVideoImageView.visibility = View.INVISIBLE

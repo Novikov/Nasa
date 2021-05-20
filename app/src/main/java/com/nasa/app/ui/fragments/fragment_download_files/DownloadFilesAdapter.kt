@@ -1,4 +1,4 @@
-package com.nasa.app.ui.fragment_download_files
+package com.nasa.app.ui.fragments.fragment_download_files
 
 import android.content.Context
 import android.content.Intent

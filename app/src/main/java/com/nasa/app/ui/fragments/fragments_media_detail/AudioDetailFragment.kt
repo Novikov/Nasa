@@ -1,4 +1,4 @@
-package com.nasa.app.ui.fragments_media_detail
+package com.nasa.app.ui.fragments.fragments_media_detail
 
 import android.content.Context
 import android.content.Intent
@@ -8,41 +8,48 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.exoplayer2.ExoPlaybackException
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.flexbox.FlexboxLayout
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.repository.NetworkState
-import com.nasa.app.databinding.FragmentImageDetailBinding
+import com.nasa.app.databinding.FragmentAudioDetailBinding
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
-import com.nasa.app.ui.fragment_download_files.DownloadFilesFragment
+import com.nasa.app.ui.activity.MainActivity
+import com.nasa.app.ui.fragments.fragment_download_files.DownloadFilesFragment
+import com.nasa.app.ui.fragments.fragments_media_detail.di.DetailComponent
 import com.nasa.app.utils.DOWNLOAD_DIALOG_FRAGMENT_TAG
 import com.nasa.app.utils.EMPTY_STRING
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
+import com.nasa.app.utils.EXO_MEDIA_PLAYER_INITIAL_TIME
 import javax.inject.Inject
 
-class ImageDetailFragment : Fragment() {
+class AudioDetailFragment : Fragment() {
     private lateinit var viewModel: DetailMediaViewModel
     lateinit var nasaId: String
     lateinit var contentType: ContentType
+    var exoMediaPlayerTime: Long? = null
     var activityContract: Activity? = null
+    var isExoPlayerPrepared = false
+
+    lateinit var detailComponent:DetailComponent
+
+    @Inject
+    lateinit var exoPlayerWrapper: ExoPlayerWrapper
 
     @Inject
     lateinit var detailMediaRepository: DetailMediaRepository
+
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
-    @Inject
-    lateinit var picasso: Picasso
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -60,18 +67,17 @@ class ImageDetailFragment : Fragment() {
             contentType = args.contentType
 
         } else {
-            throw Exception("arguments can't be null")
+            throw Exception("Fragment arguments can't be null")
         }
 
-        (requireActivity().application as BaseApplication).appComponent.getDetailComponent()
-            .create(nasaId,requireContext()).inject(this)
+        detailComponent =  (requireActivity() as MainActivity).activityComponent.getDetailComponent().create(nasaId, requireContext())
+        detailComponent.inject(this)
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(TAG, "onCreate: ")
-
+        exoMediaPlayerTime = savedInstanceState?.getLong(EXO_MEDIA_PLAYER_TIME)
         viewModel =
             ViewModelProviders.of(this, providerFactory).get(DetailMediaViewModel::class.java)
     }
@@ -82,9 +88,9 @@ class ImageDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         Log.i(TAG, "onCreateView: ")
-        val binding = DataBindingUtil.inflate<FragmentImageDetailBinding>(
+        val binding = DataBindingUtil.inflate<FragmentAudioDetailBinding>(
             inflater,
-            R.layout.fragment_image_detail,
+            R.layout.fragment_audio_detail,
             container,
             false
         )
@@ -95,36 +101,64 @@ class ImageDetailFragment : Fragment() {
         val view = binding.root
 
         val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
-        contentLayout.visibility = View.INVISIBLE
+        contentLayout.visibility = View.VISIBLE
 
+        val contentDataLayout = view.findViewById<ConstraintLayout>(R.id.content_data_layout)
+        contentDataLayout.visibility = View.INVISIBLE
+
+        val exoPlayerProgressBar = view.findViewById<ProgressBar>(R.id.exo_player_progress_bar)
+        val contentDataProgressBar = view.findViewById<ProgressBar>(R.id.content_data_progress_bar)
+        exoPlayerProgressBar.visibility = View.VISIBLE
+
+        val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
+        playerView.player = exoPlayerWrapper.getPlayer()
         val button = view.findViewById<Button>(R.id.update_results_button)
-        val imageView = view.findViewById<ImageView>(R.id.image_media_view)
+
+        exoPlayerWrapper.addListener(object : Player.EventListener {
+            override fun onPlaybackStateChanged(state: Int) {
+                super.onPlaybackStateChanged(state)
+                if (state == Player.STATE_BUFFERING) {
+                    exoPlayerProgressBar.visibility = View.VISIBLE
+                }
+                if (state == Player.STATE_READY) {
+                    exoPlayerProgressBar.visibility = View.INVISIBLE
+                    isExoPlayerPrepared = true
+                }
+            }
+
+            override fun onPlayerError(error: ExoPlaybackException) {
+                super.onPlayerError(error)
+                contentLayout.visibility = View.INVISIBLE
+                activityContract?.showErrorMessage(getString(R.string.Exo_player_error_message))
+            }
+        })
 
         val orientation = resources.configuration.orientation
         when (orientation) {
             1 -> {
+                contentDataLayout.visibility = View.INVISIBLE
             }
             2 -> {
+                contentDataLayout.visibility = View.INVISIBLE
                 activityContract?.hideActionBar()
             }
         }
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
-            picasso.load(mediaDetailResponse.item.previewUrl).into(
-                imageView,
-                object :
-                    Callback {
-                    override fun onSuccess() {
-                        contentLayout.visibility = View.VISIBLE
-                        activityContract?.hideProgressBar()
-                    }
 
-                    override fun onError(e: java.lang.Exception?) {
-                        activityContract?.hideProgressBar()
-                        activityContract?.showErrorMessage("Image loading error: ${e?.message}")
-                    }
-                })
+            //audio content initialization
+            var audioUrlString = EMPTY_STRING
+            for (asset in mediaDetailResponse.item.assets!!) {
+                if (asset.value.contains(getString(R.string.mp3_uri_substring))) {
+                    audioUrlString = asset.value
+                    break
+                }
+            }
+            val substring = audioUrlString.substringAfter("//")
+            audioUrlString = "https://$substring"
 
+            val audioUri = Uri.parse(audioUrlString)
+            exoPlayerWrapper.playPlayer(audioUri, exoMediaPlayerTime ?: EXO_MEDIA_PLAYER_INITIAL_TIME)
             binding.mediaDetail = mediaDetailResponse.item
 
             if (mediaDetailResponse.item.description == EMPTY_STRING) {
@@ -133,7 +167,8 @@ class ImageDetailFragment : Fragment() {
             }
 
             //Keywords initialization
-            val keyWordFlexBox = view.findViewById<FlexboxLayout>(R.id.key_word_flex_box_container)
+            val keyWordFlexBox =
+                view.findViewById<FlexboxLayout>(R.id.key_word_flex_box_container)
             for (i in mediaDetailResponse.item.keywords.indices) {
                 var keywordTextView =
                     TextView(requireContext(), null, 0, R.style.key_word_text_view_style)
@@ -146,10 +181,10 @@ class ImageDetailFragment : Fragment() {
             }
 
             //editText initialization
-            val keyToOriginalAsset = mediaDetailResponse.item.assets?.keys?.first().toString()
+            val keyToOriginalAsset = mediaDetailResponse.item.assets.keys.first().toString()
             val editText = view.findViewById<EditText>(R.id.url_edit_text)
             editText.setText(
-                mediaDetailResponse.item.assets?.get(keyToOriginalAsset),
+                mediaDetailResponse.item.assets[keyToOriginalAsset],
                 TextView.BufferType.EDITABLE
             )
 
@@ -157,8 +192,7 @@ class ImageDetailFragment : Fragment() {
             val linkImageView = view.findViewById<ImageView>(R.id.link_image_view)
             linkImageView.setOnClickListener {
                 activityContract?.collapseSearchField()
-                val address: Uri =
-                    Uri.parse(mediaDetailResponse.item.assets?.get(keyToOriginalAsset))
+                val address: Uri = Uri.parse(mediaDetailResponse.item.assets[keyToOriginalAsset])
                 val intent = Intent(Intent.ACTION_VIEW, address)
                 startActivity(intent)
             }
@@ -167,7 +201,7 @@ class ImageDetailFragment : Fragment() {
             button.setOnClickListener {
                 activityContract?.collapseSearchField()
                 val urlList = mutableListOf<String>()
-                mediaDetailResponse.item.assets?.values?.forEach {
+                mediaDetailResponse.item.assets.values.forEach {
                     urlList.add(it)
                 }
 
@@ -179,30 +213,37 @@ class ImageDetailFragment : Fragment() {
                     Log.i(TAG, ex.message.toString())
                 }
             }
+
         })
 
         //network state status observing
         viewModel.networkState.observe(viewLifecycleOwner, {
             when (it) {
-                NetworkState.LOADING -> activityContract?.showProgressBar()
-                NetworkState.NO_INTERNET -> {
-                    activityContract?.hideProgressBar()
-                    activityContract?.showErrorMessage(it.msg)
+                NetworkState.LOADING -> {
+                    contentDataProgressBar.visibility = View.VISIBLE
                 }
-                NetworkState.BAD_REQUEST -> {
-                    activityContract?.hideProgressBar()
+                NetworkState.LOADED -> {
+                    contentDataLayout.visibility = View.VISIBLE
+                    contentDataProgressBar.visibility = View.INVISIBLE
+                }
+                NetworkState.NO_INTERNET -> {
+                    contentLayout.visibility = View.INVISIBLE
                     activityContract?.showErrorMessage(it.msg)
                 }
                 NetworkState.TIMEOUT -> {
-                    activityContract?.hideProgressBar()
+                    contentLayout.visibility = View.INVISIBLE
+                    activityContract?.showErrorMessage(it.msg)
+                }
+                NetworkState.BAD_REQUEST -> {
+                    contentLayout.visibility = View.INVISIBLE
                     activityContract?.showErrorMessage(it.msg)
                 }
                 NetworkState.NOT_FOUND -> {
-                    activityContract?.hideProgressBar()
+                    contentLayout.visibility = View.INVISIBLE
                     activityContract?.showErrorMessage(it.msg)
                 }
                 NetworkState.ERROR -> {
-                    activityContract?.hideProgressBar()
+                    contentLayout.visibility = View.INVISIBLE
                     activityContract?.showErrorMessage(it.msg)
                 }
             }
@@ -211,7 +252,29 @@ class ImageDetailFragment : Fragment() {
         return view
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.i(TAG, "onSaveInstanceState: ")
+        outState.putLong(EXO_MEDIA_PLAYER_TIME, exoPlayerWrapper.getPlayerTime())
+        Log.i(TAG, "time onSavedInstanceState ${exoPlayerWrapper.getPlayerTime()}")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.i(TAG, "onPause: ")
+        exoPlayerWrapper.pausePlayer()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.i(TAG, "onDestroyView: ")
+        exoPlayerWrapper.releasePlayer()
+    }
+
     companion object {
-        const val TAG = "ImageDetailFragment"
+        const val TAG = "AudioDetailFragment"
+        const val EXO_MEDIA_PLAYER_TIME = "ExoMediaPlayerTime"
     }
 }
+
+
