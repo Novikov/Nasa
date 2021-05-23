@@ -1,8 +1,11 @@
 package com.nasa.app.data.model.media_detail.raw_media_detail
 
+import android.util.Log
 import com.nasa.app.data.model.media_detail.MediaDetail
 import com.nasa.app.data.model.media_detail.MediaDetailResponse
+import com.nasa.app.data.model.media_preview.raw_media_preview.RawMediaPreviewResponseConverter
 import com.nasa.app.utils.EMPTY_STRING
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -75,26 +78,27 @@ class RawMediaDetailResponseConverter @Inject constructor() {
             return EMPTY_STRING
         }
 
-        val parsedDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+        val parsedDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        val targetFormat = SimpleDateFormat("dd-MM-yyyy")
 
-        val parsedDate: Date? = parsedDateFormat.parse(dateStr)
+        var parsedDate: Date? = null
 
-        if (parsedDate != null) {
-            val dayDateFormat = SimpleDateFormat("dd")
-            val day = dayDateFormat.format(parsedDate)
-
-            val monthDateFormat = SimpleDateFormat("MM")
-            val month = monthDateFormat.format(parsedDate)
-
-            val yearDateFormat = SimpleDateFormat("yyyy")
-            val year = yearDateFormat.format(parsedDate)
-
-            val convertedDate = "$day-$month-$year"
-
-            return convertedDate
-
-        } else {
-            return EMPTY_STRING
+        try {
+            parsedDate = parsedDateFormat.parse(dateStr)
         }
+        catch (ex: ParseException){
+            Log.i(TAG, "convertDate: parsing error")
+        }
+
+        return if (parsedDate != null) {
+            val dateCreated = targetFormat.format(parsedDate)
+            dateCreated.toString()
+        } else {
+            EMPTY_STRING
+        }
+    }
+
+    companion object {
+        private const val TAG = "RawMediaDetailResponseC"
     }
 }
