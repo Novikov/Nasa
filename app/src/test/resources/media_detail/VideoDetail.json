@@ -1,0 +1,42 @@
+{
+  "collection": {
+    "items": [
+      {
+        "links": [
+          {
+            "rel": "preview",
+            "render": "image",
+            "href": "https://images-assets.nasa.gov/video/Apollo 11 For All Mankind/Apollo 11 For All Mankind~thumb.jpg"
+          },
+          {
+            "rel": "captions",
+            "href": "https://images-assets.nasa.gov/video/Apollo 11 For All Mankind/Apollo 11 For All Mankind.srt"
+          }
+        ],
+        "data": [
+          {
+            "nasa_id": "Apollo 11 For All Mankind",
+            "center": "HQ",
+            "media_type": "video",
+            "date_created": "2014-07-16T00:00:00Z",
+            "title": "Apollo 11 For All Mankind",
+            "description": "A documentary of the Apollo 11 launch, lunar landing and exploration and return to earth which included a stay in quarantine.",
+            "keywords": [
+              "Apollo 11",
+              "Moon",
+              "Michael Collins",
+              "Buzz Aldrin",
+              "Neil Armstrong"
+            ]
+          }
+        ],
+        "href": "https://images-assets.nasa.gov/video/Apollo 11 For All Mankind/collection.json"
+      }
+    ],
+    "metadata": {
+      "total_hits": 1
+    },
+    "version": "1.0",
+    "href": "http://images-api.nasa.gov/search?nasa_id=Apollo%2011%20For%20All%20Mankind"
+  }
+}
