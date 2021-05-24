@@ -1,4 +1,7 @@
 # Nasa App
+NASA Image and Video Library API client application.
+
+[Video presentation](https://youtu.be/t62A4HtZJ8c)
 
 ### App uses:
 * Nasa image and video library [API](https://api.nasa.gov/);
@@ -10,5 +13,5 @@
 * DataBinding and Picasso for UI creation;
 * Dagger for DI
 
-[Video presentation](https://youtu.be/FjamDAN3y5g)
+
 
