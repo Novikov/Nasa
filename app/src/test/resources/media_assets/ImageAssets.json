@@ -1,0 +1,26 @@
+{
+  "collection": {
+    "href": "http://images-api.nasa.gov/asset/201210220003HQ",
+    "version": "1.0",
+    "items": [
+      {
+        "href": "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~orig.tif"
+      },
+      {
+        "href": "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~large.jpg"
+      },
+      {
+        "href": "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~medium.jpg"
+      },
+      {
+        "href": "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~small.jpg"
+      },
+      {
+        "href": "http://images-assets.nasa.gov/image/201210220003HQ/201210220003HQ~thumb.jpg"
+      },
+      {
+        "href": "http://images-assets.nasa.gov/image/201210220003HQ/metadata.json"
+      }
+    ]
+  }
+}

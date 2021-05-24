@@ -48,7 +48,7 @@ class DetailMediaDataSource @Inject constructor(
                             .subscribeOn(Schedulers.io())
                             .map {
                                 rawMediaDetailResponse.item.copy(
-                                    assets = rawMediaAssetConverter.getAssets(it),
+                                    assets = rawMediaAssetConverter.getMediaDetailAssetResponse(it).assets,
                                     metadataUrl = rawMediaAssetConverter.getMetadataUrl(it)
                                 )
                             }

@@ -16,18 +16,17 @@ class RawMediaAssetsConverter @Inject constructor() {
     private val thumbUriSubstring = "thumb"
     private val dividerSymbol = '~'
 
-    fun getAssets(rawMediaDetailAssetResponse: RawMediaDetailAssetResponse): LinkedHashMap<String, String> {
-        val assetMap: LinkedHashMap<String, String>
+    fun getMediaDetailAssetResponse(rawMediaDetailAssetResponse: RawMediaDetailAssetResponse): MediaDetailAssetResponse {
 
         val assetType = getAssetType(rawMediaDetailAssetResponse.collection.items)
 
-        assetMap = when (assetType) {
-            ContentType.AUDIO -> getAudioAsset(rawMediaDetailAssetResponse.collection.items)
-            ContentType.VIDEO -> getVideoAsset(rawMediaDetailAssetResponse.collection.items)
-            ContentType.IMAGE -> getImageAsset(rawMediaDetailAssetResponse.collection.items)
+        val assetMap: LinkedHashMap<String, String> = when (assetType) {
+            ContentType.AUDIO -> parseAudioAsset(rawMediaDetailAssetResponse.collection.items)
+            ContentType.VIDEO -> parseVideoAsset(rawMediaDetailAssetResponse.collection.items)
+            ContentType.IMAGE -> parseImageAsset(rawMediaDetailAssetResponse.collection.items)
         }
 
-        return assetMap
+        return MediaDetailAssetResponse(assetType,assetMap)
     }
 
     fun getMetadataUrl(rawMediaDetailAssetResponse: RawMediaDetailAssetResponse): String? {
@@ -42,13 +41,14 @@ class RawMediaAssetsConverter @Inject constructor() {
         return tmpUrl
     }
 
-    private fun getAudioAsset(items: List<Item>): LinkedHashMap<String, String> {
+    private fun parseAudioAsset(items: List<Item>): LinkedHashMap<String, String> {
         val tmpMap = linkedMapOf<String, String>()
 
         for (element in items) {
             val href = element.href
             if (href.contains(mp3UriSubstring)
-                    .or(href.contains(m4aUriSubstring).or(href.contains(wavUriSubstring)))
+                    .or(href.contains(m4aUriSubstring)
+                        .or(href.contains(wavUriSubstring)))
             ) {
                 val startStringPosition = href.indexOf(dividerSymbol) + 1
                 val assetName = href.subSequence(startStringPosition, href.length).toString()
@@ -58,7 +58,7 @@ class RawMediaAssetsConverter @Inject constructor() {
         return tmpMap
     }
 
-    private fun getVideoAsset(items: List<Item>): LinkedHashMap<String, String> {
+    private fun parseVideoAsset(items: List<Item>): LinkedHashMap<String, String> {
         val tmpMap = linkedMapOf<String, String>()
         for (element in items) {
             val href = element.href
@@ -71,12 +71,13 @@ class RawMediaAssetsConverter @Inject constructor() {
         return tmpMap
     }
 
-    private fun getImageAsset(items: List<Item>): LinkedHashMap<String, String> {
+    private fun parseImageAsset(items: List<Item>): LinkedHashMap<String, String> {
         val tmpMap = linkedMapOf<String, String>()
         for (element in items) {
             val href = element.href
             if ((href.contains(jpgUriSubstring)
-                    .or(href.contains(tifUriSubstring))).and(!href.contains(thumbUriSubstring))
+                    .or(href.contains(tifUriSubstring)))
+                    .and(!href.contains(thumbUriSubstring))
             ) {
                 val startStringPosition = href.indexOf(dividerSymbol) + 1
                 val assetName = href.subSequence(startStringPosition, href.length).toString()
@@ -86,13 +87,14 @@ class RawMediaAssetsConverter @Inject constructor() {
         return tmpMap
     }
 
-    private fun getAssetType(items: List<Item>): ContentType {
+   private fun getAssetType(items: List<Item>): ContentType {
         var contentType: ContentType? = null
 
         for (element in items) {
             val href = element.href
             if (href.contains(mp3UriSubstring)
-                    .or(href.contains(m4aUriSubstring).or(href.contains(wavUriSubstring)))
+                    .or(href.contains(m4aUriSubstring)
+                        .or(href.contains(wavUriSubstring)))
             ) {
                 contentType = ContentType.AUDIO
                 break
