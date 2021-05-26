@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.model.media_preview.MediaPreview
-import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.data.model.media_preview.raw_media_preview.RawMediaPreviewResponseConverter
 import com.nasa.app.ui.fragments.di.FragmentScope
 import com.nasa.app.utils.FIRST_PAGE
