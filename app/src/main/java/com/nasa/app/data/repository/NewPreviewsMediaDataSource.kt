@@ -47,6 +47,8 @@ class NewPreviewsMediaDataSource @Inject constructor(
                             rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
                         callback.onResult(mediaPreviewResponse.mediaPreviewList, null, page + 1)
 
+                        searchParams.searchPage++
+
                         if (mediaPreviewResponse.mediaPreviewList.isNotEmpty()) {
                             networkState.postValue(NetworkState.LOADED)
                         } else {
@@ -82,6 +84,8 @@ class NewPreviewsMediaDataSource @Inject constructor(
                         val mediaPreviewResponse =
                             rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
                         callback.onResult(mediaPreviewResponse.mediaPreviewList, params.key + 1)
+
+                        searchParams.searchPage++
 
                         if (mediaPreviewResponse.mediaPreviewList.isNotEmpty()) {
                             networkState.postValue(NetworkState.LOADED)
