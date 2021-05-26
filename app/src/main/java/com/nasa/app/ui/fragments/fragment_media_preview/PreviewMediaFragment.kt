@@ -32,7 +32,7 @@ class PreviewMediaFragment : Fragment() {
     private var activityContract: Activity? = null
     private lateinit var viewModel: PreviewMediaViewModel
     var mediaPreviewRecyclerView: RecyclerView? = null
-    lateinit var adapter: MediaPreviewAdapter
+    lateinit var adapter: NewMediaPreviewAdapter
 
     lateinit var mediaPreviewComponent: PreviewComponent
 
@@ -61,27 +61,6 @@ class PreviewMediaFragment : Fragment() {
         viewModel =
             ViewModelProviders.of(this, providerFactory).get(PreviewMediaViewModel::class.java)
 
-        //Custom back navigation callback
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            if (searchParams.searchRequestQuery.equals(EMPTY_SEARCH_STRING)){
-                searchParams.clearSearchParams()
-                requireActivity().finish()
-            }
-            //If the back button has been pressed - show initial media previews!
-            else if (viewModel.mediaPreviews.value!=viewModel.initialMediaPreviews.value){
-                viewModel.putInitialDataToMediaPreviews()
-                rewindRecyclerViewToBegining(mediaPreviewRecyclerView!!)
-                searchParams.clearSearchParams()
-                if (activityContract!!.isErrorMessageShoved()) {
-                    activityContract!!.clearErrorMessage()
-                }
-            }
-            //If the back button has been pressed again - close application!
-            else{
-                searchParams.clearSearchParams()
-                requireActivity().finish()
-            }
-        }
     }
 
     override fun onCreateView(
@@ -101,8 +80,7 @@ class PreviewMediaFragment : Fragment() {
 
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
             Log.i(TAG, "media preview: ${it.hashCode()}")
-            adapter.dataSource = it
-            adapter.notifyDataSetChanged()
+            adapter.submitList(it)
         })
 
         //network state status observing
@@ -148,14 +126,10 @@ class PreviewMediaFragment : Fragment() {
     private fun initRecyclerView() {
         mediaPreviewRecyclerView!!.layoutManager = LinearLayoutManager(context)
         val tmpMediaPreviewResponse = MediaPreviewResponse(listOf(MediaPreview("", "https://images-assets.nasa.gov/image/ARC-2002-ACD02-0056-22/ARC-2002-ACD02-0056-22~thumb.jpg", ContentType.IMAGE, "", "")), 1, 1, 1)
-        adapter = MediaPreviewAdapter(tmpMediaPreviewResponse,picasso,searchParams,callback = {updateMediaPreviews()})
+        adapter = NewMediaPreviewAdapter(requireContext(),picasso)
         mediaPreviewRecyclerView!!.adapter = adapter
     }
 
-    fun updateMediaPreviews(){
-        viewModel.updateMediaPreviews()
-        rewindRecyclerViewToBegining(mediaPreviewRecyclerView!!)
-    }
 
     override fun onDestroy() {
         super.onDestroy()

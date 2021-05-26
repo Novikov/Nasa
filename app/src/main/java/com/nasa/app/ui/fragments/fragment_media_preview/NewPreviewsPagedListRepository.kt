@@ -18,7 +18,7 @@ class NewPreviewsPagedListRepository @Inject constructor(
 ) {
     lateinit var previewsPagedList: LiveData<PagedList<MediaPreview>>
 
-    fun fetchLiveMoviePagedList(): LiveData<PagedList<MediaPreview>> {
+    fun fetchLiveMediaPreviewPagedList(): LiveData<PagedList<MediaPreview>> {
         val config = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
             .setPageSize(POST_PER_PAGE)
