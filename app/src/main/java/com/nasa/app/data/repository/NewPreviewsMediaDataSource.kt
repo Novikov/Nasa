@@ -21,9 +21,8 @@ class NewPreviewsMediaDataSource @Inject constructor(
     private val compositeDisposable: CompositeDisposable,
     private val searchParams: SearchParams,
     private val rawMediaPreviewResponseConverter: RawMediaPreviewResponseConverter,
-//    @Named("media previews") private val _downloadedMediaPreviewsResponse: MutableLiveData<MediaPreviewResponse>,
-    @Named("media previews network state") private val _networkState: MutableLiveData<NetworkState>
-): PageKeyedDataSource<Int, MediaPreview>() {
+    @Named("media previews network state") val networkState: MutableLiveData<NetworkState>
+) : PageKeyedDataSource<Int, MediaPreview>() {
 
     private var page = FIRST_PAGE
 
@@ -31,7 +30,7 @@ class NewPreviewsMediaDataSource @Inject constructor(
         params: LoadInitialParams<Int>,
         callback: LoadInitialCallback<Int, MediaPreview>
     ) {
-        _networkState.postValue(NetworkState.LOADING)
+        networkState.postValue(NetworkState.LOADING)
 
         try {
             compositeDisposable.add(
@@ -46,18 +45,18 @@ class NewPreviewsMediaDataSource @Inject constructor(
                     .subscribe({
                         val mediaPreviewResponse =
                             rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
-                        callback.onResult(mediaPreviewResponse.mediaPreviewList,null,page+1)
+                        callback.onResult(mediaPreviewResponse.mediaPreviewList, null, page + 1)
 
                         if (mediaPreviewResponse.mediaPreviewList.isNotEmpty()) {
-                            _networkState.postValue(NetworkState.LOADED)
+                            networkState.postValue(NetworkState.LOADED)
                         } else {
-                            _networkState.postValue(NetworkState.NOTHING_FOUND)
+                            networkState.postValue(NetworkState.NOTHING_FOUND)
                         }
                     }, {
                         if (it.message?.contains(NO_INTERNET_ERROR_MSG_SUBSTRING)!!) {
-                            _networkState.postValue(NetworkState.NO_INTERNET)
+                            networkState.postValue(NetworkState.NO_INTERNET)
                         } else {
-                            _networkState.postValue(NetworkState.ERROR)
+                            networkState.postValue(NetworkState.ERROR)
                         }
                     })
             )
@@ -67,7 +66,7 @@ class NewPreviewsMediaDataSource @Inject constructor(
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, MediaPreview>) {
-        _networkState.postValue(NetworkState.LOADING)
+        networkState.postValue(NetworkState.LOADING)
 
         try {
             compositeDisposable.add(
@@ -82,18 +81,18 @@ class NewPreviewsMediaDataSource @Inject constructor(
                     .subscribe({
                         val mediaPreviewResponse =
                             rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
-                        callback.onResult(mediaPreviewResponse.mediaPreviewList,params.key+1)
+                        callback.onResult(mediaPreviewResponse.mediaPreviewList, params.key + 1)
 
                         if (mediaPreviewResponse.mediaPreviewList.isNotEmpty()) {
-                            _networkState.postValue(NetworkState.LOADED)
+                            networkState.postValue(NetworkState.LOADED)
                         } else {
-                            _networkState.postValue(NetworkState.NOTHING_FOUND)
+                            networkState.postValue(NetworkState.NOTHING_FOUND)
                         }
                     }, {
                         if (it.message?.contains(NO_INTERNET_ERROR_MSG_SUBSTRING)!!) {
-                            _networkState.postValue(NetworkState.NO_INTERNET)
+                            networkState.postValue(NetworkState.NO_INTERNET)
                         } else {
-                            _networkState.postValue(NetworkState.ERROR)
+                            networkState.postValue(NetworkState.ERROR)
                         }
                     })
             )
