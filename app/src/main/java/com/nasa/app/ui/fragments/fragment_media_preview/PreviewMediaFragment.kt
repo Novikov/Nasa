@@ -7,23 +7,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.addCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.nasa.app.BaseApplication
 import com.nasa.app.R
-import com.nasa.app.data.model.ContentType
-import com.nasa.app.data.model.media_preview.MediaPreview
-import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
 import com.nasa.app.ui.fragments.fragment_media_preview.di.PreviewComponent
-import com.nasa.app.utils.EMPTY_SEARCH_STRING
 import com.nasa.app.utils.SearchParams
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
@@ -31,7 +25,6 @@ import javax.inject.Inject
 class PreviewMediaFragment : Fragment() {
     private var activityContract: Activity? = null
     private lateinit var viewModel: PreviewMediaViewModel
-    var mediaPreviewRecyclerView: RecyclerView? = null
     lateinit var adapter: NewMediaPreviewAdapter
 
     lateinit var mediaPreviewComponent: PreviewComponent
@@ -75,8 +68,12 @@ class PreviewMediaFragment : Fragment() {
         val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
         contentLayout.visibility = View.INVISIBLE
 
-        mediaPreviewRecyclerView = view.findViewById(R.id.media_preview_recycler_view)
-        initRecyclerView()
+        val recyclerView = view.findViewById<RecyclerView>(R.id.media_preview_recycler_view)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.setHasFixedSize(true)
+        recyclerView.setItemViewCacheSize(12)
+        adapter = NewMediaPreviewAdapter(requireContext())
+        recyclerView.adapter = adapter
 
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
             Log.i(TAG, "media preview: ${it.hashCode()}")
@@ -116,24 +113,9 @@ class PreviewMediaFragment : Fragment() {
         return view
     }
 
-    private fun rewindRecyclerViewToBegining(mediaPreviewRecyclerView:RecyclerView) {
-        (mediaPreviewRecyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
-            0,
-            0
-        )
-    }
-
-    private fun initRecyclerView() {
-        mediaPreviewRecyclerView!!.layoutManager = LinearLayoutManager(context)
-        val tmpMediaPreviewResponse = MediaPreviewResponse(listOf(MediaPreview("", "https://images-assets.nasa.gov/image/ARC-2002-ACD02-0056-22/ARC-2002-ACD02-0056-22~thumb.jpg", ContentType.IMAGE, "", "")), 1, 1, 1)
-        adapter = NewMediaPreviewAdapter(requireContext(),picasso)
-        mediaPreviewRecyclerView!!.adapter = adapter
-    }
-
-
     override fun onDestroy() {
         super.onDestroy()
-        mediaPreviewRecyclerView = null
+        activityContract = null
     }
 
     companion object {
