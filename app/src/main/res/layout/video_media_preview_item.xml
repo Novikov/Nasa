@@ -13,6 +13,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:background="#1D1D23"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -64,6 +65,7 @@
         app:layout_constraintEnd_toEndOf="@+id/media_preview_recycler_view_image"
         app:layout_constraintStart_toStartOf="@+id/media_preview_recycler_view_image"
         app:layout_constraintTop_toTopOf="@+id/media_preview_recycler_view_image"
-        app:srcCompat="@drawable/ic_play_video" />
+        app:srcCompat="@drawable/ic_play_video"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

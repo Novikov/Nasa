@@ -1,6 +1,7 @@
 package com.nasa.app.ui.fragments.fragment_media_preview
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +9,20 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.nasa.app.R
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.media_preview.MediaPreview
 import com.nasa.app.data.repository.NetworkState
 import kotlinx.android.synthetic.main.image_media_preview_item.view.*
+import kotlinx.android.synthetic.main.image_media_preview_item.view.date_created_text_view
+import kotlinx.android.synthetic.main.image_media_preview_item.view.description_text_view
+import kotlinx.android.synthetic.main.image_media_preview_item.view.media_preview_recycler_view_image
+import kotlinx.android.synthetic.main.network_state_item.view.*
+import kotlinx.android.synthetic.main.video_media_preview_item.view.*
 
 class NewMediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview, RecyclerView.ViewHolder>(MovieDiffCallback()){
 
@@ -54,13 +64,13 @@ class NewMediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPrev
             (holder as ImageMediaPreviewViewHolder).bind(getItem(position)!!)
         }
 
-        if(getItemViewType(position)==VIDEO_VIEW_TYPE) {
-            (holder as VideoMediaPreviewViewHolder).bind(getItem(position)!!)
-        }
+            if(getItemViewType(position)==VIDEO_VIEW_TYPE) {
+                (holder as VideoMediaPreviewViewHolder).bind(getItem(position)!!)
+            }
 
-        if(getItemViewType(position)==AUDIO_VIEW_TYPE) {
-            (holder as AudioMediaPreviewViewHolder).bind(getItem(position)!!)
-        }
+            if(getItemViewType(position)==AUDIO_VIEW_TYPE) {
+                (holder as AudioMediaPreviewViewHolder).bind(getItem(position)!!)
+            }
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -112,8 +122,31 @@ class NewMediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPrev
             itemView.description_text_view.text = mediaPreview.description
             itemView.date_created_text_view.text = mediaPreview.dateCreated
 
+
             Glide.with(itemView.context)
                 .load(mediaPreview.previewUrl)
+                .listener(object : RequestListener<Drawable>{
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        return false
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        itemView.play_video_image_view.visibility = View.VISIBLE
+                        return false
+                    }
+
+                })
                 .into(itemView.media_preview_recycler_view_image)
         }
     }
@@ -122,6 +155,30 @@ class NewMediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPrev
         fun bind(mediaPreview: MediaPreview) {
             itemView.description_text_view.text = mediaPreview.description
             itemView.date_created_text_view.text = mediaPreview.dateCreated
+        }
+    }
+
+    class NetworkStateItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+
+        fun bind(networkState: NetworkState?) {
+            if (networkState != null && networkState == NetworkState.LOADING) {
+                itemView.progress_bar_item.visibility = View.VISIBLE;
+            }
+            else  {
+                itemView.progress_bar_item.visibility = View.GONE;
+            }
+
+            if (networkState != null && networkState == NetworkState.ERROR) {
+                itemView.error_msg_item.visibility = View.VISIBLE;
+                itemView.error_msg_item.text = networkState.msg;
+            }
+            else if (networkState != null && networkState == NetworkState.ENDOFLIST) {
+                itemView.error_msg_item.visibility = View.VISIBLE;
+                itemView.error_msg_item.text = networkState.msg;
+            }
+            else {
+                itemView.error_msg_item.visibility = View.GONE;
+            }
         }
     }
 }
