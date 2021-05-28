@@ -77,7 +77,27 @@ class PreviewMediaFragment : Fragment() {
         //network state status observing
         viewModel.networkState.observe(viewLifecycleOwner, {
             progress_bar_popular.visibility = if (viewModel.listIsEmpty() && it == NetworkState.LOADING) View.VISIBLE else View.GONE
-            txt_error_popular.visibility = if (viewModel.listIsEmpty() && it == NetworkState.ERROR) View.VISIBLE else View.GONE
+
+            if (viewModel.listIsEmpty()){
+                when(it){
+                    NetworkState.NOTHING_FOUND -> {
+                        txt_error_popular.text = NetworkState.NOTHING_FOUND.msg
+                        txt_error_popular.visibility = View.VISIBLE
+                    }
+                    NetworkState.NO_INTERNET -> {
+                        txt_error_popular.text = NetworkState.NO_INTERNET.msg
+                        txt_error_popular.visibility = View.VISIBLE
+                    }
+                    NetworkState.TIMEOUT -> {
+                        txt_error_popular.text = NetworkState.TIMEOUT.msg
+                        txt_error_popular.visibility = View.VISIBLE
+                    }
+                    NetworkState.ERROR -> {
+                        txt_error_popular.text = NetworkState.ERROR.msg
+                        txt_error_popular.visibility = View.VISIBLE
+                    }
+                }
+            }
 
             if (!viewModel.listIsEmpty()) {
                 adapter.setNetworkState(it)

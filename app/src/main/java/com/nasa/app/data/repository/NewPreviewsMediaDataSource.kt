@@ -39,17 +39,19 @@ class NewPreviewsMediaDataSource @Inject constructor(
                     searchParams.getSearchMediaTypes(),
                     searchParams.startSearchYear,
                     searchParams.endSearchYear,
-                    searchParams.searchPage
+                    page
                 )
                     .subscribeOn(Schedulers.io())
                     .subscribe({
-                        val mediaPreviewResponse =
-                            rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
-                        callback.onResult(mediaPreviewResponse.mediaPreviewList, null, page + 1)
-                        searchParams.searchPage++
-
-                        networkState.postValue(NetworkState.LOADED)
-
+                        if (it.collection.items.size>0){
+                            val mediaPreviewResponse =
+                                rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
+                            callback.onResult(mediaPreviewResponse.mediaPreviewList, null, page + 1)
+                            networkState.postValue(NetworkState.LOADED)
+                        }
+                        else {
+                            networkState.postValue(NetworkState.NOTHING_FOUND)
+                        }
                     }, {
                         if (it.message?.contains(NO_INTERNET_ERROR_MSG_SUBSTRING)!!) {
                             networkState.postValue(NetworkState.NO_INTERNET)
@@ -73,7 +75,7 @@ class NewPreviewsMediaDataSource @Inject constructor(
                     searchParams.getSearchMediaTypes(),
                     searchParams.startSearchYear,
                     searchParams.endSearchYear,
-                    searchParams.searchPage
+                    params.key
                 )
                     .subscribeOn(Schedulers.io())
                     .subscribe({
@@ -82,7 +84,6 @@ class NewPreviewsMediaDataSource @Inject constructor(
                         if(mediaPreviewResponse.totalPages >= params.key) {
                             callback.onResult(mediaPreviewResponse.mediaPreviewList, params.key + 1)
                             networkState.postValue(NetworkState.LOADED)
-                            searchParams.searchPage++
                         }
                         else{
                             networkState.postValue(NetworkState.ENDOFLIST)

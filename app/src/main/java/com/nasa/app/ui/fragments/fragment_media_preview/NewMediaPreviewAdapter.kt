@@ -116,7 +116,6 @@ class NewMediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPrev
         }
     }
 
-
     class MovieDiffCallback : DiffUtil.ItemCallback<MediaPreview>() {
         override fun areItemsTheSame(oldItem: MediaPreview, newItem: MediaPreview): Boolean {
             return oldItem.nasaId == newItem.nasaId
