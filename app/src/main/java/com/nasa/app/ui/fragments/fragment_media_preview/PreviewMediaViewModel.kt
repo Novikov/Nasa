@@ -23,6 +23,10 @@ class PreviewMediaViewModel @Inject constructor(
         mediaRepository.getNetworkState()
     }
 
+    fun listIsEmpty(): Boolean {
+        return mediaPreviews.value?.isEmpty() ?: true
+    }
+
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.dispose()

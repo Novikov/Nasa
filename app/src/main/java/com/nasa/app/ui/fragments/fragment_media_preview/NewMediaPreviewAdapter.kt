@@ -74,15 +74,19 @@ class NewMediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPrev
     }
 
     override fun getItemViewType(position: Int): Int {
-        when(getItem(position)!!.mediaType){
-            ContentType.IMAGE -> {
-                return IMAGE_VIEW_TYPE
-            }
-            ContentType.VIDEO -> {
-                return VIDEO_VIEW_TYPE
-            }
-            ContentType.AUDIO -> {
-                return AUDIO_VIEW_TYPE
+        return if (hasExtraRow() && position == itemCount - 1) {
+            NETWORK_VIEW_TYPE
+        } else {
+            when(getItem(position)!!.mediaType){
+                ContentType.IMAGE -> {
+                    return IMAGE_VIEW_TYPE
+                }
+                ContentType.VIDEO -> {
+                    return VIDEO_VIEW_TYPE
+                }
+                ContentType.AUDIO -> {
+                    return AUDIO_VIEW_TYPE
+                }
             }
         }
     }
@@ -93,6 +97,23 @@ class NewMediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPrev
 
     override fun getItemCount(): Int {
         return super.getItemCount() + if (hasExtraRow()) 1 else 0
+    }
+
+    fun setNetworkState(newNetworkState: NetworkState) {
+        val previousState = this.networkState
+        val hadExtraRow = hasExtraRow()
+        this.networkState = newNetworkState
+        val hasExtraRow = hasExtraRow()
+
+        if (hadExtraRow != hasExtraRow) {
+            if (hadExtraRow) {                             //hadExtraRow is true and hasExtraRow false
+                notifyItemRemoved(super.getItemCount())    //remove the progressbar at the end
+            } else {                                       //hasExtraRow is true and hadExtraRow false
+                notifyItemInserted(super.getItemCount())   //add the progressbar at the end
+            }
+        } else if (hasExtraRow && previousState != newNetworkState) { //hasExtraRow is true and hadExtraRow true and (NetworkState.ERROR or NetworkState.ENDOFLIST)
+            notifyItemChanged(itemCount - 1)       //add the network message at the end
+        }
     }
 
 

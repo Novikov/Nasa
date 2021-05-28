@@ -20,6 +20,7 @@ import com.nasa.app.ui.activity.MainActivity
 import com.nasa.app.ui.fragments.fragment_media_preview.di.PreviewComponent
 import com.nasa.app.utils.SearchParams
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_media_preview.*
 import javax.inject.Inject
 
 class PreviewMediaFragment : Fragment() {
@@ -31,10 +32,6 @@ class PreviewMediaFragment : Fragment() {
 
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
-    @Inject
-    lateinit var searchParams: SearchParams
-    @Inject
-    lateinit var picasso: Picasso
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -65,9 +62,6 @@ class PreviewMediaFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_media_preview, container, false)
 
-        val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
-        contentLayout.visibility = View.INVISIBLE
-
         val recyclerView = view.findViewById<RecyclerView>(R.id.media_preview_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
@@ -82,31 +76,11 @@ class PreviewMediaFragment : Fragment() {
 
         //network state status observing
         viewModel.networkState.observe(viewLifecycleOwner, {
-            when (it) {
-                NetworkState.LOADING -> {
-                    contentLayout.visibility = View.INVISIBLE
-                    activityContract?.showProgressBar()
-                }
-                NetworkState.LOADED -> {
-                    contentLayout.visibility = View.VISIBLE
-                    activityContract?.hideProgressBar()
-                }
-                NetworkState.NOTHING_FOUND -> {
-                    activityContract?.hideProgressBar()
-                    activityContract?.showErrorMessage(it.msg)
-                }
-                NetworkState.NO_INTERNET -> {
-                    activityContract?.hideProgressBar()
-                    activityContract?.showErrorMessage(it.msg)
-                }
-                NetworkState.TIMEOUT -> {
-                    activityContract?.hideProgressBar()
-                    activityContract?.showErrorMessage(it.msg)
-                }
-                NetworkState.ERROR -> {
-                    activityContract?.hideProgressBar()
-                    activityContract?.showErrorMessage(it.msg)
-                }
+            progress_bar_popular.visibility = if (viewModel.listIsEmpty() && it == NetworkState.LOADING) View.VISIBLE else View.GONE
+            txt_error_popular.visibility = if (viewModel.listIsEmpty() && it == NetworkState.ERROR) View.VISIBLE else View.GONE
+
+            if (!viewModel.listIsEmpty()) {
+                adapter.setNetworkState(it)
             }
         })
 

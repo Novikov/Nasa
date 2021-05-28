@@ -46,14 +46,10 @@ class NewPreviewsMediaDataSource @Inject constructor(
                         val mediaPreviewResponse =
                             rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
                         callback.onResult(mediaPreviewResponse.mediaPreviewList, null, page + 1)
-
                         searchParams.searchPage++
 
-                        if (mediaPreviewResponse.mediaPreviewList.isNotEmpty()) {
-                            networkState.postValue(NetworkState.LOADED)
-                        } else {
-                            networkState.postValue(NetworkState.NOTHING_FOUND)
-                        }
+                        networkState.postValue(NetworkState.LOADED)
+
                     }, {
                         if (it.message?.contains(NO_INTERNET_ERROR_MSG_SUBSTRING)!!) {
                             networkState.postValue(NetworkState.NO_INTERNET)
@@ -81,16 +77,15 @@ class NewPreviewsMediaDataSource @Inject constructor(
                 )
                     .subscribeOn(Schedulers.io())
                     .subscribe({
-                        val mediaPreviewResponse =
-                            rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
-                        callback.onResult(mediaPreviewResponse.mediaPreviewList, params.key + 1)
+                        val mediaPreviewResponse = rawMediaPreviewResponseConverter.getMediaPreviewResponse(it)
 
-                        searchParams.searchPage++
-
-                        if (mediaPreviewResponse.mediaPreviewList.isNotEmpty()) {
+                        if(mediaPreviewResponse.totalPages >= params.key) {
+                            callback.onResult(mediaPreviewResponse.mediaPreviewList, params.key + 1)
                             networkState.postValue(NetworkState.LOADED)
-                        } else {
-                            networkState.postValue(NetworkState.NOTHING_FOUND)
+                            searchParams.searchPage++
+                        }
+                        else{
+                            networkState.postValue(NetworkState.ENDOFLIST)
                         }
                     }, {
                         if (it.message?.contains(NO_INTERNET_ERROR_MSG_SUBSTRING)!!) {
