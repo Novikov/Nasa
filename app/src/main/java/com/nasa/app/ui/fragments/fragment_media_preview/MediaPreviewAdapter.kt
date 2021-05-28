@@ -216,13 +216,25 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
 
         fun bind(networkState: NetworkState?) {
             if (networkState != null && networkState == NetworkState.LOADING) {
-                itemView.progress_bar_item.visibility = View.VISIBLE;
+                itemView.progress_bar_item.visibility = View.VISIBLE
             }
             else  {
-                itemView.progress_bar_item.visibility = View.GONE;
+                itemView.progress_bar_item.visibility = View.GONE
             }
 
-            if (networkState != null && networkState == NetworkState.ERROR) {
+            if (networkState != null && networkState == NetworkState.TIMEOUT) {
+                itemView.error_msg_item.visibility = View.VISIBLE
+                itemView.error_msg_item.text = networkState.msg
+                itemView.progress_bar_item.visibility = View.VISIBLE
+            }
+
+            else if (networkState != null && networkState == NetworkState.NO_INTERNET) {
+                itemView.error_msg_item.visibility = View.VISIBLE
+                itemView.error_msg_item.text = networkState.msg
+                itemView.progress_bar_item.visibility = View.VISIBLE;
+            }
+
+            else if (networkState != null && networkState == NetworkState.ERROR) {
                 itemView.error_msg_item.visibility = View.VISIBLE;
                 itemView.error_msg_item.text = networkState.msg;
             }
