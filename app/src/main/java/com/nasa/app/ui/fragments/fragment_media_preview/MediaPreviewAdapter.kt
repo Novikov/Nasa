@@ -5,6 +5,9 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +20,6 @@ import com.nasa.app.R
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.media_preview.MediaPreview
 import com.nasa.app.data.repository.NetworkState
-import kotlinx.android.synthetic.main.image_media_preview_item.view.*
 import kotlinx.android.synthetic.main.image_media_preview_item.view.date_created_text_view
 import kotlinx.android.synthetic.main.image_media_preview_item.view.description_text_view
 import kotlinx.android.synthetic.main.image_media_preview_item.view.media_preview_recycler_view_image
@@ -33,7 +35,10 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
 
     private var networkState: NetworkState? = null
 
+    var navController: NavController? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        navController = Navigation.findNavController(parent)
         val layoutInflater = LayoutInflater.from(parent.context)
         val view:View
 
@@ -58,21 +63,19 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
-        if(getItemViewType(position)==IMAGE_VIEW_TYPE) {
-            (holder as ImageMediaPreviewViewHolder).bind(getItem(position)!!)
-        }
-
-            if(getItemViewType(position)==VIDEO_VIEW_TYPE) {
+        when(getItemViewType(position)){
+            IMAGE_VIEW_TYPE->{
+                (holder as ImageMediaPreviewViewHolder).bind(getItem(position)!!)
+            }
+            VIDEO_VIEW_TYPE->{
                 (holder as VideoMediaPreviewViewHolder).bind(getItem(position)!!)
             }
-
-            if(getItemViewType(position)==AUDIO_VIEW_TYPE) {
+            AUDIO_VIEW_TYPE->{
                 (holder as AudioMediaPreviewViewHolder).bind(getItem(position)!!)
             }
-
-        if(getItemViewType(position)==NETWORK_VIEW_TYPE) {
-            (holder as NetworkStateItemViewHolder).bind(networkState)
+            NETWORK_VIEW_TYPE->{
+                (holder as NetworkStateItemViewHolder).bind(networkState)
+            }
         }
     }
 
@@ -129,7 +132,8 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
         }
     }
 
-    class ImageMediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ImageMediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
         fun bind(mediaPreview: MediaPreview) {
             itemView.description_text_view.text = mediaPreview.description
             itemView.date_created_text_view.text = mediaPreview.dateCreated
@@ -137,10 +141,19 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
             Glide.with(itemView.context)
                 .load(mediaPreview.previewUrl)
                 .into(itemView.media_preview_recycler_view_image)
-        }
+
+                itemView.setOnClickListener {
+                    navController?.navigate(
+                        PreviewMediaFragmentDirections.actionMediaFragmentToImageDetailFragment(
+                            mediaPreview.nasaId,
+                            mediaPreview.mediaType
+                        )
+                    )
+                }
+            }
     }
 
-    class VideoMediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class VideoMediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(mediaPreview: MediaPreview) {
             itemView.description_text_view.text = mediaPreview.description
             itemView.date_created_text_view.text = mediaPreview.dateCreated
@@ -171,13 +184,31 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
 
                 })
                 .into(itemView.media_preview_recycler_view_image)
+
+            itemView.setOnClickListener {
+                navController?.navigate(
+                    PreviewMediaFragmentDirections.actionMediaFragmentToVideoDetailFragment(
+                        mediaPreview.nasaId,
+                        mediaPreview.mediaType
+                    )
+                )
+            }
         }
     }
 
-    class AudioMediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class AudioMediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(mediaPreview: MediaPreview) {
             itemView.description_text_view.text = mediaPreview.description
             itemView.date_created_text_view.text = mediaPreview.dateCreated
+
+            itemView.setOnClickListener {
+                navController?.navigate(
+                    PreviewMediaFragmentDirections.actionMediaFragmentToAudioDetailFragment(
+                        mediaPreview.nasaId,
+                        mediaPreview.mediaType
+                    )
+                )
+            }
         }
     }
 
