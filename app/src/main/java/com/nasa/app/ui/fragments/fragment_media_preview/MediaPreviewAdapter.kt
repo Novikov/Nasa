@@ -37,29 +37,28 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
         val layoutInflater = LayoutInflater.from(parent.context)
         val view:View
 
-        when(viewType)
-        {
-            1->{
+        return when (viewType) {
+            1 -> {
                 view = layoutInflater.inflate(R.layout.image_media_preview_item, parent, false)
                 return ImageMediaPreviewViewHolder(view)
             }
-            2->{
+            2 -> {
                 view = layoutInflater.inflate(R.layout.video_media_preview_item, parent, false)
                 return VideoMediaPreviewViewHolder(view)
             }
-            3->{
+            3 -> {
                 view = layoutInflater.inflate(R.layout.audio_media_preview_item, parent, false)
                 return AudioMediaPreviewViewHolder(view)
             }
             else -> {
-                view = layoutInflater.inflate(R.layout.image_media_preview_item, parent, false)
-                return ImageMediaPreviewViewHolder(view)
+                view = layoutInflater.inflate(R.layout.network_state_item, parent, false)
+                return NetworkStateItemViewHolder(view)
             }
         }
-
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+
         if(getItemViewType(position)==IMAGE_VIEW_TYPE) {
             (holder as ImageMediaPreviewViewHolder).bind(getItem(position)!!)
         }
@@ -71,6 +70,10 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
             if(getItemViewType(position)==AUDIO_VIEW_TYPE) {
                 (holder as AudioMediaPreviewViewHolder).bind(getItem(position)!!)
             }
+
+        if(getItemViewType(position)==NETWORK_VIEW_TYPE) {
+            (holder as NetworkStateItemViewHolder).bind(networkState)
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
