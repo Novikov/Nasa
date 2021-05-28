@@ -60,10 +60,10 @@ class PreviewMediaFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_media_preview, container, false)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.media_preview_recycler_view)
+
+        adapter = MediaPreviewAdapter(requireContext())
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
-        recyclerView.setItemViewCacheSize(12)
-        adapter = MediaPreviewAdapter(requireContext())
         recyclerView.adapter = adapter
 
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {

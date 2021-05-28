@@ -2,6 +2,7 @@ package com.nasa.app.ui.fragments.fragment_media_preview
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.nasa.app.R
 import com.nasa.app.data.model.ContentType
@@ -135,9 +137,6 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
     inner class ImageMediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(mediaPreview: MediaPreview) {
-            itemView.description_text_view.text = mediaPreview.description
-            itemView.date_created_text_view.text = mediaPreview.dateCreated
-
             Glide.with(itemView.context)
                 .load(mediaPreview.previewUrl)
                 .into(itemView.media_preview_recycler_view_image)
@@ -150,14 +149,15 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
                         )
                     )
                 }
+
+            itemView.description_text_view.text = mediaPreview.description
+            itemView.date_created_text_view.text = mediaPreview.dateCreated
+
             }
     }
 
     inner class VideoMediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(mediaPreview: MediaPreview) {
-            itemView.description_text_view.text = mediaPreview.description
-            itemView.date_created_text_view.text = mediaPreview.dateCreated
-
 
             Glide.with(itemView.context)
                 .load(mediaPreview.previewUrl)
@@ -186,6 +186,7 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
                 .into(itemView.media_preview_recycler_view_image)
 
             itemView.setOnClickListener {
+
                 navController?.navigate(
                     PreviewMediaFragmentDirections.actionMediaFragmentToVideoDetailFragment(
                         mediaPreview.nasaId,
@@ -193,6 +194,9 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
                     )
                 )
             }
+
+            itemView.description_text_view.text = mediaPreview.description
+            itemView.date_created_text_view.text = mediaPreview.dateCreated
         }
     }
 

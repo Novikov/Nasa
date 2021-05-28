@@ -17,12 +17,10 @@ class SearchParams @Inject constructor() {
     var searchImage = true
     var searchVideo = true
     var searchAudio = true
-    var searchPage = FIRST_PAGE
     val defaultSearchParams = "image,video,audio"
 
     fun initNewSearchRequestParams(query:String){
         searchRequestQuery = query
-        searchPage = FIRST_PAGE
     }
 
     fun clearSearchParams(){
@@ -32,7 +30,6 @@ class SearchParams @Inject constructor() {
         searchImage = true
         searchVideo = true
         searchAudio = true
-        searchPage = FIRST_PAGE
     }
 
     fun updateSearchParams(startSearchYear:String,endSearchYear:String,searchImage:Boolean,searchVideo:Boolean,searchAudio:Boolean){
