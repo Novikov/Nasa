@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @FragmentScope
 class PreviewMediaViewModel @Inject constructor(
-    private val mediaRepository: NewPreviewsPagedListRepository,
+    private val mediaRepository: PreviewsPagedListRepository,
     private val compositeDisposable: CompositeDisposable
 ) : ViewModel() {
 

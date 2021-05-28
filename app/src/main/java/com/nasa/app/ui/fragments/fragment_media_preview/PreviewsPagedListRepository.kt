@@ -6,15 +6,15 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.nasa.app.data.model.media_preview.MediaPreview
 import com.nasa.app.data.repository.NetworkState
-import com.nasa.app.data.repository.NewPreviewsMediaDataSource
-import com.nasa.app.data.repository.NewPreviewsMediaDataSourceFactory
+import com.nasa.app.data.repository.PreviewsMediaDataSource
+import com.nasa.app.data.repository.PreviewsMediaDataSourceFactory
 import com.nasa.app.ui.fragments.di.FragmentScope
 import com.nasa.app.utils.POST_PER_PAGE
 import javax.inject.Inject
 
 @FragmentScope
-class NewPreviewsPagedListRepository @Inject constructor(
-    private val previewsDataSourceFactory: NewPreviewsMediaDataSourceFactory
+class PreviewsPagedListRepository @Inject constructor(
+    private val previewsDataSourceFactory: PreviewsMediaDataSourceFactory
 ) {
     lateinit var previewsPagedList: LiveData<PagedList<MediaPreview>>
 
@@ -30,9 +30,9 @@ class NewPreviewsPagedListRepository @Inject constructor(
     }
 
     fun getNetworkState(): LiveData<NetworkState> {
-        return Transformations.switchMap<NewPreviewsMediaDataSource, NetworkState>(
+        return Transformations.switchMap<PreviewsMediaDataSource, NetworkState>(
             previewsDataSourceFactory.previewsLiveDataSource,
-            NewPreviewsMediaDataSource::networkState
+            PreviewsMediaDataSource::networkState
         )
     }
 }

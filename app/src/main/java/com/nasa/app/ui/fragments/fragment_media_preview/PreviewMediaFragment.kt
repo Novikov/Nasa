@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,15 +17,13 @@ import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
 import com.nasa.app.ui.fragments.fragment_media_preview.di.PreviewComponent
-import com.nasa.app.utils.SearchParams
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_media_preview.*
 import javax.inject.Inject
 
 class PreviewMediaFragment : Fragment() {
     private var activityContract: Activity? = null
     private lateinit var viewModel: PreviewMediaViewModel
-    lateinit var adapter: NewMediaPreviewAdapter
+    lateinit var adapter: MediaPreviewAdapter
 
     lateinit var mediaPreviewComponent: PreviewComponent
 
@@ -66,7 +63,7 @@ class PreviewMediaFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
         recyclerView.setItemViewCacheSize(12)
-        adapter = NewMediaPreviewAdapter(requireContext())
+        adapter = MediaPreviewAdapter(requireContext())
         recyclerView.adapter = adapter
 
         viewModel.mediaPreviews.observe(viewLifecycleOwner, {
