@@ -1,17 +1,18 @@
 package com.nasa.app.ui.fragments.fragment_media_preview
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -27,6 +28,7 @@ import kotlinx.android.synthetic.main.image_media_preview_item.view.description_
 import kotlinx.android.synthetic.main.image_media_preview_item.view.media_preview_recycler_view_image
 import kotlinx.android.synthetic.main.network_state_item.view.*
 import kotlinx.android.synthetic.main.video_media_preview_item.view.*
+
 
 class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview, RecyclerView.ViewHolder>(MovieDiffCallback()){
 
@@ -137,7 +139,18 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
     inner class ImageMediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(mediaPreview: MediaPreview) {
+
+            val circularProgressDrawable = CircularProgressDrawable(itemView.context)
+            circularProgressDrawable.strokeWidth = 5f
+            circularProgressDrawable.centerRadius = 30f
+            circularProgressDrawable.setColorSchemeColors(Color.WHITE)
+            circularProgressDrawable.start()
+
+            val requestOptions = RequestOptions()
+            requestOptions.placeholder(circularProgressDrawable)
+
             Glide.with(itemView.context)
+                .setDefaultRequestOptions(requestOptions)
                 .load(mediaPreview.previewUrl)
                 .into(itemView.media_preview_recycler_view_image)
 
@@ -159,7 +172,17 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
     inner class VideoMediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(mediaPreview: MediaPreview) {
 
+            val circularProgressDrawable = CircularProgressDrawable(itemView.context)
+            circularProgressDrawable.strokeWidth = 5f
+            circularProgressDrawable.centerRadius = 30f
+            circularProgressDrawable.setColorSchemeColors(Color.WHITE)
+            circularProgressDrawable.start()
+
+            val requestOptions = RequestOptions()
+            requestOptions.placeholder(circularProgressDrawable)
+
             Glide.with(itemView.context)
+                .setDefaultRequestOptions(requestOptions)
                 .load(mediaPreview.previewUrl)
                 .listener(object : RequestListener<Drawable>{
                     override fun onLoadFailed(
