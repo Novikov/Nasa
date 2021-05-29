@@ -16,7 +16,7 @@ import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
-import com.nasa.app.ui.fragments.fragment_media_preview.MediaPreviewAdapter
+import com.nasa.app.ui.fragments.fragment_media_preview.initial.InitialMediaPreviewAdapter
 import com.nasa.app.ui.fragments.fragment_media_preview.di.PreviewComponent
 import kotlinx.android.synthetic.main.fragment_media_preview.*
 import javax.inject.Inject
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class FoundPreviewMediaFragment : Fragment() {
     private var activityContract: Activity? = null
     private lateinit var viewModelInitial: FoundPreviewMediaViewModel
-    lateinit var adapter: MediaPreviewAdapter
+    lateinit var adapterInitial: FoundMediaPreviewAdapter
 
     lateinit var mediaPreviewComponent: PreviewComponent
 
@@ -61,14 +61,14 @@ class FoundPreviewMediaFragment : Fragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.media_preview_recycler_view)
 
-        adapter = MediaPreviewAdapter(requireContext())
+        adapterInitial = FoundMediaPreviewAdapter(requireContext())
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
-        recyclerView.adapter = adapter
+        recyclerView.adapter = adapterInitial
 
         viewModelInitial.foundMediaPreviews.observe(viewLifecycleOwner, {
             Log.i(TAG, "media preview: ${it.hashCode()}")
-            adapter.submitList(it)
+            adapterInitial.submitList(it)
         })
 
         //network state status observing
@@ -97,7 +97,7 @@ class FoundPreviewMediaFragment : Fragment() {
             }
 
             if (!viewModelInitial.listIsEmpty()) {
-                adapter.setNetworkState(it)
+                adapterInitial.setNetworkState(it)
             }
         })
 

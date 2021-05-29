@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_mediaFragment_to_audioDetailFragment"
             app:destination="@id/audioDetailFragment" />
+        <action
+            android:id="@+id/action_mediaFragment_to_foundPreviewMediaFragment"
+            app:destination="@id/foundPreviewMediaFragment" />
     </fragment>
 
     <fragment
@@ -52,5 +55,19 @@
         <argument
             android:name="contentType"
             app:argType="com.nasa.app.data.model.ContentType" />
+    </fragment>
+    <fragment
+        android:id="@+id/foundPreviewMediaFragment"
+        android:name="com.nasa.app.ui.fragments.fragment_media_preview.found.FoundPreviewMediaFragment"
+        android:label="FoundPreviewMediaFragment" >
+        <action
+            android:id="@+id/action_foundPreviewMediaFragment_to_audioDetailFragment"
+            app:destination="@id/audioDetailFragment" />
+        <action
+            android:id="@+id/action_foundPreviewMediaFragment_to_videoDetailFragment"
+            app:destination="@id/videoDetailFragment" />
+        <action
+            android:id="@+id/action_foundPreviewMediaFragment_to_imageDetailFragment"
+            app:destination="@id/imageDetailFragment" />
     </fragment>
 </navigation>

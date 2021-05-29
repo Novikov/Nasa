@@ -1,8 +1,7 @@
-package com.nasa.app.ui.fragments.fragment_media_preview
+package com.nasa.app.ui.fragments.fragment_media_preview.found
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +16,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.nasa.app.R
 import com.nasa.app.data.model.ContentType
@@ -31,7 +29,9 @@ import kotlinx.android.synthetic.main.network_state_item.view.*
 import kotlinx.android.synthetic.main.video_media_preview_item.view.*
 
 
-class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview, RecyclerView.ViewHolder>(MovieDiffCallback()){
+class FoundMediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview, RecyclerView.ViewHolder>(
+    MovieDiffCallback()
+){
 
     val IMAGE_VIEW_TYPE = 1
     val VIDEO_VIEW_TYPE = 2
@@ -154,7 +154,7 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
 
                 itemView.setOnClickListener {
                     navController?.navigate(
-                        InitialPreviewMediaFragmentDirections.actionMediaFragmentToImageDetailFragment(
+                        FoundPreviewMediaFragmentDirections.actionFoundPreviewMediaFragmentToImageDetailFragment(
                             mediaPreview.nasaId,
                             mediaPreview.mediaType
                         )
@@ -206,7 +206,7 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
             itemView.setOnClickListener {
 
                 navController?.navigate(
-                    InitialPreviewMediaFragmentDirections.actionMediaFragmentToVideoDetailFragment(
+                    FoundPreviewMediaFragmentDirections.actionFoundPreviewMediaFragmentToVideoDetailFragment(
                         mediaPreview.nasaId,
                         mediaPreview.mediaType
                     )
@@ -226,7 +226,7 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
 
             itemView.setOnClickListener {
                 navController?.navigate(
-                    InitialPreviewMediaFragmentDirections.actionMediaFragmentToAudioDetailFragment(
+                    FoundPreviewMediaFragmentDirections.actionFoundPreviewMediaFragmentToAudioDetailFragment(
                         mediaPreview.nasaId,
                         mediaPreview.mediaType
                     )
