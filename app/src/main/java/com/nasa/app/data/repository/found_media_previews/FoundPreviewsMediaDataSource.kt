@@ -1,4 +1,4 @@
-package com.nasa.app.data.repository
+package com.nasa.app.data.repository.found_media_previews
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -6,6 +6,7 @@ import androidx.paging.PageKeyedDataSource
 import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.model.media_preview.MediaPreview
 import com.nasa.app.data.model.media_preview.raw_media_preview.RawMediaPreviewResponseConverter
+import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.ui.fragments.di.FragmentScope
 import com.nasa.app.utils.FIRST_PAGE
 import com.nasa.app.utils.NO_INTERNET_ERROR_MSG_SUBSTRING
@@ -16,12 +17,12 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @FragmentScope
-class PreviewsMediaDataSource @Inject constructor(
+class FoundPreviewsMediaDataSource @Inject constructor(
     private val apiService: NasaApiService,
-    private val compositeDisposable: CompositeDisposable,
+    @Named("found media previews composite disposable") private val compositeDisposable: CompositeDisposable,
     private val searchParams: SearchParams,
     private val rawMediaPreviewResponseConverter: RawMediaPreviewResponseConverter,
-    @Named("media previews network state") val networkState: MutableLiveData<NetworkState>
+    @Named("found media previews network state") val networkState: MutableLiveData<NetworkState>
 ) : PageKeyedDataSource<Int, MediaPreview>() {
 
     private var page = FIRST_PAGE

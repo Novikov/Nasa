@@ -23,6 +23,7 @@ import com.nasa.app.R
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.media_preview.MediaPreview
 import com.nasa.app.data.repository.NetworkState
+import com.nasa.app.ui.fragments.fragment_media_preview.initial.InitialPreviewMediaFragmentDirections
 import kotlinx.android.synthetic.main.image_media_preview_item.view.date_created_text_view
 import kotlinx.android.synthetic.main.image_media_preview_item.view.description_text_view
 import kotlinx.android.synthetic.main.image_media_preview_item.view.media_preview_recycler_view_image
@@ -153,7 +154,7 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
 
                 itemView.setOnClickListener {
                     navController?.navigate(
-                        PreviewMediaFragmentDirections.actionMediaFragmentToImageDetailFragment(
+                        InitialPreviewMediaFragmentDirections.actionMediaFragmentToImageDetailFragment(
                             mediaPreview.nasaId,
                             mediaPreview.mediaType
                         )
@@ -205,7 +206,7 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
             itemView.setOnClickListener {
 
                 navController?.navigate(
-                    PreviewMediaFragmentDirections.actionMediaFragmentToVideoDetailFragment(
+                    InitialPreviewMediaFragmentDirections.actionMediaFragmentToVideoDetailFragment(
                         mediaPreview.nasaId,
                         mediaPreview.mediaType
                     )
@@ -217,6 +218,7 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
         }
     }
 
+
     inner class AudioMediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(mediaPreview: MediaPreview) {
             itemView.description_text_view.text = mediaPreview.description
@@ -224,7 +226,7 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
 
             itemView.setOnClickListener {
                 navController?.navigate(
-                    PreviewMediaFragmentDirections.actionMediaFragmentToAudioDetailFragment(
+                    InitialPreviewMediaFragmentDirections.actionMediaFragmentToAudioDetailFragment(
                         mediaPreview.nasaId,
                         mediaPreview.mediaType
                     )

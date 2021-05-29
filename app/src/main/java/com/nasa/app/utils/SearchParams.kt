@@ -5,7 +5,6 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class SearchParams @Inject constructor() {
     val beginDate = 1920.toString()
     val endDate = Calendar.getInstance().get(Calendar.YEAR).toString()

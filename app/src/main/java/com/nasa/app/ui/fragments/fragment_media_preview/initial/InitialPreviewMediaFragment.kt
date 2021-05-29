@@ -1,4 +1,4 @@
-package com.nasa.app.ui.fragments.fragment_media_preview
+package com.nasa.app.ui.fragments.fragment_media_preview.initial
 
 
 import android.content.Context
@@ -16,13 +16,14 @@ import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
+import com.nasa.app.ui.fragments.fragment_media_preview.MediaPreviewAdapter
 import com.nasa.app.ui.fragments.fragment_media_preview.di.PreviewComponent
 import kotlinx.android.synthetic.main.fragment_media_preview.*
 import javax.inject.Inject
 
-class PreviewMediaFragment : Fragment() {
+class InitialPreviewMediaFragment : Fragment() {
     private var activityContract: Activity? = null
-    private lateinit var viewModel: PreviewMediaViewModel
+    private lateinit var viewModelInitial: InitialPreviewMediaViewModel
     lateinit var adapter: MediaPreviewAdapter
 
     lateinit var mediaPreviewComponent: PreviewComponent
@@ -45,8 +46,8 @@ class PreviewMediaFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel =
-            ViewModelProviders.of(this, providerFactory).get(PreviewMediaViewModel::class.java)
+        viewModelInitial =
+            ViewModelProviders.of(this, providerFactory).get(InitialPreviewMediaViewModel::class.java)
 
     }
 
@@ -66,16 +67,16 @@ class PreviewMediaFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
 
-        viewModel.mediaPreviews.observe(viewLifecycleOwner, {
+        viewModelInitial.initialMediaPreviews.observe(viewLifecycleOwner, {
             Log.i(TAG, "media preview: ${it.hashCode()}")
             adapter.submitList(it)
         })
 
         //network state status observing
-        viewModel.networkState.observe(viewLifecycleOwner, {
-            progress_bar_popular.visibility = if (viewModel.listIsEmpty() && it == NetworkState.LOADING) View.VISIBLE else View.GONE
+        viewModelInitial.networkState.observe(viewLifecycleOwner, {
+            progress_bar_popular.visibility = if (viewModelInitial.listIsEmpty() && it == NetworkState.LOADING) View.VISIBLE else View.GONE
 
-            if (viewModel.listIsEmpty()){
+            if (viewModelInitial.listIsEmpty()){
                 when(it){
                     NetworkState.NOTHING_FOUND -> {
                         txt_error_popular.text = NetworkState.NOTHING_FOUND.msg
@@ -96,7 +97,7 @@ class PreviewMediaFragment : Fragment() {
                 }
             }
 
-            if (!viewModel.listIsEmpty()) {
+            if (!viewModelInitial.listIsEmpty()) {
                 adapter.setNetworkState(it)
             }
         })
