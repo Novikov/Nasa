@@ -146,12 +146,9 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
             circularProgressDrawable.setColorSchemeColors(Color.WHITE)
             circularProgressDrawable.start()
 
-            val requestOptions = RequestOptions()
-            requestOptions.placeholder(circularProgressDrawable)
-
             Glide.with(itemView.context)
-                .setDefaultRequestOptions(requestOptions)
                 .load(mediaPreview.previewUrl)
+                .placeholder(circularProgressDrawable)
                 .into(itemView.media_preview_recycler_view_image)
 
                 itemView.setOnClickListener {
@@ -178,11 +175,7 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
             circularProgressDrawable.setColorSchemeColors(Color.WHITE)
             circularProgressDrawable.start()
 
-            val requestOptions = RequestOptions()
-            requestOptions.placeholder(circularProgressDrawable)
-
             Glide.with(itemView.context)
-                .setDefaultRequestOptions(requestOptions)
                 .load(mediaPreview.previewUrl)
                 .listener(object : RequestListener<Drawable>{
                     override fun onLoadFailed(
@@ -206,6 +199,7 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
                     }
 
                 })
+                .placeholder(circularProgressDrawable)
                 .into(itemView.media_preview_recycler_view_image)
 
             itemView.setOnClickListener {
