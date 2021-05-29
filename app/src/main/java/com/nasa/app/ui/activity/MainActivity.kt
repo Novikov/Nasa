@@ -1,6 +1,8 @@
 package com.nasa.app.ui.activity
 
+import android.content.Context
 import android.os.Bundle
+import android.util.AttributeSet
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -9,11 +11,14 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
 import com.nasa.app.ui.activity.di.ActivityComponent
+import com.nasa.app.ui.fragments.fragment_media_preview.initial.InitialPreviewMediaFragmentDirections
 import com.nasa.app.ui.fragments.fragment_search_settings.SearchSettingsFragment
 import com.nasa.app.utils.EMPTY_SEARCH_STRING
 import com.nasa.app.utils.EMPTY_STRING
@@ -85,18 +90,21 @@ class MainActivity : AppCompatActivity(), Activity {
     }
 
     override fun searchRequest(query: String) {
-        if (errorMessageTextView.visibility == View.VISIBLE) {
-            clearErrorMessage()
-        }
-        searchParams.initNewSearchRequestParams(query)
-
+//        if (errorMessageTextView.visibility == View.VISIBLE) {
+//            clearErrorMessage()
+//        }
+//        searchParams.initNewSearchRequestParams(query)
+//
         val navController = findNavController(R.id.nav_host_fragment)
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val inflater = navHostFragment.navController.navInflater
-        val graph = inflater.inflate(R.navigation.app_navigation)
-        graph.startDestination = R.id.mediaFragment
-        navController.graph = graph
+//        val navHostFragment =
+//            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+//        val inflater = navHostFragment.navController.navInflater
+//        val graph = inflater.inflate(R.navigation.app_navigation)
+//        graph.startDestination = R.id.mediaFragment
+//        navController.graph = graph
+        navController?.navigate(
+            InitialPreviewMediaFragmentDirections.actionMediaFragmentToFoundPreviewMediaFragment()
+        )
     }
 
     override fun collapseSearchField() {
