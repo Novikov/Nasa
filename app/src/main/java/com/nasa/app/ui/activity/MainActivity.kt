@@ -1,8 +1,6 @@
 package com.nasa.app.ui.activity
 
-import android.content.Context
 import android.os.Bundle
-import android.util.AttributeSet
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -13,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
@@ -26,6 +23,7 @@ import com.nasa.app.utils.SearchParams
 import com.nasa.app.utils.safeNavigate
 import javax.inject.Inject
 
+
 class MainActivity : AppCompatActivity(), Activity {
     private lateinit var progressBar: ProgressBar
     private lateinit var errorMessageTextView: TextView
@@ -33,6 +31,7 @@ class MainActivity : AppCompatActivity(), Activity {
     private var isErrorMessageShoved = false
     lateinit var activityComponent:ActivityComponent
     lateinit var navController:NavController
+    var menu:Menu? = null
 
     @Inject
     lateinit var searchParams: SearchParams
@@ -50,10 +49,12 @@ class MainActivity : AppCompatActivity(), Activity {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.search_menu, menu)
         menuItem = menu?.findItem(R.id.action_search)
+        this.menu = menu
         val searchView = menuItem?.actionView as SearchView
         searchView.queryHint = getString(R.string.Type_here_to_search)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+                searchView.clearFocus()
                 searchRequest(query ?: EMPTY_SEARCH_STRING)
                 return true
             }
@@ -62,8 +63,11 @@ class MainActivity : AppCompatActivity(), Activity {
                 return false
             }
         })
+
         return super.onCreateOptionsMenu(menu)
     }
+
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
@@ -94,8 +98,11 @@ class MainActivity : AppCompatActivity(), Activity {
         if (errorMessageTextView.visibility == View.VISIBLE) {
             clearErrorMessage()
         }
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+        val currentFragment = navHostFragment!!.childFragmentManager.fragments[0]
+
         searchParams.initNewSearchRequestParams(query)
-        navController.safeNavigate(InitialPreviewMediaFragmentDirections.actionMediaFragmentToFoundPreviewMediaFragment())
+        navController.navigate(InitialPreviewMediaFragmentDirections.actionMediaFragmentToFoundPreviewMediaFragment())
     }
 
     override fun collapseSearchField() {
@@ -129,6 +136,11 @@ class MainActivity : AppCompatActivity(), Activity {
     override fun isErrorMessageShoved(): Boolean {
         return isErrorMessageShoved
     }
+
+    override fun closeMenu() {
+//        menu?.getItem(0)?.setShowAsAction(SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW)
+    }
+
 
     companion object {
         private const val TAG = "MainActivity"

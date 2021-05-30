@@ -10,4 +10,5 @@ interface Activity {
     fun hideActionBar()
     fun showActionBar()
     fun isErrorMessageShoved():Boolean
+    fun closeMenu()
 }
