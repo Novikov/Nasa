@@ -103,7 +103,6 @@ class VideoDetailFragment : Fragment() {
 
         val contentDataLayout = view.findViewById<ConstraintLayout>(R.id.content_data_layout)
         contentDataLayout.visibility = View.INVISIBLE
-        activityContract?.hideActionBar()
 
         val exoPlayerProgressBar = view.findViewById<ProgressBar>(R.id.exo_player_progress_bar)
         exoPlayerProgressBar.visibility = View.VISIBLE

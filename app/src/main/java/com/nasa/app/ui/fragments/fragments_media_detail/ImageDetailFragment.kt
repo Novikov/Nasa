@@ -99,7 +99,6 @@ class ImageDetailFragment : Fragment() {
 
         val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
         contentLayout.visibility = View.INVISIBLE
-        activityContract?.hideActionBar()
 
         val button = view.findViewById<Button>(R.id.update_results_button)
         val imageView = view.findViewById<ImageView>(R.id.image_media_view)

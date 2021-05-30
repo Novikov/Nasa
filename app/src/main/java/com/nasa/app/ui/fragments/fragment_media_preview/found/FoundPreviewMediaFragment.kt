@@ -4,11 +4,10 @@ package com.nasa.app.ui.fragments.fragment_media_preview.found
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nasa.app.R
@@ -18,6 +17,7 @@ import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
 import com.nasa.app.ui.fragments.fragment_media_preview.initial.InitialMediaPreviewAdapter
 import com.nasa.app.ui.fragments.fragment_media_preview.di.PreviewComponent
+import com.nasa.app.ui.fragments.fragment_search_settings.SearchSettingsFragment
 import kotlinx.android.synthetic.main.fragment_media_preview.*
 import javax.inject.Inject
 
@@ -46,8 +46,42 @@ class FoundPreviewMediaFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         viewModelInitial =
             ViewModelProviders.of(this, providerFactory).get(FoundPreviewMediaViewModel::class.java)
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.search_menu, menu)
+        val menuItem = menu.findItem(R.id.action_search)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+
+        if (id == R.id.search_settings) {
+            try {
+                val searchSettingsFragment = SearchSettingsFragment.newInstance()
+                searchSettingsFragment.show(
+                    requireActivity().supportFragmentManager,
+                    getString(R.string.SearchSettingsFragmentTag)
+                )
+            } catch (ex: Exception) {
+                Log.i(TAG, ex.message.toString())
+            }
+        }
+
+        if (id == android.R.id.home){
+            findNavController().navigateUp()
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onCreateView(
@@ -55,13 +89,13 @@ class FoundPreviewMediaFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         activityContract?.clearErrorMessage()
-        activityContract?.showActionBar()
-        activityContract?.closeMenu()
 
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_media_preview, container, false)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.media_preview_recycler_view)
+
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         adapterInitial = FoundMediaPreviewAdapter(requireContext())
         recyclerView.layoutManager = LinearLayoutManager(context)

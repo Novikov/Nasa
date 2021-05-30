@@ -133,7 +133,6 @@ class AudioDetailFragment : Fragment() {
         })
 
         contentDataLayout.visibility = View.INVISIBLE
-        activityContract?.hideActionBar()
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
 
