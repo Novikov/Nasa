@@ -50,11 +50,6 @@ class InitialPreviewMediaFragment : Fragment() {
             ViewModelProviders.of(this, providerFactory).get(InitialPreviewMediaViewModel::class.java)
     }
 
-    override fun onResume() {
-        super.onResume()
-
-    }
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.initial_menu, menu)
         val menuItem = menu.findItem(R.id.action_search)

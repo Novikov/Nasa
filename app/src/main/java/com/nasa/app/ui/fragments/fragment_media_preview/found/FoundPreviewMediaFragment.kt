@@ -5,6 +5,8 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.marginEnd
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -18,6 +20,7 @@ import com.nasa.app.ui.activity.MainActivity
 import com.nasa.app.ui.fragments.fragment_media_preview.initial.InitialMediaPreviewAdapter
 import com.nasa.app.ui.fragments.fragment_media_preview.di.PreviewComponent
 import com.nasa.app.ui.fragments.fragment_search_settings.SearchSettingsFragment
+import com.nasa.app.utils.EMPTY_SEARCH_STRING
 import kotlinx.android.synthetic.main.fragment_media_preview.*
 import javax.inject.Inject
 
@@ -52,14 +55,23 @@ class FoundPreviewMediaFragment : Fragment() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-
-    }
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_menu, menu)
         val menuItem = menu.findItem(R.id.action_search)
+        val searchView = menuItem?.actionView as SearchView
+        searchView.maxWidth = 500
+        searchView.queryHint = getString(R.string.Type_here_to_search)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchView.clearFocus()
+                activityContract?.searchRequest(query ?: EMPTY_SEARCH_STRING)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
