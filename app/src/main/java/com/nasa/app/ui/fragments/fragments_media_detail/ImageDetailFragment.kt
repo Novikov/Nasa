@@ -100,18 +100,10 @@ class ImageDetailFragment : Fragment() {
 
         val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
         contentLayout.visibility = View.INVISIBLE
+        activityContract?.hideActionBar()
 
         val button = view.findViewById<Button>(R.id.update_results_button)
         val imageView = view.findViewById<ImageView>(R.id.image_media_view)
-
-        val orientation = resources.configuration.orientation
-        when (orientation) {
-            1 -> {
-            }
-            2 -> {
-                activityContract?.hideActionBar()
-            }
-        }
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
             picasso.load(mediaDetailResponse.item.previewUrl).into(

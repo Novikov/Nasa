@@ -103,6 +103,9 @@ class VideoDetailFragment : Fragment() {
         contentLayout.visibility = View.VISIBLE
 
         val contentDataLayout = view.findViewById<ConstraintLayout>(R.id.content_data_layout)
+        contentDataLayout.visibility = View.INVISIBLE
+        activityContract?.hideActionBar()
+
         val exoPlayerProgressBar = view.findViewById<ProgressBar>(R.id.exo_player_progress_bar)
         exoPlayerProgressBar.visibility = View.VISIBLE
 
@@ -112,6 +115,7 @@ class VideoDetailFragment : Fragment() {
         val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
         playerView.player = exoPlayerWrapper.getPlayer()
         val button = view.findViewById<Button>(R.id.update_results_button)
+
 
         exoPlayerWrapper.addListener(object : Player.EventListener {
             override fun onPlaybackStateChanged(state: Int) {
@@ -132,16 +136,7 @@ class VideoDetailFragment : Fragment() {
             }
         })
 
-        val orientation = resources.configuration.orientation
-        when(orientation){
-            1 -> {
-                contentDataLayout.visibility = View.INVISIBLE
-            }
-            2 -> {
-                contentDataLayout.visibility = View.INVISIBLE
-                activityContract?.hideActionBar()
-            }
-        }
+
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
 

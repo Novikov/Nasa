@@ -133,16 +133,8 @@ class AudioDetailFragment : Fragment() {
             }
         })
 
-        val orientation = resources.configuration.orientation
-        when (orientation) {
-            1 -> {
-                contentDataLayout.visibility = View.INVISIBLE
-            }
-            2 -> {
-                contentDataLayout.visibility = View.INVISIBLE
-                activityContract?.hideActionBar()
-            }
-        }
+        contentDataLayout.visibility = View.INVISIBLE
+        activityContract?.hideActionBar()
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
 
