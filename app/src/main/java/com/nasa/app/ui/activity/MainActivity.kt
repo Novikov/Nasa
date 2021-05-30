@@ -23,6 +23,7 @@ import com.nasa.app.ui.fragments.fragment_search_settings.SearchSettingsFragment
 import com.nasa.app.utils.EMPTY_SEARCH_STRING
 import com.nasa.app.utils.EMPTY_STRING
 import com.nasa.app.utils.SearchParams
+import com.nasa.app.utils.safeNavigate
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), Activity {
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity(), Activity {
     private var menuItem: MenuItem? = null
     private var isErrorMessageShoved = false
     lateinit var activityComponent:ActivityComponent
+    lateinit var navController:NavController
 
     @Inject
     lateinit var searchParams: SearchParams
@@ -42,6 +44,7 @@ class MainActivity : AppCompatActivity(), Activity {
         setContentView(R.layout.activity_main)
         progressBar = findViewById(R.id.progressBar)
         errorMessageTextView = findViewById(R.id.msg_text_view)
+        navController = Navigation.findNavController(this,R.id.nav_host_fragment)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -88,21 +91,11 @@ class MainActivity : AppCompatActivity(), Activity {
     }
 
     override fun searchRequest(query: String) {
-//        if (errorMessageTextView.visibility == View.VISIBLE) {
-//            clearErrorMessage()
-//        }
+        if (errorMessageTextView.visibility == View.VISIBLE) {
+            clearErrorMessage()
+        }
         searchParams.initNewSearchRequestParams(query)
-//
-        val navController = findNavController(R.id.nav_host_fragment)
-//        val navHostFragment =
-//            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-//        val inflater = navHostFragment.navController.navInflater
-//        val graph = inflater.inflate(R.navigation.app_navigation)
-//        graph.startDestination = R.id.mediaFragment
-//        navController.graph = graph
-        navController.navigate(
-            InitialPreviewMediaFragmentDirections.actionMediaFragmentToFoundPreviewMediaFragment()
-        )
+        navController.safeNavigate(InitialPreviewMediaFragmentDirections.actionMediaFragmentToFoundPreviewMediaFragment())
     }
 
     override fun collapseSearchField() {
