@@ -51,7 +51,6 @@ class MainActivity : AppCompatActivity(), Activity {
         searchView.queryHint = getString(R.string.Type_here_to_search)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                collapseSearchField()
                 searchRequest(query ?: EMPTY_SEARCH_STRING)
                 return true
             }
@@ -67,7 +66,6 @@ class MainActivity : AppCompatActivity(), Activity {
         val id = item.itemId
 
         if (id == R.id.search_settings) {
-            collapseSearchField()
             try {
                 val searchSettingsFragment = SearchSettingsFragment.newInstance()
                 searchSettingsFragment.show(
@@ -93,7 +91,7 @@ class MainActivity : AppCompatActivity(), Activity {
 //        if (errorMessageTextView.visibility == View.VISIBLE) {
 //            clearErrorMessage()
 //        }
-//        searchParams.initNewSearchRequestParams(query)
+        searchParams.initNewSearchRequestParams(query)
 //
         val navController = findNavController(R.id.nav_host_fragment)
 //        val navHostFragment =
@@ -102,7 +100,7 @@ class MainActivity : AppCompatActivity(), Activity {
 //        val graph = inflater.inflate(R.navigation.app_navigation)
 //        graph.startDestination = R.id.mediaFragment
 //        navController.graph = graph
-        navController?.navigate(
+        navController.navigate(
             InitialPreviewMediaFragmentDirections.actionMediaFragmentToFoundPreviewMediaFragment()
         )
     }

@@ -48,12 +48,4 @@ class AppModule {
     fun providePicassoInstance(): Picasso {
         return Picasso.get()
     }
-
-
-    @Singleton
-    @Named("initial search params")
-    @Provides
-    fun provideInitialSearchParams():SearchParams {
-        return SearchParams()
-    }
 }

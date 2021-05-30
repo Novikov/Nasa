@@ -95,7 +95,6 @@ class VideoDetailFragment : Fragment() {
         )
 
         activityContract?.clearErrorMessage()
-        activityContract?.collapseSearchField()
 
         val view = binding.root
 
@@ -187,7 +186,6 @@ class VideoDetailFragment : Fragment() {
             //linkImageView initialization
             val linkImageView = view.findViewById<ImageView>(R.id.link_image_view)
             linkImageView.setOnClickListener {
-                activityContract?.collapseSearchField()
                 val address: Uri = Uri.parse(mediaDetailResponse.item.assets[keyToOriginalAsset])
                 val intent = Intent(Intent.ACTION_VIEW, address)
                 startActivity(intent)
@@ -195,7 +193,6 @@ class VideoDetailFragment : Fragment() {
 
             //download button initialization
             button.setOnClickListener {
-                activityContract?.collapseSearchField()
                 val urlList = mutableListOf<String>()
                 mediaDetailResponse.item.assets.values.forEach {
                     urlList.add(it)

@@ -55,6 +55,7 @@ class FoundPreviewMediaFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         activityContract?.clearErrorMessage()
+        activityContract?.showActionBar()
 
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_media_preview, container, false)

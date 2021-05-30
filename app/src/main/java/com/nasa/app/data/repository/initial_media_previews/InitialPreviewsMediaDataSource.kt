@@ -8,6 +8,7 @@ import com.nasa.app.data.model.media_preview.MediaPreview
 import com.nasa.app.data.model.media_preview.raw_media_preview.RawMediaPreviewResponseConverter
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.ui.fragments.di.FragmentScope
+import com.nasa.app.utils.EMPTY_SEARCH_STRING
 import com.nasa.app.utils.FIRST_PAGE
 import com.nasa.app.utils.NO_INTERNET_ERROR_MSG_SUBSTRING
 import com.nasa.app.utils.SearchParams
@@ -36,8 +37,8 @@ class InitialPreviewsMediaDataSource @Inject constructor(
         try {
             compositeDisposable.add(
                 apiService.getMediaPreviews(
-                    searchParams.searchRequestQuery,
-                    searchParams.getSearchMediaTypes(),
+                    searchParams.getDefaultSearchQuery(),
+                    searchParams.getDefaultSearchMediaTypes(),
                     searchParams.startSearchYear,
                     searchParams.endSearchYear,
                     page
@@ -72,10 +73,10 @@ class InitialPreviewsMediaDataSource @Inject constructor(
         try {
             compositeDisposable.add(
                 apiService.getMediaPreviews(
-                    searchParams.searchRequestQuery,
-                    searchParams.getSearchMediaTypes(),
-                    searchParams.startSearchYear,
-                    searchParams.endSearchYear,
+                    searchParams.getDefaultSearchQuery(),
+                    searchParams.getDefaultSearchMediaTypes(),
+                    searchParams.beginDate,
+                    searchParams.endDate,
                     params.key
                 )
                     .subscribeOn(Schedulers.io())
