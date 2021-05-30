@@ -83,6 +83,11 @@ class MainActivity : AppCompatActivity(), Activity {
                 Log.i(TAG, ex.message.toString())
             }
         }
+
+        if (id == android.R.id.home){
+            navController.navigateUp()
+        }
+
         return super.onOptionsItemSelected(item)
     }
 
@@ -131,6 +136,7 @@ class MainActivity : AppCompatActivity(), Activity {
 
     override fun showActionBar() {
         supportActionBar?.show()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun isErrorMessageShoved(): Boolean {
