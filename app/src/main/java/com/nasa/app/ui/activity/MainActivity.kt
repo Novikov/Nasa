@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity(), Activity {
     }
 
     override fun searchRequest(query: String) {
+        searchParams.clearSearchParams()
         searchParams.initNewSearchRequestParams(query)
 
         val navController = Navigation.findNavController(this,R.id.nav_host_fragment)
