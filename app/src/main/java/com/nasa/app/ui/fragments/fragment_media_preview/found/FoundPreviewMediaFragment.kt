@@ -59,7 +59,8 @@ class FoundPreviewMediaFragment : Fragment() {
         inflater.inflate(R.menu.search_menu, menu)
         val menuItem = menu.findItem(R.id.action_search)
         val searchView = menuItem?.actionView as SearchView
-        searchView.maxWidth = 500
+        val width = resources.displayMetrics.widthPixels
+        searchView.maxWidth = (width/1.5).toInt()
         searchView.queryHint = getString(R.string.Type_here_to_search)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
