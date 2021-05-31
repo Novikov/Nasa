@@ -94,12 +94,12 @@ class VideoDetailFragment : Fragment() {
             false
         )
 
-        activityContract?.clearErrorMessage()
-
         val view = binding.root
 
         val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
         contentLayout.visibility = View.VISIBLE
+
+        val errorTextView = view.findViewById<TextView>(R.id.fragment_error_text_view)
 
         val contentDataLayout = view.findViewById<ConstraintLayout>(R.id.content_data_layout)
         contentDataLayout.visibility = View.INVISIBLE
@@ -146,8 +146,6 @@ class VideoDetailFragment : Fragment() {
                 activityContract?.showErrorMessage(getString(R.string.Exo_player_error_message))
             }
         })
-
-
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
 
@@ -233,23 +231,28 @@ class VideoDetailFragment : Fragment() {
                 }
                 NetworkState.NO_INTERNET -> {
                     contentLayout.visibility = View.INVISIBLE
-                    activityContract?.showErrorMessage(it.msg)
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
                 NetworkState.TIMEOUT -> {
                     contentLayout.visibility = View.INVISIBLE
-                    activityContract?.showErrorMessage(it.msg)
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
                 NetworkState.BAD_REQUEST -> {
                     contentLayout.visibility = View.INVISIBLE
-                    activityContract?.showErrorMessage(it.msg)
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
                 NetworkState.NOT_FOUND -> {
                     contentLayout.visibility = View.INVISIBLE
-                    activityContract?.showErrorMessage(it.msg)
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
                 NetworkState.ERROR -> {
                     contentLayout.visibility = View.INVISIBLE
-                    activityContract?.showErrorMessage(it.msg)
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
             }
         })
