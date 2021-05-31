@@ -94,7 +94,6 @@ class ImageDetailFragment : Fragment() {
         )
 
         activityContract?.clearErrorMessage()
-        activityContract?.collapseSearchField()
 
         val view = binding.root
 
@@ -104,9 +103,14 @@ class ImageDetailFragment : Fragment() {
         val button = view.findViewById<Button>(R.id.update_results_button)
         val imageView = view.findViewById<ImageView>(R.id.image_media_view)
 
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
         val orientation = resources.configuration.orientation
         when (orientation) {
             1 -> {
+                if (!activityContract?.isActionBarShowing()!!){
+                    activityContract?.showActionBar()
+                }
             }
             2 -> {
                 activityContract?.hideActionBar()
@@ -160,7 +164,6 @@ class ImageDetailFragment : Fragment() {
             //linkImageView initialization
             val linkImageView = view.findViewById<ImageView>(R.id.link_image_view)
             linkImageView.setOnClickListener {
-                activityContract?.collapseSearchField()
                 val address: Uri =
                     Uri.parse(mediaDetailResponse.item.assets?.get(keyToOriginalAsset))
                 val intent = Intent(Intent.ACTION_VIEW, address)
@@ -169,7 +172,6 @@ class ImageDetailFragment : Fragment() {
 
             //download button initialization
             button.setOnClickListener {
-                activityContract?.collapseSearchField()
                 val urlList = mutableListOf<String>()
                 mediaDetailResponse.item.assets?.values?.forEach {
                     urlList.add(it)

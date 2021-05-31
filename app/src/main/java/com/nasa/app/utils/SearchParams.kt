@@ -1,6 +1,7 @@
 package com.nasa.app.utils
 
 import com.nasa.app.data.model.ContentType
+import com.nasa.app.ui.fragments.di.FragmentScope
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -52,6 +53,14 @@ class SearchParams @Inject constructor() {
             resultString = resultString + ContentType.AUDIO.contentType
         }
         return resultString
+    }
+
+    fun getDefaultSearchMediaTypes(): String {
+        return ContentType.IMAGE.contentType + "," + ContentType.VIDEO.contentType + "," + ContentType.AUDIO.contentType
+    }
+
+    fun getDefaultSearchQuery(): String {
+        return EMPTY_SEARCH_STRING
     }
 }
 

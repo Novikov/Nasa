@@ -95,7 +95,6 @@ class VideoDetailFragment : Fragment() {
         )
 
         activityContract?.clearErrorMessage()
-        activityContract?.collapseSearchField()
 
         val view = binding.root
 
@@ -103,6 +102,8 @@ class VideoDetailFragment : Fragment() {
         contentLayout.visibility = View.VISIBLE
 
         val contentDataLayout = view.findViewById<ConstraintLayout>(R.id.content_data_layout)
+        contentDataLayout.visibility = View.INVISIBLE
+
         val exoPlayerProgressBar = view.findViewById<ProgressBar>(R.id.exo_player_progress_bar)
         exoPlayerProgressBar.visibility = View.VISIBLE
 
@@ -112,6 +113,20 @@ class VideoDetailFragment : Fragment() {
         val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
         playerView.player = exoPlayerWrapper.getPlayer()
         val button = view.findViewById<Button>(R.id.update_results_button)
+
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
+        val orientation = resources.configuration.orientation
+        when (orientation) {
+            1 -> {
+                if (!activityContract?.isActionBarShowing()!!){
+                    activityContract?.showActionBar()
+                }
+            }
+            2 -> {
+                activityContract?.hideActionBar()
+            }
+        }
 
         exoPlayerWrapper.addListener(object : Player.EventListener {
             override fun onPlaybackStateChanged(state: Int) {
@@ -132,16 +147,7 @@ class VideoDetailFragment : Fragment() {
             }
         })
 
-        val orientation = resources.configuration.orientation
-        when(orientation){
-            1 -> {
-                contentDataLayout.visibility = View.INVISIBLE
-            }
-            2 -> {
-                contentDataLayout.visibility = View.INVISIBLE
-                activityContract?.hideActionBar()
-            }
-        }
+
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
 
@@ -192,7 +198,6 @@ class VideoDetailFragment : Fragment() {
             //linkImageView initialization
             val linkImageView = view.findViewById<ImageView>(R.id.link_image_view)
             linkImageView.setOnClickListener {
-                activityContract?.collapseSearchField()
                 val address: Uri = Uri.parse(mediaDetailResponse.item.assets[keyToOriginalAsset])
                 val intent = Intent(Intent.ACTION_VIEW, address)
                 startActivity(intent)
@@ -200,7 +205,6 @@ class VideoDetailFragment : Fragment() {
 
             //download button initialization
             button.setOnClickListener {
-                activityContract?.collapseSearchField()
                 val urlList = mutableListOf<String>()
                 mediaDetailResponse.item.assets.values.forEach {
                     urlList.add(it)

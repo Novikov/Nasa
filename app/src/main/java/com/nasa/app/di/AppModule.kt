@@ -6,6 +6,7 @@ import dagger.Provides
 import com.google.gson.GsonBuilder
 import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.utils.NASA_BASE_URL
+import com.nasa.app.utils.SearchParams
 import com.squareup.picasso.Picasso
 import dagger.Module
 import okhttp3.OkHttpClient
@@ -46,12 +47,5 @@ class AppModule {
     @Provides
     fun providePicassoInstance(): Picasso {
         return Picasso.get()
-    }
-
-    @Singleton
-    @Named("initial media previews")
-    @Provides
-    fun provideInitialMediaPreviewResponseMutableLiveData(): MutableLiveData<MediaPreviewResponse> {
-        return MutableLiveData<MediaPreviewResponse>()
     }
 }

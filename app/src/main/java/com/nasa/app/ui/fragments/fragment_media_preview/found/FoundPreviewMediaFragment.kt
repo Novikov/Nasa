@@ -1,14 +1,15 @@
-package com.nasa.app.ui.fragments.fragment_media_preview
+package com.nasa.app.ui.fragments.fragment_media_preview.found
 
 
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.marginEnd
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nasa.app.R
@@ -16,14 +17,17 @@ import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
+import com.nasa.app.ui.fragments.fragment_media_preview.initial.InitialMediaPreviewAdapter
 import com.nasa.app.ui.fragments.fragment_media_preview.di.PreviewComponent
+import com.nasa.app.ui.fragments.fragment_search_settings.SearchSettingsFragment
+import com.nasa.app.utils.EMPTY_SEARCH_STRING
 import kotlinx.android.synthetic.main.fragment_media_preview.*
 import javax.inject.Inject
 
-class PreviewMediaFragment : Fragment() {
+class FoundPreviewMediaFragment : Fragment() {
     private var activityContract: Activity? = null
-    private lateinit var viewModel: PreviewMediaViewModel
-    lateinit var adapter: MediaPreviewAdapter
+    private lateinit var viewModelInitial: FoundPreviewMediaViewModel
+    lateinit var adapterInitial: FoundMediaPreviewAdapter
 
     lateinit var mediaPreviewComponent: PreviewComponent
 
@@ -45,9 +49,52 @@ class PreviewMediaFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel =
-            ViewModelProviders.of(this, providerFactory).get(PreviewMediaViewModel::class.java)
+        setHasOptionsMenu(true)
+        viewModelInitial =
+            ViewModelProviders.of(this, providerFactory).get(FoundPreviewMediaViewModel::class.java)
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.search_menu, menu)
+        val menuItem = menu.findItem(R.id.action_search)
+        val searchView = menuItem?.actionView as SearchView
+        val width = resources.displayMetrics.widthPixels
+        searchView.maxWidth = (width/1.5).toInt()
+        searchView.queryHint = getString(R.string.Type_here_to_search)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchView.clearFocus()
+                activityContract?.searchRequest(query ?: EMPTY_SEARCH_STRING)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+
+        if (id == R.id.search_settings) {
+            try {
+                val searchSettingsFragment = SearchSettingsFragment.newInstance()
+                searchSettingsFragment.show(
+                    requireActivity().supportFragmentManager,
+                    getString(R.string.SearchSettingsFragmentTag)
+                )
+            } catch (ex: Exception) {
+                Log.i(TAG, ex.message.toString())
+            }
+        }
+
+        if (id == android.R.id.home){
+            findNavController().navigateUp()
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onCreateView(
@@ -61,21 +108,23 @@ class PreviewMediaFragment : Fragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.media_preview_recycler_view)
 
-        adapter = MediaPreviewAdapter(requireContext())
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        adapterInitial = FoundMediaPreviewAdapter(requireContext())
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
-        recyclerView.adapter = adapter
+        recyclerView.adapter = adapterInitial
 
-        viewModel.mediaPreviews.observe(viewLifecycleOwner, {
+        viewModelInitial.foundMediaPreviews.observe(viewLifecycleOwner, {
             Log.i(TAG, "media preview: ${it.hashCode()}")
-            adapter.submitList(it)
+            adapterInitial.submitList(it)
         })
 
         //network state status observing
-        viewModel.networkState.observe(viewLifecycleOwner, {
-            progress_bar_popular.visibility = if (viewModel.listIsEmpty() && it == NetworkState.LOADING) View.VISIBLE else View.GONE
+        viewModelInitial.networkState.observe(viewLifecycleOwner, {
+            progress_bar_popular.visibility = if (viewModelInitial.listIsEmpty() && it == NetworkState.LOADING) View.VISIBLE else View.GONE
 
-            if (viewModel.listIsEmpty()){
+            if (viewModelInitial.listIsEmpty()){
                 when(it){
                     NetworkState.NOTHING_FOUND -> {
                         txt_error_popular.text = NetworkState.NOTHING_FOUND.msg
@@ -96,8 +145,8 @@ class PreviewMediaFragment : Fragment() {
                 }
             }
 
-            if (!viewModel.listIsEmpty()) {
-                adapter.setNetworkState(it)
+            if (!viewModelInitial.listIsEmpty()) {
+                adapterInitial.setNetworkState(it)
             }
         })
 

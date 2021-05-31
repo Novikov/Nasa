@@ -13,25 +13,29 @@ import javax.inject.Named
 class PreviewModule {
 
     @FragmentScope
+    @Named("initial media previews composite disposable")
     @Provides
-    fun providesCompositeDisposable():CompositeDisposable{
+    fun providesInitialCompositeDisposable():CompositeDisposable{
+        return CompositeDisposable()
+    }
+    @FragmentScope
+    @Named("found media previews composite disposable")
+    @Provides
+    fun providesFoundCompositeDisposable():CompositeDisposable{
         return CompositeDisposable()
     }
 
     @FragmentScope
-    @Named("media previews")
+    @Named("initial media previews network state")
     @Provides
-    fun provideMediaPreviewResponseMutableLiveData(): MutableLiveData<MediaPreviewResponse> {
-        return MutableLiveData<MediaPreviewResponse>()
-    }
-
-
-
-    @FragmentScope
-    @Named("media previews network state")
-    @Provides
-    fun providesMediaPreviewNetworkState(): MutableLiveData<NetworkState> {
+    fun providesInitialMediaPreviewNetworkState(): MutableLiveData<NetworkState> {
         return MutableLiveData<NetworkState>()
     }
 
+    @FragmentScope
+    @Named("found media previews network state")
+    @Provides
+    fun providesFoundMediaPreviewNetworkState(): MutableLiveData<NetworkState> {
+        return MutableLiveData<NetworkState>()
+    }
 }

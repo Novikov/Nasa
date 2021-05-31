@@ -1,8 +1,7 @@
-package com.nasa.app.ui.fragments.fragment_media_preview
+package com.nasa.app.ui.fragments.fragment_media_preview.found
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
@@ -17,12 +16,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.nasa.app.R
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.media_preview.MediaPreview
 import com.nasa.app.data.repository.NetworkState
+import com.nasa.app.ui.fragments.fragment_media_preview.initial.InitialPreviewMediaFragmentDirections
 import kotlinx.android.synthetic.main.image_media_preview_item.view.date_created_text_view
 import kotlinx.android.synthetic.main.image_media_preview_item.view.description_text_view
 import kotlinx.android.synthetic.main.image_media_preview_item.view.media_preview_recycler_view_image
@@ -30,7 +29,9 @@ import kotlinx.android.synthetic.main.network_state_item.view.*
 import kotlinx.android.synthetic.main.video_media_preview_item.view.*
 
 
-class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview, RecyclerView.ViewHolder>(MovieDiffCallback()){
+class FoundMediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview, RecyclerView.ViewHolder>(
+    MovieDiffCallback()
+){
 
     val IMAGE_VIEW_TYPE = 1
     val VIDEO_VIEW_TYPE = 2
@@ -153,7 +154,7 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
 
                 itemView.setOnClickListener {
                     navController?.navigate(
-                        PreviewMediaFragmentDirections.actionMediaFragmentToImageDetailFragment(
+                        FoundPreviewMediaFragmentDirections.actionFoundPreviewMediaFragmentToImageDetailFragment(
                             mediaPreview.nasaId,
                             mediaPreview.mediaType
                         )
@@ -205,7 +206,7 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
             itemView.setOnClickListener {
 
                 navController?.navigate(
-                    PreviewMediaFragmentDirections.actionMediaFragmentToVideoDetailFragment(
+                    FoundPreviewMediaFragmentDirections.actionFoundPreviewMediaFragmentToVideoDetailFragment(
                         mediaPreview.nasaId,
                         mediaPreview.mediaType
                     )
@@ -217,6 +218,7 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
         }
     }
 
+
     inner class AudioMediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(mediaPreview: MediaPreview) {
             itemView.description_text_view.text = mediaPreview.description
@@ -224,7 +226,7 @@ class MediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPreview
 
             itemView.setOnClickListener {
                 navController?.navigate(
-                    PreviewMediaFragmentDirections.actionMediaFragmentToAudioDetailFragment(
+                    FoundPreviewMediaFragmentDirections.actionFoundPreviewMediaFragmentToAudioDetailFragment(
                         mediaPreview.nasaId,
                         mediaPreview.mediaType
                     )
