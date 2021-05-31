@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
 import com.nasa.app.ui.activity.di.ActivityComponent
@@ -59,6 +60,10 @@ class MainActivity : AppCompatActivity(), Activity {
             clearErrorMessage()
         }
         searchParams.initNewSearchRequestParams(query)
+
+        if(navController.currentDestination?.id != R.id.mediaFragment){
+            navController.navigateUp()
+        }
         navController.navigate(InitialPreviewMediaFragmentDirections.actionMediaFragmentToFoundPreviewMediaFragment())
     }
 
