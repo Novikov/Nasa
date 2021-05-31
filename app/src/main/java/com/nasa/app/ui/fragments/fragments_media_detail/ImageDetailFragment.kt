@@ -8,10 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -100,6 +97,10 @@ class ImageDetailFragment : Fragment() {
         val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
         contentLayout.visibility = View.INVISIBLE
 
+        val progressBar = view.findViewById<ProgressBar>(R.id.fragment_progress_bar)
+
+        val errorTextView = view.findViewById<TextView>(R.id.fragment_error_text_view)
+
         val button = view.findViewById<Button>(R.id.update_results_button)
         val imageView = view.findViewById<ImageView>(R.id.image_media_view)
 
@@ -124,12 +125,11 @@ class ImageDetailFragment : Fragment() {
                     Callback {
                     override fun onSuccess() {
                         contentLayout.visibility = View.VISIBLE
-                        activityContract?.hideProgressBar()
+                        progressBar.visibility = View.GONE
                     }
 
                     override fun onError(e: java.lang.Exception?) {
-                        activityContract?.hideProgressBar()
-                        activityContract?.showErrorMessage("Image loading error: ${e?.message}")
+                        Log.i(TAG, "picasso loading image error: ${e.toString()}")
                     }
                 })
 
@@ -190,30 +190,35 @@ class ImageDetailFragment : Fragment() {
         //network state status observing
         viewModel.networkState.observe(viewLifecycleOwner, {
             when (it) {
-                NetworkState.LOADING -> activityContract?.showProgressBar()
+                NetworkState.LOADING ->
+                    progressBar.visibility = View.VISIBLE
                 NetworkState.NO_INTERNET -> {
-                    activityContract?.hideProgressBar()
-                    activityContract?.showErrorMessage(it.msg)
+                    progressBar.visibility = View.INVISIBLE
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
                 NetworkState.BAD_REQUEST -> {
-                    activityContract?.hideProgressBar()
-                    activityContract?.showErrorMessage(it.msg)
+                    progressBar.visibility = View.INVISIBLE
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
                 NetworkState.TIMEOUT -> {
-                    activityContract?.hideProgressBar()
-                    activityContract?.showErrorMessage(it.msg)
+                    progressBar.visibility = View.INVISIBLE
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
                 NetworkState.NOT_FOUND -> {
-                    activityContract?.hideProgressBar()
-                    activityContract?.showErrorMessage(it.msg)
+                    progressBar.visibility = View.INVISIBLE
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
                 NetworkState.ERROR -> {
-                    activityContract?.hideProgressBar()
-                    activityContract?.showErrorMessage(it.msg)
+                    progressBar.visibility = View.INVISIBLE
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
             }
         })
-
         return view
     }
 
