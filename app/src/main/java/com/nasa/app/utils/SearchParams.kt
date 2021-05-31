@@ -1,6 +1,7 @@
 package com.nasa.app.utils
 
 import com.nasa.app.data.model.ContentType
+import com.nasa.app.ui.fragments.di.FragmentScope
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,12 +18,10 @@ class SearchParams @Inject constructor() {
     var searchImage = true
     var searchVideo = true
     var searchAudio = true
-    var searchPage = FIRST_PAGE
     val defaultSearchParams = "image,video,audio"
 
     fun initNewSearchRequestParams(query:String){
         searchRequestQuery = query
-        searchPage = FIRST_PAGE
     }
 
     fun clearSearchParams(){
@@ -32,7 +31,6 @@ class SearchParams @Inject constructor() {
         searchImage = true
         searchVideo = true
         searchAudio = true
-        searchPage = FIRST_PAGE
     }
 
     fun updateSearchParams(startSearchYear:String,endSearchYear:String,searchImage:Boolean,searchVideo:Boolean,searchAudio:Boolean){
@@ -55,6 +53,14 @@ class SearchParams @Inject constructor() {
             resultString = resultString + ContentType.AUDIO.contentType
         }
         return resultString
+    }
+
+    fun getDefaultSearchMediaTypes(): String {
+        return ContentType.IMAGE.contentType + "," + ContentType.VIDEO.contentType + "," + ContentType.AUDIO.contentType
+    }
+
+    fun getDefaultSearchQuery(): String {
+        return EMPTY_SEARCH_STRING
     }
 }
 

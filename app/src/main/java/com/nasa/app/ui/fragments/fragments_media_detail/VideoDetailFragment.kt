@@ -94,15 +94,16 @@ class VideoDetailFragment : Fragment() {
             false
         )
 
-        activityContract?.clearErrorMessage()
-        activityContract?.collapseSearchField()
-
         val view = binding.root
 
         val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
         contentLayout.visibility = View.VISIBLE
 
+        val errorTextView = view.findViewById<TextView>(R.id.fragment_error_text_view)
+
         val contentDataLayout = view.findViewById<ConstraintLayout>(R.id.content_data_layout)
+        contentDataLayout.visibility = View.INVISIBLE
+
         val exoPlayerProgressBar = view.findViewById<ProgressBar>(R.id.exo_player_progress_bar)
         exoPlayerProgressBar.visibility = View.VISIBLE
 
@@ -112,6 +113,20 @@ class VideoDetailFragment : Fragment() {
         val playerView = view.findViewById<PlayerView>(R.id.exo_player_video_view)
         playerView.player = exoPlayerWrapper.getPlayer()
         val button = view.findViewById<Button>(R.id.update_results_button)
+
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
+        val orientation = resources.configuration.orientation
+        when (orientation) {
+            1 -> {
+                if (!activityContract?.isActionBarShowing()!!){
+                    activityContract?.showActionBar()
+                }
+            }
+            2 -> {
+                activityContract?.hideActionBar()
+            }
+        }
 
         exoPlayerWrapper.addListener(object : Player.EventListener {
             override fun onPlaybackStateChanged(state: Int) {
@@ -128,20 +143,10 @@ class VideoDetailFragment : Fragment() {
             override fun onPlayerError(error: ExoPlaybackException) {
                 super.onPlayerError(error)
                 contentLayout.visibility = View.INVISIBLE
-                activityContract?.showErrorMessage(getString(R.string.Exo_player_error_message))
+                errorTextView.text = getString(R.string.Exo_player_error_message)
+                errorTextView.visibility = View.VISIBLE
             }
         })
-
-        val orientation = resources.configuration.orientation
-        when(orientation){
-            1 -> {
-                contentDataLayout.visibility = View.INVISIBLE
-            }
-            2 -> {
-                contentDataLayout.visibility = View.INVISIBLE
-                activityContract?.hideActionBar()
-            }
-        }
 
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
 
@@ -192,7 +197,6 @@ class VideoDetailFragment : Fragment() {
             //linkImageView initialization
             val linkImageView = view.findViewById<ImageView>(R.id.link_image_view)
             linkImageView.setOnClickListener {
-                activityContract?.collapseSearchField()
                 val address: Uri = Uri.parse(mediaDetailResponse.item.assets[keyToOriginalAsset])
                 val intent = Intent(Intent.ACTION_VIEW, address)
                 startActivity(intent)
@@ -200,7 +204,6 @@ class VideoDetailFragment : Fragment() {
 
             //download button initialization
             button.setOnClickListener {
-                activityContract?.collapseSearchField()
                 val urlList = mutableListOf<String>()
                 mediaDetailResponse.item.assets.values.forEach {
                     urlList.add(it)
@@ -229,23 +232,28 @@ class VideoDetailFragment : Fragment() {
                 }
                 NetworkState.NO_INTERNET -> {
                     contentLayout.visibility = View.INVISIBLE
-                    activityContract?.showErrorMessage(it.msg)
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
                 NetworkState.TIMEOUT -> {
                     contentLayout.visibility = View.INVISIBLE
-                    activityContract?.showErrorMessage(it.msg)
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
                 NetworkState.BAD_REQUEST -> {
                     contentLayout.visibility = View.INVISIBLE
-                    activityContract?.showErrorMessage(it.msg)
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
                 NetworkState.NOT_FOUND -> {
                     contentLayout.visibility = View.INVISIBLE
-                    activityContract?.showErrorMessage(it.msg)
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
                 NetworkState.ERROR -> {
                     contentLayout.visibility = View.INVISIBLE
-                    activityContract?.showErrorMessage(it.msg)
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
             }
         })
@@ -270,6 +278,11 @@ class VideoDetailFragment : Fragment() {
         super.onDestroyView()
         Log.i(TAG, "onDestroyView: ")
         exoPlayerWrapper.releasePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        activityContract= null
     }
 
     companion object {

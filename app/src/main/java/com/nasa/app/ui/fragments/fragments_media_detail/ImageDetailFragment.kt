@@ -8,10 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -93,20 +90,26 @@ class ImageDetailFragment : Fragment() {
             false
         )
 
-        activityContract?.clearErrorMessage()
-        activityContract?.collapseSearchField()
-
         val view = binding.root
 
         val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
         contentLayout.visibility = View.INVISIBLE
 
+        val progressBar = view.findViewById<ProgressBar>(R.id.fragment_progress_bar)
+
+        val errorTextView = view.findViewById<TextView>(R.id.fragment_error_text_view)
+
         val button = view.findViewById<Button>(R.id.update_results_button)
         val imageView = view.findViewById<ImageView>(R.id.image_media_view)
+
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
         val orientation = resources.configuration.orientation
         when (orientation) {
             1 -> {
+                if (!activityContract?.isActionBarShowing()!!){
+                    activityContract?.showActionBar()
+                }
             }
             2 -> {
                 activityContract?.hideActionBar()
@@ -120,12 +123,11 @@ class ImageDetailFragment : Fragment() {
                     Callback {
                     override fun onSuccess() {
                         contentLayout.visibility = View.VISIBLE
-                        activityContract?.hideProgressBar()
+                        progressBar.visibility = View.GONE
                     }
 
                     override fun onError(e: java.lang.Exception?) {
-                        activityContract?.hideProgressBar()
-                        activityContract?.showErrorMessage("Image loading error: ${e?.message}")
+                        Log.i(TAG, "picasso loading image error: ${e.toString()}")
                     }
                 })
 
@@ -160,7 +162,6 @@ class ImageDetailFragment : Fragment() {
             //linkImageView initialization
             val linkImageView = view.findViewById<ImageView>(R.id.link_image_view)
             linkImageView.setOnClickListener {
-                activityContract?.collapseSearchField()
                 val address: Uri =
                     Uri.parse(mediaDetailResponse.item.assets?.get(keyToOriginalAsset))
                 val intent = Intent(Intent.ACTION_VIEW, address)
@@ -169,7 +170,6 @@ class ImageDetailFragment : Fragment() {
 
             //download button initialization
             button.setOnClickListener {
-                activityContract?.collapseSearchField()
                 val urlList = mutableListOf<String>()
                 mediaDetailResponse.item.assets?.values?.forEach {
                     urlList.add(it)
@@ -188,31 +188,41 @@ class ImageDetailFragment : Fragment() {
         //network state status observing
         viewModel.networkState.observe(viewLifecycleOwner, {
             when (it) {
-                NetworkState.LOADING -> activityContract?.showProgressBar()
+                NetworkState.LOADING ->
+                    progressBar.visibility = View.VISIBLE
                 NetworkState.NO_INTERNET -> {
-                    activityContract?.hideProgressBar()
-                    activityContract?.showErrorMessage(it.msg)
+                    progressBar.visibility = View.INVISIBLE
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
                 NetworkState.BAD_REQUEST -> {
-                    activityContract?.hideProgressBar()
-                    activityContract?.showErrorMessage(it.msg)
+                    progressBar.visibility = View.INVISIBLE
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
                 NetworkState.TIMEOUT -> {
-                    activityContract?.hideProgressBar()
-                    activityContract?.showErrorMessage(it.msg)
+                    progressBar.visibility = View.INVISIBLE
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
                 NetworkState.NOT_FOUND -> {
-                    activityContract?.hideProgressBar()
-                    activityContract?.showErrorMessage(it.msg)
+                    progressBar.visibility = View.INVISIBLE
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
                 NetworkState.ERROR -> {
-                    activityContract?.hideProgressBar()
-                    activityContract?.showErrorMessage(it.msg)
+                    progressBar.visibility = View.INVISIBLE
+                    errorTextView.text = it.msg
+                    errorTextView.visibility = View.VISIBLE
                 }
             }
         })
-
         return view
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        activityContract= null
     }
 
     companion object {

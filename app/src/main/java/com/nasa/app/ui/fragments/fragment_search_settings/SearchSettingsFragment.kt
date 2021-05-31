@@ -21,7 +21,6 @@ import javax.inject.Inject
 
 class SearchSettingsFragment : DialogFragment() {
     private var activityContract: Activity? = null
-
     lateinit var searchSettingsComponent:SearchSettingsComponent
 
     @Inject
@@ -140,6 +139,11 @@ class SearchSettingsFragment : DialogFragment() {
         }
 
         return view
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        activityContract = null
     }
 
     companion object {
