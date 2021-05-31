@@ -103,6 +103,20 @@ class ImageDetailFragment : Fragment() {
         val button = view.findViewById<Button>(R.id.update_results_button)
         val imageView = view.findViewById<ImageView>(R.id.image_media_view)
 
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
+        val orientation = resources.configuration.orientation
+        when (orientation) {
+            1 -> {
+                if (!activityContract?.isActionBarShowing()!!){
+                    activityContract?.showActionBar()
+                }
+            }
+            2 -> {
+                activityContract?.hideActionBar()
+            }
+        }
+
         viewModel.mediaDetails.observe(viewLifecycleOwner, { mediaDetailResponse ->
             picasso.load(mediaDetailResponse.item.previewUrl).into(
                 imageView,

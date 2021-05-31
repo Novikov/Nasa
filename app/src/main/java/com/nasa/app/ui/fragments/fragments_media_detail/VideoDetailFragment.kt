@@ -114,6 +114,19 @@ class VideoDetailFragment : Fragment() {
         playerView.player = exoPlayerWrapper.getPlayer()
         val button = view.findViewById<Button>(R.id.update_results_button)
 
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
+        val orientation = resources.configuration.orientation
+        when (orientation) {
+            1 -> {
+                if (!activityContract?.isActionBarShowing()!!){
+                    activityContract?.showActionBar()
+                }
+            }
+            2 -> {
+                activityContract?.hideActionBar()
+            }
+        }
 
         exoPlayerWrapper.addListener(object : Player.EventListener {
             override fun onPlaybackStateChanged(state: Int) {
