@@ -23,8 +23,6 @@ import javax.inject.Inject
 class InitialPreviewMediaFragment : Fragment() {
     private var activityContract: Activity? = null
     private lateinit var viewModelInitial: InitialPreviewMediaViewModel
-    lateinit var adapterInitial: InitialMediaPreviewAdapter
-
     lateinit var mediaPreviewComponent: PreviewComponent
 
     @Inject
@@ -72,7 +70,9 @@ class InitialPreviewMediaFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        activityContract?.clearErrorMessage()
+        if (!activityContract?.isActionBarShowing()!!){
+            activityContract?.showActionBar()
+        }
 
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_media_preview, container, false)
@@ -81,7 +81,7 @@ class InitialPreviewMediaFragment : Fragment() {
 
         (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
-        adapterInitial = InitialMediaPreviewAdapter(requireContext())
+        val adapterInitial = InitialMediaPreviewAdapter(requireContext())
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapterInitial
