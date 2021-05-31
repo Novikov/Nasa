@@ -19,12 +19,8 @@ import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity(), Activity {
-    private lateinit var progressBar: ProgressBar
-    private lateinit var errorMessageTextView: TextView
-    private var isErrorMessageShoved = false
+
     lateinit var activityComponent:ActivityComponent
-    lateinit var navController:NavController
-    var menu:Menu? = null
 
     @Inject
     lateinit var searchParams: SearchParams
@@ -34,17 +30,6 @@ class MainActivity : AppCompatActivity(), Activity {
         activityComponent.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        progressBar = findViewById(R.id.progressBar)
-        errorMessageTextView = findViewById(R.id.msg_text_view)
-        navController = Navigation.findNavController(this,R.id.nav_host_fragment)
-    }
-
-    override fun showProgressBar() {
-        progressBar.visibility = ProgressBar.VISIBLE
-    }
-
-    override fun hideProgressBar() {
-        progressBar.visibility = ProgressBar.INVISIBLE
     }
 
     override fun showActionBar() {
@@ -60,31 +45,13 @@ class MainActivity : AppCompatActivity(), Activity {
     }
 
     override fun searchRequest(query: String) {
-        if (errorMessageTextView.visibility == View.VISIBLE) {
-            clearErrorMessage()
-        }
         searchParams.initNewSearchRequestParams(query)
 
+        val navController = Navigation.findNavController(this,R.id.nav_host_fragment)
         if(navController.currentDestination?.id != R.id.mediaFragment){
             navController.navigateUp()
         }
         navController.navigate(InitialPreviewMediaFragmentDirections.actionMediaFragmentToFoundPreviewMediaFragment())
-    }
-
-    override fun showErrorMessage(msg: String) {
-        errorMessageTextView.text = msg
-        errorMessageTextView.visibility = View.VISIBLE
-        isErrorMessageShoved = true
-    }
-
-    override fun clearErrorMessage() {
-        errorMessageTextView.text = EMPTY_STRING
-        errorMessageTextView.visibility = View.INVISIBLE
-        isErrorMessageShoved = false
-    }
-
-    override fun isErrorMessageShoved(): Boolean {
-        return isErrorMessageShoved
     }
 
     companion object {

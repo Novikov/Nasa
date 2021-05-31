@@ -95,10 +95,7 @@ class AudioDetailFragment : Fragment() {
             false
         )
 
-        activityContract?.clearErrorMessage()
-
         val view = binding.root
-
 
         val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
         contentLayout.visibility = View.VISIBLE
@@ -279,6 +276,10 @@ class AudioDetailFragment : Fragment() {
         exoPlayerWrapper.releasePlayer()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        activityContract= null
+    }
     companion object {
         const val TAG = "AudioDetailFragment"
         const val EXO_MEDIA_PLAYER_TIME = "ExoMediaPlayerTime"

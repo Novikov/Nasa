@@ -280,6 +280,11 @@ class VideoDetailFragment : Fragment() {
         exoPlayerWrapper.releasePlayer()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        activityContract= null
+    }
+
     companion object {
         const val TAG = "VideoDetailFragment"
         const val EXO_MEDIA_PLAYER_TIME = "ExoMediaPlayerTime"

@@ -90,8 +90,6 @@ class ImageDetailFragment : Fragment() {
             false
         )
 
-        activityContract?.clearErrorMessage()
-
         val view = binding.root
 
         val contentLayout = view.findViewById<ConstraintLayout>(R.id.content_layout)
@@ -220,6 +218,11 @@ class ImageDetailFragment : Fragment() {
             }
         })
         return view
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        activityContract= null
     }
 
     companion object {
