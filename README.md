@@ -1,5 +1,5 @@
 # Nasa App
-NASA Image and Video Library API client application.
+NASA app - clone of the mobile version of [images.nasa.gov](https://images.nasa.gov/)
 
 ![](nasa.gif)
 
