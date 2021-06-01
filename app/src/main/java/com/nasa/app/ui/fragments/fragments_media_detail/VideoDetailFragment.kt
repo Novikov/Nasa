@@ -143,7 +143,7 @@ class VideoDetailFragment : Fragment() {
             override fun onPlayerError(error: ExoPlaybackException) {
                 super.onPlayerError(error)
                 contentLayout.visibility = View.INVISIBLE
-                errorTextView.text = getString(R.string.Exo_player_error_message)
+                errorTextView.text = error.toString()
                 errorTextView.visibility = View.VISIBLE
             }
         })

@@ -15,26 +15,4 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/app_navigation" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:visibility="invisible" />
-
-    <TextView
-        android:id="@+id/msg_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/nothing_found"
-        android:textAlignment="center"
-        android:textColor="#FFF"
-        android:textSize="24sp"
-        android:visibility="invisible" />
-
 </RelativeLayout>

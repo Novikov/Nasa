@@ -22,9 +22,6 @@ class MainActivity : AppCompatActivity(), Activity {
 
     lateinit var activityComponent:ActivityComponent
 
-    @Inject
-    lateinit var searchParams: SearchParams
-
     override fun onCreate(savedInstanceState: Bundle?) {
         activityComponent = (application as BaseApplication).appComponent.getActivityComponent().create()
         activityComponent.inject(this)
@@ -44,10 +41,7 @@ class MainActivity : AppCompatActivity(), Activity {
         return  supportActionBar?.isShowing!!
     }
 
-    override fun searchRequest(query: String) {
-        searchParams.clearSearchParams()
-        searchParams.initNewSearchRequestParams(query)
-
+    override fun searchRequest() {
         val navController = Navigation.findNavController(this,R.id.nav_host_fragment)
         if(navController.currentDestination?.id != R.id.mediaFragment){
             navController.navigateUp()

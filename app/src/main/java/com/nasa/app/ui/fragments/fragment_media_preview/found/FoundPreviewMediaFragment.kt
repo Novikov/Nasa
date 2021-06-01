@@ -69,7 +69,11 @@ class FoundPreviewMediaFragment : Fragment() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 searchView.clearFocus()
-                activityContract?.searchRequest(query ?: EMPTY_SEARCH_STRING)
+                if(!query!!.equals(searchParams.searchRequestQuery)){
+                    searchParams.clearSearchParams()
+                    searchParams.initNewSearchRequestParams(query)
+                    activityContract?.searchRequest()
+                }
                 return true
             }
 

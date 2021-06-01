@@ -17,6 +17,7 @@ import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
 import com.nasa.app.ui.fragments.fragment_media_preview.di.PreviewComponent
 import com.nasa.app.utils.EMPTY_SEARCH_STRING
+import com.nasa.app.utils.SearchParams
 import kotlinx.android.synthetic.main.fragment_media_preview.*
 import javax.inject.Inject
 
@@ -27,6 +28,9 @@ class InitialPreviewMediaFragment : Fragment() {
 
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
+
+    @Inject
+    lateinit var searchParams: SearchParams
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -56,7 +60,9 @@ class InitialPreviewMediaFragment : Fragment() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 searchView.clearFocus()
-                activityContract?.searchRequest(query ?: EMPTY_SEARCH_STRING)
+                searchParams.clearSearchParams()
+                searchParams.initNewSearchRequestParams(query!!)
+                activityContract?.searchRequest()
                 return true
             }
 
