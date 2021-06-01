@@ -21,6 +21,7 @@ import com.nasa.app.ui.fragments.fragment_media_preview.initial.InitialMediaPrev
 import com.nasa.app.ui.fragments.fragment_media_preview.di.PreviewComponent
 import com.nasa.app.ui.fragments.fragment_search_settings.SearchSettingsFragment
 import com.nasa.app.utils.EMPTY_SEARCH_STRING
+import com.nasa.app.utils.SearchParams
 import kotlinx.android.synthetic.main.fragment_media_preview.*
 import javax.inject.Inject
 
@@ -32,6 +33,9 @@ class FoundPreviewMediaFragment : Fragment() {
 
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
+
+    @Inject
+    lateinit var searchParams: SearchParams
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -59,6 +63,7 @@ class FoundPreviewMediaFragment : Fragment() {
         val menuItem = menu.findItem(R.id.action_search)
         val searchView = menuItem?.actionView as SearchView
         val width = resources.displayMetrics.widthPixels
+
         searchView.maxWidth = (width/1.5).toInt()
         searchView.queryHint = getString(R.string.Type_here_to_search)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -72,6 +77,10 @@ class FoundPreviewMediaFragment : Fragment() {
                 return false
             }
         })
+
+        searchView.onActionViewExpanded()
+        searchView.setQuery(searchParams.searchRequestQuery, false)
+        searchView.clearFocus()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
