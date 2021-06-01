@@ -6,13 +6,13 @@ NASA Image and Video Library API client application.
 ### App uses:
 * Nasa image and video library [API](https://api.nasa.gov/);
 * MVVM Architecture pattern;
+* Dagger for DI;
 * RxJava and Retrofit for API requests;
 * Gson for handling server responses;
 * [ExoPlayer](https://exoplayer.dev/) for playing video and audio content;
 * Navigation component;
 * Paging 2;
-* DataBinding and Picasso for UI creation;
-* Dagger for DI
+* Junit;
 
 
 
