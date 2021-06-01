@@ -14,7 +14,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.flexbox.FlexboxLayout
-import com.nasa.app.BaseApplication
 import com.nasa.app.R
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.repository.NetworkState
@@ -72,7 +71,7 @@ class ImageDetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(TAG, "onCreate: ")
-
+        setHasOptionsMenu(true)
         viewModel =
             ViewModelProviders.of(this, providerFactory).get(DetailMediaViewModel::class.java)
     }

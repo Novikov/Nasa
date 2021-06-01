@@ -117,7 +117,7 @@ class SearchSettingsFragment : DialogFragment() {
                 tmpIsCheckedVideoCheckBox,
                 tmpIsCheckedAudioCheckBox
             )
-            activityContract?.searchRequest(searchParams.searchRequestQuery)
+            activityContract?.searchRequest()
         }
 
         //date text views

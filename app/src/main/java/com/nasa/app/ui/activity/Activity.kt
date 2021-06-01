@@ -4,5 +4,5 @@ interface Activity {
     fun showActionBar()
     fun hideActionBar()
     fun isActionBarShowing():Boolean
-    fun searchRequest(query: String)
+    fun searchRequest()
 }
