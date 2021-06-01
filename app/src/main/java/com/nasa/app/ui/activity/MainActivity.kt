@@ -1,21 +1,12 @@
 package com.nasa.app.ui.activity
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
 import com.nasa.app.ui.activity.di.ActivityComponent
 import com.nasa.app.ui.fragments.fragment_media_preview.initial.InitialPreviewMediaFragmentDirections
-import com.nasa.app.utils.EMPTY_STRING
-import com.nasa.app.utils.SearchParams
-import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity(), Activity {

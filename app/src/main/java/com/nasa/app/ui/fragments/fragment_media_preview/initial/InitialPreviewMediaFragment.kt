@@ -16,7 +16,6 @@ import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
 import com.nasa.app.ui.fragments.fragment_media_preview.di.PreviewComponent
-import com.nasa.app.utils.EMPTY_SEARCH_STRING
 import com.nasa.app.utils.SearchParams
 import kotlinx.android.synthetic.main.fragment_media_preview.*
 import javax.inject.Inject
