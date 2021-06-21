@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.marginEnd
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -17,10 +16,9 @@ import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
-import com.nasa.app.ui.fragments.fragment_media_preview.initial.InitialMediaPreviewAdapter
 import com.nasa.app.ui.fragments.fragment_media_preview.di.PreviewComponent
 import com.nasa.app.ui.fragments.fragment_search_settings.SearchSettingsFragment
-import com.nasa.app.utils.EMPTY_SEARCH_STRING
+import com.nasa.app.utils.SearchParams
 import kotlinx.android.synthetic.main.fragment_media_preview.*
 import javax.inject.Inject
 
@@ -32,6 +30,9 @@ class FoundPreviewMediaFragment : Fragment() {
 
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
+
+    @Inject
+    lateinit var searchParams: SearchParams
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -59,12 +60,17 @@ class FoundPreviewMediaFragment : Fragment() {
         val menuItem = menu.findItem(R.id.action_search)
         val searchView = menuItem?.actionView as SearchView
         val width = resources.displayMetrics.widthPixels
+
         searchView.maxWidth = (width/1.5).toInt()
         searchView.queryHint = getString(R.string.Type_here_to_search)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 searchView.clearFocus()
-                activityContract?.searchRequest(query ?: EMPTY_SEARCH_STRING)
+                if(!query!!.equals(searchParams.searchRequestQuery)){
+                    searchParams.clearSearchParams()
+                    searchParams.initNewSearchRequestParams(query)
+                    activityContract?.searchRequest()
+                }
                 return true
             }
 
@@ -72,6 +78,10 @@ class FoundPreviewMediaFragment : Fragment() {
                 return false
             }
         })
+
+        searchView.onActionViewExpanded()
+        searchView.setQuery(searchParams.searchRequestQuery, false)
+        searchView.clearFocus()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

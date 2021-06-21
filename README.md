@@ -1,17 +1,18 @@
 # Nasa App
-NASA Image and Video Library API client application.
+NASA app - clone of the mobile version of [images.nasa.gov](https://images.nasa.gov/)
 
-[Video presentation](https://youtu.be/t62A4HtZJ8c)
+![](nasa.gif)
 
 ### App uses:
 * Nasa image and video library [API](https://api.nasa.gov/);
 * MVVM Architecture pattern;
+* Dagger for DI;
 * RxJava and Retrofit for API requests;
 * Gson for handling server responses;
 * [ExoPlayer](https://exoplayer.dev/) for playing video and audio content;
 * Navigation component;
-* DataBinding and Picasso for UI creation;
-* Dagger for DI
+* Paging 2;
+* Junit;
 
 
 

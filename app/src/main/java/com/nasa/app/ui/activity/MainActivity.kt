@@ -1,29 +1,17 @@
 package com.nasa.app.ui.activity
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.nasa.app.BaseApplication
 import com.nasa.app.R
 import com.nasa.app.ui.activity.di.ActivityComponent
 import com.nasa.app.ui.fragments.fragment_media_preview.initial.InitialPreviewMediaFragmentDirections
-import com.nasa.app.utils.EMPTY_STRING
-import com.nasa.app.utils.SearchParams
-import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity(), Activity {
 
     lateinit var activityComponent:ActivityComponent
-
-    @Inject
-    lateinit var searchParams: SearchParams
 
     override fun onCreate(savedInstanceState: Bundle?) {
         activityComponent = (application as BaseApplication).appComponent.getActivityComponent().create()
@@ -44,10 +32,7 @@ class MainActivity : AppCompatActivity(), Activity {
         return  supportActionBar?.isShowing!!
     }
 
-    override fun searchRequest(query: String) {
-        searchParams.clearSearchParams()
-        searchParams.initNewSearchRequestParams(query)
-
+    override fun searchRequest() {
         val navController = Navigation.findNavController(this,R.id.nav_host_fragment)
         if(navController.currentDestination?.id != R.id.mediaFragment){
             navController.navigateUp()

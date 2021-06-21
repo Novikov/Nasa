@@ -1,20 +1,16 @@
 package com.nasa.app.di
 
-import androidx.lifecycle.MutableLiveData
-import com.nasa.app.data.api.NasaApiService
-import dagger.Provides
 import com.google.gson.GsonBuilder
-import com.nasa.app.data.model.media_preview.MediaPreviewResponse
+import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.utils.NASA_BASE_URL
-import com.nasa.app.utils.SearchParams
 import com.squareup.picasso.Picasso
 import dagger.Module
+import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
