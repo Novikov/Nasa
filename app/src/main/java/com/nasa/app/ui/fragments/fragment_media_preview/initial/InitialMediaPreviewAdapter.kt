@@ -223,14 +223,14 @@ class InitialMediaPreviewAdapter (val context: Context) : PagedListAdapter<Media
             itemView.description_text_view.text = mediaPreview.description
             itemView.date_created_text_view.text = mediaPreview.dateCreated
 
-            itemView.setOnClickListener {
-                navController?.navigate(
-                    InitialPreviewMediaFragmentDirections.actionMediaFragmentToAudioDetailFragment(
-                        mediaPreview.nasaId,
-                        mediaPreview.mediaType
-                    )
-                )
-            }
+//            itemView.setOnClickListener {
+//                navController?.navigate(
+//                    InitialPreviewMediaFragmentDirections.actionMediaFragmentToAudioDetailFragment(
+//                        mediaPreview.nasaId,
+//                        mediaPreview.mediaType
+//                    )
+//                )
+//            }
         }
     }
 

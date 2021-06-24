@@ -6,15 +6,16 @@ import androidx.paging.PagedList
 import com.nasa.app.data.model.media_preview.MediaPreview
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.ui.fragments.di.FragmentScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Named
 
 @FragmentScope
 class InitialPreviewMediaViewModel @Inject constructor(
-    private val mediaRepositoryInitial: InitialPreviewsPagedListRepository,
-    @Named("initial media previews composite disposable") private val compositeDisposable: CompositeDisposable
-) : ViewModel() {
+    val mediaRepositoryInitial: InitialPreviewsPagedListRepository,
+    @Named("initial media previews composite disposable") val compositeDisposable: CompositeDisposable
+){
 
     val initialMediaPreviews: LiveData<PagedList<MediaPreview>> by lazy {
         mediaRepositoryInitial.fetchLiveMediaPreviewPagedList()
@@ -28,8 +29,8 @@ class InitialPreviewMediaViewModel @Inject constructor(
         return initialMediaPreviews.value?.isEmpty() ?: true
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.dispose()
-    }
+//    override fun onCleared() {
+//        super.onCleared()
+//        compositeDisposable.dispose()
+//    }
 }

@@ -152,14 +152,14 @@ class FoundMediaPreviewAdapter (val context: Context) : PagedListAdapter<MediaPr
                 .placeholder(circularProgressDrawable)
                 .into(itemView.media_preview_recycler_view_image)
 
-                itemView.setOnClickListener {
-                    navController?.navigate(
-                        FoundPreviewMediaFragmentDirections.actionFoundPreviewMediaFragmentToImageDetailFragment(
-                            mediaPreview.nasaId,
-                            mediaPreview.mediaType
-                        )
-                    )
-                }
+//                itemView.setOnClickListener {
+//                    navController?.navigate(
+//                        FoundPreviewMediaFragmentDirections.actionFoundPreviewMediaFragmentToImageDetailFragment(
+//                            mediaPreview.nasaId,
+//                            mediaPreview.mediaType
+//                        )
+//                    )
+//                }
 
             itemView.description_text_view.text = mediaPreview.description
             itemView.date_created_text_view.text = mediaPreview.dateCreated

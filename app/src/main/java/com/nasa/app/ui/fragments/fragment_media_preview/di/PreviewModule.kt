@@ -6,9 +6,13 @@ import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.ui.fragments.di.FragmentScope
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.components.SingletonComponent
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Named
 
+@InstallIn(FragmentComponent::class)
 @Module
 class PreviewModule {
 

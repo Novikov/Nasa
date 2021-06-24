@@ -5,14 +5,15 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nasa.app.R
 import com.nasa.app.data.repository.NetworkState
-import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
 import com.nasa.app.ui.fragments.fragment_media_preview.di.PreviewComponent
@@ -22,11 +23,10 @@ import javax.inject.Inject
 
 class InitialPreviewMediaFragment : Fragment() {
     private var activityContract: Activity? = null
-    private lateinit var viewModelInitial: InitialPreviewMediaViewModel
     lateinit var mediaPreviewComponent: PreviewComponent
 
     @Inject
-    lateinit var providerFactory: ViewModelProviderFactory
+    lateinit var viewModelInitial: InitialPreviewMediaViewModel
 
     @Inject
     lateinit var searchParams: SearchParams
@@ -47,8 +47,6 @@ class InitialPreviewMediaFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        viewModelInitial =
-            ViewModelProviders.of(this, providerFactory).get(InitialPreviewMediaViewModel::class.java)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
