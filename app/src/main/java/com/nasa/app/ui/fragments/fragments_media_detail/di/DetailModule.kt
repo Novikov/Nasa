@@ -14,33 +14,33 @@ import dagger.hilt.android.components.FragmentComponent
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Named
 
-//@InstallIn(FragmentComponent::class)
-//@Module
-//class DetailModule {
-//
-//    @FragmentScope
-//    @Provides
-//    fun providesCompositeDisposable(): CompositeDisposable {
-//        return CompositeDisposable()
-//    }
-//
-//    @Provides
-//    fun provideExoPlayerInstance(context:Context): ExoPlayer{
-//        return SimpleExoPlayer.Builder(context).build()
-//    }
-//
-//    @FragmentScope
-//    @Provides
-//    fun providesDownloadMediaDetailMutableLiveData(): MutableLiveData<MediaDetailResponse> {
-//       return MutableLiveData<MediaDetailResponse>()
-//    }
-//
-//    @FragmentScope
-//    @Named("media detail network state")
-//    @Provides
-//    fun provideDetailNetworkState(): MutableLiveData<NetworkState> {
-//        return MutableLiveData<NetworkState>()
-//    }
-//
-//
-//}
+@InstallIn(FragmentComponent::class)
+@Module
+class DetailModule {
+
+    @FragmentScope
+    @Provides
+    fun providesCompositeDisposable(): CompositeDisposable {
+        return CompositeDisposable()
+    }
+
+    @Provides
+    fun provideExoPlayerInstance(context:Context): ExoPlayer{
+        return SimpleExoPlayer.Builder(context).build()
+    }
+
+    @FragmentScope
+    @Provides
+    fun providesDownloadMediaDetailMutableLiveData(): MutableLiveData<MediaDetailResponse> {
+       return MutableLiveData<MediaDetailResponse>()
+    }
+
+    @FragmentScope
+    @Named("media detail network state")
+    @Provides
+    fun provideDetailNetworkState(): MutableLiveData<NetworkState> {
+        return MutableLiveData<NetworkState>()
+    }
+
+
+}

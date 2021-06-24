@@ -16,86 +16,86 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Named
 
-//class DetailMediaDataSource @Inject constructor(
-//    private val apiService: NasaApiService,
-//    private val compositeDisposable: CompositeDisposable,
-//    @Named("nasa id") private val nasaId: String,
-//    private val rawMediaDetailConverter: RawMediaDetailResponseConverter,
-//    private val rawMediaAssetConverter: RawMediaAssetsConverter,
-//    private val _downloadedMediaDetailsResponse: MutableLiveData<MediaDetailResponse>,
-//    @Named("media detail network state") private val _networkState: MutableLiveData<NetworkState>
-//) {
-//    val networkState: LiveData<NetworkState>
-//        get() = _networkState
-//
-//    val downloadedMediaResponse: LiveData<MediaDetailResponse>
-//        get() = _downloadedMediaDetailsResponse
-//
-//    fun getMediaDetail() {
-//        _networkState.postValue(NetworkState.LOADING)
-//
-//        try {
-//            compositeDisposable.add(
-//                apiService.getMediaDetailInfo(nasaId)
-//                    .observeOn(Schedulers.io())
-//                    .subscribeOn(Schedulers.io())
-//                    .flatMap {
-//                        val rawMediaDetailResponse =
-//                            rawMediaDetailConverter.getMediaDetailResponseWithInfoData(it)
-//                        Log.i(TAG, rawMediaDetailResponse.item.toString())
-//                        apiService.getMediaDetailAsset(rawMediaDetailResponse.item.nasaId)
-//                            .observeOn(Schedulers.io())
-//                            .subscribeOn(Schedulers.io())
-//                            .map {
-//                                rawMediaDetailResponse.item.copy(
-//                                    assets = rawMediaAssetConverter.getMediaDetailAssetResponse(it).assets,
-//                                    metadataUrl = rawMediaAssetConverter.getMetadataUrl(it)
-//                                )
-//                            }
-//                    }
-//                    .flatMap { rawMediaDetailResponse ->
-//                        Log.i(TAG, rawMediaDetailResponse.toString())
-//                        apiService.getMediaMetadata(rawMediaDetailResponse.metadataUrl!!)
-//                            .observeOn(Schedulers.io())
-//                            .subscribeOn(Schedulers.io())
-//                            .map {
-//                                rawMediaDetailResponse.copy(
-//                                    fileFormat = it.fileFormat,
-//                                    fileSize = it.fileSize
-//                                )
-//                            }
-//                    }
-//                    .subscribe({
-//                        Log.i(TAG, it.toString())
-//                        _downloadedMediaDetailsResponse.postValue(MediaDetailResponse(it))
-//                        _networkState.postValue(NetworkState.LOADED)
-//                    }, {
-//                        when {
-//                            it.message?.contains(NO_INTERNET_ERROR_MSG_SUBSTRING)!! -> {
-//                                _networkState.postValue(NetworkState.NO_INTERNET)
-//                            }
-//                            it.message?.contains(TIMEOUT_ERROR_SUBSTRING)!! -> {
-//                                _networkState.postValue(NetworkState.TIMEOUT)
-//                            }
-//                            it.message?.contains(HTTP_400_ERROR_MSG_SUBSTRING)!! -> {
-//                                _networkState.postValue(NetworkState.BAD_REQUEST)
-//                            }
-//                            it.message?.contains(HTTP_404_ERROR_MSG_SUBSTRING)!! -> {
-//                                _networkState.postValue(NetworkState.NOT_FOUND)
-//                            }
-//                            else -> {
-//                                Log.i(TAG, it.message.toString())
-//                                _networkState.postValue(NetworkState.ERROR)
-//                            }
-//                        }
-//                    })
-//            )
-//        } catch (e: Exception) {
-//            Log.e(TAG, e.message.toString())
-//        }
-//    }
-//
-//    companion object {
-//        private const val TAG = "DetailMediaDataSource"
-//    }
-//}
+class DetailMediaDataSource @Inject constructor(
+    private val apiService: NasaApiService,
+    private val compositeDisposable: CompositeDisposable,
+    @Named("nasa id") private val nasaId: String,
+    private val rawMediaDetailConverter: RawMediaDetailResponseConverter,
+    private val rawMediaAssetConverter: RawMediaAssetsConverter,
+    private val _downloadedMediaDetailsResponse: MutableLiveData<MediaDetailResponse>,
+    @Named("media detail network state") private val _networkState: MutableLiveData<NetworkState>
+) {
+    val networkState: LiveData<NetworkState>
+        get() = _networkState
+
+    val downloadedMediaResponse: LiveData<MediaDetailResponse>
+        get() = _downloadedMediaDetailsResponse
+
+    fun getMediaDetail() {
+        _networkState.postValue(NetworkState.LOADING)
+
+        try {
+            compositeDisposable.add(
+                apiService.getMediaDetailInfo(nasaId)
+                    .observeOn(Schedulers.io())
+                    .subscribeOn(Schedulers.io())
+                    .flatMap {
+                        val rawMediaDetailResponse =
+                            rawMediaDetailConverter.getMediaDetailResponseWithInfoData(it)
+                        Log.i(TAG, rawMediaDetailResponse.item.toString())
+                        apiService.getMediaDetailAsset(rawMediaDetailResponse.item.nasaId)
+                            .observeOn(Schedulers.io())
+                            .subscribeOn(Schedulers.io())
+                            .map {
+                                rawMediaDetailResponse.item.copy(
+                                    assets = rawMediaAssetConverter.getMediaDetailAssetResponse(it).assets,
+                                    metadataUrl = rawMediaAssetConverter.getMetadataUrl(it)
+                                )
+                            }
+                    }
+                    .flatMap { rawMediaDetailResponse ->
+                        Log.i(TAG, rawMediaDetailResponse.toString())
+                        apiService.getMediaMetadata(rawMediaDetailResponse.metadataUrl!!)
+                            .observeOn(Schedulers.io())
+                            .subscribeOn(Schedulers.io())
+                            .map {
+                                rawMediaDetailResponse.copy(
+                                    fileFormat = it.fileFormat,
+                                    fileSize = it.fileSize
+                                )
+                            }
+                    }
+                    .subscribe({
+                        Log.i(TAG, it.toString())
+                        _downloadedMediaDetailsResponse.postValue(MediaDetailResponse(it))
+                        _networkState.postValue(NetworkState.LOADED)
+                    }, {
+                        when {
+                            it.message?.contains(NO_INTERNET_ERROR_MSG_SUBSTRING)!! -> {
+                                _networkState.postValue(NetworkState.NO_INTERNET)
+                            }
+                            it.message?.contains(TIMEOUT_ERROR_SUBSTRING)!! -> {
+                                _networkState.postValue(NetworkState.TIMEOUT)
+                            }
+                            it.message?.contains(HTTP_400_ERROR_MSG_SUBSTRING)!! -> {
+                                _networkState.postValue(NetworkState.BAD_REQUEST)
+                            }
+                            it.message?.contains(HTTP_404_ERROR_MSG_SUBSTRING)!! -> {
+                                _networkState.postValue(NetworkState.NOT_FOUND)
+                            }
+                            else -> {
+                                Log.i(TAG, it.message.toString())
+                                _networkState.postValue(NetworkState.ERROR)
+                            }
+                        }
+                    })
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+        }
+    }
+
+    companion object {
+        private const val TAG = "DetailMediaDataSource"
+    }
+}

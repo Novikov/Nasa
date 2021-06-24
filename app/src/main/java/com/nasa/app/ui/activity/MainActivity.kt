@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity(), Activity {
     override fun onCreate(savedInstanceState: Bundle?) {
         val entryPoint = EntryPointAccessors.fromApplication(applicationContext, ActivityEntryPoint::class.java)
         activityComponent = entryPoint.activityComponent().create()
-//        activityComponent.inject(this)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
