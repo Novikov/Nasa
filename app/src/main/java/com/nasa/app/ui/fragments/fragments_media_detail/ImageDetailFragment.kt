@@ -26,6 +26,7 @@ import com.nasa.app.utils.DOWNLOAD_DIALOG_FRAGMENT_TAG
 import com.nasa.app.utils.EMPTY_STRING
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.EntryPointAccessors
 import javax.inject.Inject
 
 class ImageDetailFragment : Fragment() {
@@ -62,7 +63,8 @@ class ImageDetailFragment : Fragment() {
             throw Exception("arguments can't be null")
         }
 
-        detailComponent =  (requireActivity() as MainActivity).activityComponent.getDetailComponent().create(nasaId, requireContext())
+        val entryPoint = EntryPointAccessors.fromApplication(requireActivity().applicationContext, DetailEntryPoint::class.java)
+        detailComponent = entryPoint.detailComponent().create(nasaId, requireContext())
         detailComponent.inject(this)
     }
 

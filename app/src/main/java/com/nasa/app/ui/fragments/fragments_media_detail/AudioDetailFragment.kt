@@ -27,6 +27,7 @@ import com.nasa.app.ui.fragments.fragments_media_detail.di.DetailComponent
 import com.nasa.app.utils.DOWNLOAD_DIALOG_FRAGMENT_TAG
 import com.nasa.app.utils.EMPTY_STRING
 import com.nasa.app.utils.EXO_MEDIA_PLAYER_INITIAL_TIME
+import dagger.hilt.android.EntryPointAccessors
 import javax.inject.Inject
 
 class AudioDetailFragment : Fragment() {
@@ -66,7 +67,8 @@ class AudioDetailFragment : Fragment() {
             throw Exception("Fragment arguments can't be null")
         }
 
-        detailComponent =  (requireActivity() as MainActivity).activityComponent.getDetailComponent().create(nasaId, requireContext())
+        val entryPoint = EntryPointAccessors.fromApplication(requireActivity().applicationContext, DetailEntryPoint::class.java)
+        detailComponent = entryPoint.detailComponent().create(nasaId, requireContext())
         detailComponent.inject(this)
     }
 

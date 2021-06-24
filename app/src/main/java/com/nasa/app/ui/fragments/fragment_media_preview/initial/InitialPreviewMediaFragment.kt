@@ -5,19 +5,18 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nasa.app.R
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
+import com.nasa.app.ui.fragments.fragment_media_preview.PreviewEntryPoint
 import com.nasa.app.ui.fragments.fragment_media_preview.di.PreviewComponent
 import com.nasa.app.utils.SearchParams
+import dagger.hilt.android.EntryPointAccessors
 import kotlinx.android.synthetic.main.fragment_media_preview.*
 import javax.inject.Inject
 
@@ -40,7 +39,8 @@ class InitialPreviewMediaFragment : Fragment() {
             throw ClassCastException(context.toString() + "Activity have to implement interface Activity")
         }
 
-        mediaPreviewComponent =  (requireActivity() as MainActivity).activityComponent.getPreviewComponent().create()
+        val entryPoint = EntryPointAccessors.fromApplication(requireContext(), PreviewEntryPoint::class.java)
+        mediaPreviewComponent = entryPoint.previewComponent().create()
         mediaPreviewComponent.inject(this)
     }
 

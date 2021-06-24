@@ -4,28 +4,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
 import com.nasa.app.R
-import com.nasa.app.ui.activity.di.ActivityComponent
 import com.nasa.app.ui.fragments.fragment_media_preview.initial.InitialPreviewMediaFragmentDirections
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), Activity {
 
-    @InstallIn(SingletonComponent::class)
-    @EntryPoint
-    interface ActivityEntryPoint {
-        fun activityComponent(): ActivityComponent.Factory
-    }
-
-    lateinit var activityComponent:ActivityComponent
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        val entryPoint = EntryPointAccessors.fromApplication(applicationContext, ActivityEntryPoint::class.java)
-        activityComponent = entryPoint.activityComponent().create()
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }

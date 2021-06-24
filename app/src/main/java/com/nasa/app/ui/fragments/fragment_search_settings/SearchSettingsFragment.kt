@@ -17,9 +17,20 @@ import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
 import com.nasa.app.ui.fragments.fragment_search_settings.di.SearchSettingsComponent
 import com.nasa.app.utils.SearchParams
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 
 class SearchSettingsFragment : DialogFragment() {
+    @InstallIn(SingletonComponent::class)
+    @EntryPoint
+    interface SearchSettingsEntryPoint {
+        fun searchSettingsComponent(): SearchSettingsComponent.Factory
+    }
+
     private var activityContract: Activity? = null
     lateinit var searchSettingsComponent:SearchSettingsComponent
 
@@ -40,7 +51,9 @@ class SearchSettingsFragment : DialogFragment() {
         } catch (e: ClassCastException) {
             throw ClassCastException(context.toString() + "Activity have to implement interface Activity")
         }
-        searchSettingsComponent = (requireActivity() as MainActivity).activityComponent.getSearchSettingsComponent().create()
+
+        val entryPoint = EntryPointAccessors.fromApplication(requireContext(), SearchSettingsEntryPoint::class.java)
+        searchSettingsComponent = entryPoint.searchSettingsComponent().create()
         searchSettingsComponent.inject(this)
     }
 

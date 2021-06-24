@@ -17,9 +17,11 @@ import com.nasa.app.R
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
+import com.nasa.app.ui.fragments.fragment_media_preview.PreviewEntryPoint
 import com.nasa.app.ui.fragments.fragment_media_preview.di.PreviewComponent
 import com.nasa.app.ui.fragments.fragment_search_settings.SearchSettingsFragment
 import com.nasa.app.utils.SearchParams
+import dagger.hilt.android.EntryPointAccessors
 import kotlinx.android.synthetic.main.fragment_media_preview.*
 import javax.inject.Inject
 
@@ -43,7 +45,8 @@ class FoundPreviewMediaFragment : Fragment() {
             throw ClassCastException(context.toString() + "Activity have to implement interface Activity")
         }
 
-        mediaPreviewComponent =  (requireActivity() as MainActivity).activityComponent.getPreviewComponent().create()
+        val entryPoint = EntryPointAccessors.fromApplication(requireContext(), PreviewEntryPoint::class.java)
+        mediaPreviewComponent = entryPoint.previewComponent().create()
         mediaPreviewComponent.inject(this)
     }
 
