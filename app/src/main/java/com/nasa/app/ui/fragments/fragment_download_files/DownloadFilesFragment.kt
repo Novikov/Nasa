@@ -9,39 +9,17 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.DialogFragment
 import com.nasa.app.R
-import com.nasa.app.ui.activity.MainActivity
-import com.nasa.app.ui.fragments.fragment_download_files.di.DownloadFilesComponent
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.android.components.ActivityComponent
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class DownloadFilesFragment : DialogFragment() {
-
-    @InstallIn(SingletonComponent::class)
-    @EntryPoint
-    interface DownloadEntryPoint {
-        fun downloadComponent(): DownloadFilesComponent.Factory
-    }
-
     private var emptyArgumentsErrorMessage = "Urls can't be empty"
     private var fileStringsUris: ArrayList<String>? = null
     private val filesUris = arrayListOf<Uri>()
 
-    lateinit var downloadFilesComponent:DownloadFilesComponent
-
     @Inject
     lateinit var downloadFilesAdapter: DownloadFilesAdapter
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        val entryPoint = EntryPointAccessors.fromApplication(requireContext(), DownloadEntryPoint::class.java)
-        downloadFilesComponent = entryPoint.downloadComponent().create(requireContext())
-        downloadFilesComponent.inject(this)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
