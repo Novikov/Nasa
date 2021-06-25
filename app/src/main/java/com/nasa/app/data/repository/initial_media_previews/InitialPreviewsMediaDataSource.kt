@@ -7,23 +7,23 @@ import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.model.media_preview.MediaPreview
 import com.nasa.app.data.model.media_preview.raw_media_preview.RawMediaPreviewResponseConverter
 import com.nasa.app.data.repository.NetworkState
-import com.nasa.app.ui.fragments.di.FragmentScope
-import com.nasa.app.utils.EMPTY_SEARCH_STRING
+import com.nasa.app.ui.fragments.fragment_media_preview.di.InitialMediaPreviewsCompositeDisposable
+import com.nasa.app.ui.fragments.fragment_media_preview.di.InitialMediaPreviewsNetworkState
 import com.nasa.app.utils.FIRST_PAGE
 import com.nasa.app.utils.NO_INTERNET_ERROR_MSG_SUBSTRING
 import com.nasa.app.utils.SearchParams
+import dagger.hilt.android.scopes.FragmentScoped
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Named
 
-@FragmentScope
 class InitialPreviewsMediaDataSource @Inject constructor(
     private val apiService: NasaApiService,
-    @Named("initial media previews composite disposable") private val compositeDisposable: CompositeDisposable,
+    @InitialMediaPreviewsCompositeDisposable private val compositeDisposable: CompositeDisposable,
     private val searchParams: SearchParams,
     private val rawMediaPreviewResponseConverter: RawMediaPreviewResponseConverter,
-    @Named("initial media previews network state") val networkState: MutableLiveData<NetworkState>
+    @InitialMediaPreviewsNetworkState val networkState: MutableLiveData<NetworkState>
 ) : PageKeyedDataSource<Int, MediaPreview>() {
 
     private var page = FIRST_PAGE

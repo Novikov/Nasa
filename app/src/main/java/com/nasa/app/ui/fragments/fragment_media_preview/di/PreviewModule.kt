@@ -1,43 +1,42 @@
 package com.nasa.app.ui.fragments.fragment_media_preview.di
 
 import androidx.lifecycle.MutableLiveData
-import com.nasa.app.data.model.media_preview.MediaPreviewResponse
 import com.nasa.app.data.repository.NetworkState
-import com.nasa.app.ui.fragments.di.FragmentScope
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.FragmentScoped
+import dagger.hilt.android.scopes.ViewModelScoped
 import io.reactivex.disposables.CompositeDisposable
-import javax.inject.Named
 
-@InstallIn(FragmentComponent::class)
+@InstallIn(ViewModelComponent::class)
 @Module
 class PreviewModule {
 
-    @FragmentScope
-    @Named("initial media previews composite disposable")
+    @ViewModelScoped
+    @InitialMediaPreviewsCompositeDisposable
     @Provides
     fun providesInitialCompositeDisposable():CompositeDisposable{
         return CompositeDisposable()
     }
-    @FragmentScope
-    @Named("found media previews composite disposable")
+
+    @ViewModelScoped
+    @FoundMediaPreviewsCompositeDisposable
     @Provides
     fun providesFoundCompositeDisposable():CompositeDisposable{
         return CompositeDisposable()
     }
 
-    @FragmentScope
-    @Named("initial media previews network state")
+    @ViewModelScoped
+    @InitialMediaPreviewsNetworkState
     @Provides
     fun providesInitialMediaPreviewNetworkState(): MutableLiveData<NetworkState> {
         return MutableLiveData<NetworkState>()
     }
 
-    @FragmentScope
-    @Named("found media previews network state")
+    @ViewModelScoped
+    @FoundMediaPreviewsNetworkState
     @Provides
     fun providesFoundMediaPreviewNetworkState(): MutableLiveData<NetworkState> {
         return MutableLiveData<NetworkState>()
