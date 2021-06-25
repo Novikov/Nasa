@@ -1,4 +1,4 @@
-package com.nasa.app.ui.fragments.fragment_media_preview.di
+package com.nasa.app.ui.fragments.fragment_media_preview.initial.di
 
 import javax.inject.Qualifier
 
