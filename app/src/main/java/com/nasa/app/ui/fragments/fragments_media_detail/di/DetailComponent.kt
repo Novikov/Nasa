@@ -15,7 +15,7 @@ interface DetailComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(@BindsInstance @Named("nasa id") nasaId: String, @BindsInstance context: Context): DetailComponent
+        fun create(@BindsInstance context: Context): DetailComponent
     }
 
     fun inject(audioMediaFragment: AudioDetailFragment)

@@ -64,7 +64,7 @@ class ImageDetailFragment : Fragment() {
         }
 
         val entryPoint = EntryPointAccessors.fromApplication(requireActivity().applicationContext, DetailEntryPoint::class.java)
-        detailComponent = entryPoint.detailComponent().create(nasaId, requireContext())
+        detailComponent = entryPoint.detailComponent().create(requireContext())
         detailComponent.inject(this)
     }
 

@@ -19,7 +19,6 @@ import javax.inject.Named
 class DetailMediaDataSource @Inject constructor(
     private val apiService: NasaApiService,
     private val compositeDisposable: CompositeDisposable,
-    @Named("nasa id") private val nasaId: String,
     private val rawMediaDetailConverter: RawMediaDetailResponseConverter,
     private val rawMediaAssetConverter: RawMediaAssetsConverter,
     private val _downloadedMediaDetailsResponse: MutableLiveData<MediaDetailResponse>,
@@ -31,7 +30,7 @@ class DetailMediaDataSource @Inject constructor(
     val downloadedMediaResponse: LiveData<MediaDetailResponse>
         get() = _downloadedMediaDetailsResponse
 
-    fun getMediaDetail() {
+    fun getMediaDetail(nasaId: String = "NHQ201907180120") {
         _networkState.postValue(NetworkState.LOADING)
 
         try {
