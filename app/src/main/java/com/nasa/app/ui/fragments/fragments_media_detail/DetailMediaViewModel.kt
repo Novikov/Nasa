@@ -1,10 +1,12 @@
 package com.nasa.app.ui.fragments.fragments_media_detail
 
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.nasa.app.data.model.media_detail.MediaDetailResponse
 import com.nasa.app.data.repository.NetworkState
+import com.nasa.app.ui.fragments.fragments_media_detail.di.MediaDetailsCompositeDisposable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -12,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailMediaViewModel @Inject constructor(
     private val mediaRepository: DetailMediaRepository,
-    private val compositeDisposable: CompositeDisposable
+    @MediaDetailsCompositeDisposable private val compositeDisposable: CompositeDisposable
 ) : ViewModel(){
 
     val mediaDetails: LiveData<MediaDetailResponse> by lazy {

@@ -25,19 +25,10 @@ import javax.inject.Named
 @Module
 class DetailModule {
 
+    @MediaDetailsCompositeDisposable
     @Provides
     fun providesCompositeDisposable(): CompositeDisposable {
         return CompositeDisposable()
-    }
-
-    @Provides
-    fun provideExoPlayerInstance(@ApplicationContext context:Context): ExoPlayer{
-        return SimpleExoPlayer.Builder(context).build()
-    }
-
-    @Provides
-    fun providesDownloadMediaDetailMutableLiveData(): MutableLiveData<MediaDetailResponse> {
-       return MutableLiveData<MediaDetailResponse>()
     }
 
     @MediaDetailsNetworkState
@@ -45,6 +36,4 @@ class DetailModule {
     fun provideDetailNetworkState(): MutableLiveData<NetworkState> {
         return MutableLiveData<NetworkState>()
     }
-
-
 }
