@@ -7,6 +7,7 @@ import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.model.media_detail.MediaDetailResponse
 import com.nasa.app.data.model.media_detail.raw_media_asset.RawMediaAssetsConverter
 import com.nasa.app.data.model.media_detail.raw_media_detail.RawMediaDetailResponseConverter
+import com.nasa.app.ui.fragments.fragments_media_detail.di.MediaDetailsNetworkState
 import com.nasa.app.utils.HTTP_400_ERROR_MSG_SUBSTRING
 import com.nasa.app.utils.HTTP_404_ERROR_MSG_SUBSTRING
 import com.nasa.app.utils.NO_INTERNET_ERROR_MSG_SUBSTRING
@@ -22,7 +23,7 @@ class DetailMediaDataSource @Inject constructor(
     private val rawMediaDetailConverter: RawMediaDetailResponseConverter,
     private val rawMediaAssetConverter: RawMediaAssetsConverter,
     private val _downloadedMediaDetailsResponse: MutableLiveData<MediaDetailResponse>,
-    @Named("media detail network state") private val _networkState: MutableLiveData<NetworkState>
+    @MediaDetailsNetworkState private val _networkState: MutableLiveData<NetworkState>
 ) {
     val networkState: LiveData<NetworkState>
         get() = _networkState

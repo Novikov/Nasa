@@ -12,6 +12,7 @@ import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerView
@@ -23,23 +24,22 @@ import com.nasa.app.databinding.FragmentAudioDetailBinding
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
 import com.nasa.app.ui.fragments.fragment_download_files.DownloadFilesFragment
-import com.nasa.app.ui.fragments.fragments_media_detail.di.DetailComponent
 import com.nasa.app.utils.DOWNLOAD_DIALOG_FRAGMENT_TAG
 import com.nasa.app.utils.EMPTY_STRING
 import com.nasa.app.utils.EXO_MEDIA_PLAYER_INITIAL_TIME
+import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class AudioDetailFragment : Fragment() {
     lateinit var nasaId: String
     lateinit var contentType: ContentType
     var exoMediaPlayerTime: Long? = null
     var activityContract: Activity? = null
     var isExoPlayerPrepared = false
-    lateinit var detailComponent: DetailComponent
 
-    @Inject
-    lateinit var viewModel: DetailMediaViewModel
+    val viewModel: DetailMediaViewModel by viewModels()
 
     @Inject
     lateinit var exoPlayerWrapper: ExoPlayerWrapper
@@ -66,10 +66,6 @@ class AudioDetailFragment : Fragment() {
         } else {
             throw Exception("Fragment arguments can't be null")
         }
-
-        val entryPoint = EntryPointAccessors.fromApplication(requireActivity().applicationContext, DetailEntryPoint::class.java)
-        detailComponent = entryPoint.detailComponent().create(requireContext())
-        detailComponent.inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
