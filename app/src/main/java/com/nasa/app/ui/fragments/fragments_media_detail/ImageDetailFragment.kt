@@ -12,41 +12,45 @@ import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.viewModels
 import com.google.android.flexbox.FlexboxLayout
 import com.nasa.app.R
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.databinding.FragmentImageDetailBinding
-import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
 import com.nasa.app.ui.fragments.fragment_download_files.DownloadFilesFragment
-import com.nasa.app.ui.fragments.fragments_media_detail.di.DetailComponent
+import com.nasa.app.ui.fragments.fragments_media_detail.di.DetailViewModelAssistedFactory
 import com.nasa.app.utils.DOWNLOAD_DIALOG_FRAGMENT_TAG
 import com.nasa.app.utils.EMPTY_STRING
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class ImageDetailFragment : Fragment() {
-    private lateinit var viewModel: DetailMediaViewModel
+    var activityContract: Activity? = null
     lateinit var nasaId: String
     lateinit var contentType: ContentType
-    var activityContract: Activity? = null
 
-    lateinit var detailComponent: DetailComponent
-
-    @Inject
-    lateinit var detailMediaRepository: DetailMediaRepository
-    @Inject
-    lateinit var providerFactory: ViewModelProviderFactory
     @Inject
     lateinit var picasso: Picasso
 
+    @Inject
+    lateinit var assistedFactory: DetailViewModelAssistedFactory
+
+    val viewModel: DetailMediaViewModel by viewModels {
+        DetailMediaViewModel.Factory(assistedFactory, nasaId)
+    }
+
+    @Inject
+    lateinit var exoPlayerWrapper: ExoPlayerWrapper
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.i(TAG, "onAttach: ")
+        Log.i(AudioDetailFragment.TAG, "onAttach: ")
         try {
             activityContract = context as Activity
         } catch (e: ClassCastException) {
@@ -62,18 +66,12 @@ class ImageDetailFragment : Fragment() {
         } else {
             throw Exception("arguments can't be null")
         }
-
-        detailComponent =  (requireActivity() as MainActivity).activityComponent.getDetailComponent().create(nasaId, requireContext())
-        detailComponent.inject(this)
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i(TAG, "onCreate: ")
         setHasOptionsMenu(true)
-        viewModel =
-            ViewModelProviders.of(this, providerFactory).get(DetailMediaViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -81,7 +79,6 @@ class ImageDetailFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.i(TAG, "onCreateView: ")
         val binding = DataBindingUtil.inflate<FragmentImageDetailBinding>(
             inflater,
             R.layout.fragment_image_detail,

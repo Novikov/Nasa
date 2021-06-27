@@ -7,29 +7,25 @@ import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nasa.app.R
 import com.nasa.app.data.repository.NetworkState
-import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
-import com.nasa.app.ui.fragments.fragment_media_preview.di.PreviewComponent
 import com.nasa.app.ui.fragments.fragment_search_settings.SearchSettingsFragment
 import com.nasa.app.utils.SearchParams
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_media_preview.*
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class FoundPreviewMediaFragment : Fragment() {
     private var activityContract: Activity? = null
-    private lateinit var viewModelInitial: FoundPreviewMediaViewModel
 
-    lateinit var mediaPreviewComponent: PreviewComponent
-
-    @Inject
-    lateinit var providerFactory: ViewModelProviderFactory
+    val viewModelInitial: FoundPreviewMediaViewModel by viewModels()
 
     @Inject
     lateinit var searchParams: SearchParams
@@ -42,17 +38,11 @@ class FoundPreviewMediaFragment : Fragment() {
         } catch (e: ClassCastException) {
             throw ClassCastException(context.toString() + "Activity have to implement interface Activity")
         }
-
-        mediaPreviewComponent =  (requireActivity() as MainActivity).activityComponent.getPreviewComponent().create()
-        mediaPreviewComponent.inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        viewModelInitial =
-            ViewModelProviders.of(this, providerFactory).get(FoundPreviewMediaViewModel::class.java)
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

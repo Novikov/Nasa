@@ -1,7 +1,6 @@
 package com.nasa.app.utils
 
 import com.nasa.app.data.model.ContentType
-import com.nasa.app.ui.fragments.di.FragmentScope
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton

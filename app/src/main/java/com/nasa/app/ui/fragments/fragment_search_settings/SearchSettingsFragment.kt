@@ -11,17 +11,15 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.slider.RangeSlider
-import com.nasa.app.BaseApplication
 import com.nasa.app.R
 import com.nasa.app.ui.activity.Activity
-import com.nasa.app.ui.activity.MainActivity
-import com.nasa.app.ui.fragments.fragment_search_settings.di.SearchSettingsComponent
 import com.nasa.app.utils.SearchParams
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class SearchSettingsFragment : DialogFragment() {
     private var activityContract: Activity? = null
-    lateinit var searchSettingsComponent:SearchSettingsComponent
 
     @Inject
     lateinit var searchParams: SearchParams
@@ -40,8 +38,6 @@ class SearchSettingsFragment : DialogFragment() {
         } catch (e: ClassCastException) {
             throw ClassCastException(context.toString() + "Activity have to implement interface Activity")
         }
-        searchSettingsComponent = (requireActivity() as MainActivity).activityComponent.getSearchSettingsComponent().create()
-        searchSettingsComponent.inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

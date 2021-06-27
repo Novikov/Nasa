@@ -1,11 +1,11 @@
 package com.nasa.app.ui.fragments.fragments_media_detail
 
 import android.net.Uri
-import com.google.android.exoplayer2.*
-import com.nasa.app.ui.fragments.di.FragmentScope
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
 import javax.inject.Inject
 
-@FragmentScope
 class ExoPlayerWrapper @Inject constructor(private val exoPlayer: ExoPlayer) {
 
     fun playPlayer(uri: Uri, time: Long) {

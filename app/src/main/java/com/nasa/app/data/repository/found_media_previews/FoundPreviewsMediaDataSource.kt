@@ -7,22 +7,22 @@ import com.nasa.app.data.api.NasaApiService
 import com.nasa.app.data.model.media_preview.MediaPreview
 import com.nasa.app.data.model.media_preview.raw_media_preview.RawMediaPreviewResponseConverter
 import com.nasa.app.data.repository.NetworkState
-import com.nasa.app.ui.fragments.di.FragmentScope
+import com.nasa.app.ui.fragments.fragment_media_preview.found.di.FoundMediaPreviewsCompositeDisposable
+import com.nasa.app.ui.fragments.fragment_media_preview.found.di.FoundMediaPreviewsNetworkState
 import com.nasa.app.utils.FIRST_PAGE
 import com.nasa.app.utils.NO_INTERNET_ERROR_MSG_SUBSTRING
 import com.nasa.app.utils.SearchParams
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
-import javax.inject.Named
 
-@FragmentScope
+
 class FoundPreviewsMediaDataSource @Inject constructor(
     private val apiService: NasaApiService,
-    @Named("found media previews composite disposable") private val compositeDisposable: CompositeDisposable,
+    @FoundMediaPreviewsCompositeDisposable private val compositeDisposable: CompositeDisposable,
     private val searchParams: SearchParams,
     private val rawMediaPreviewResponseConverter: RawMediaPreviewResponseConverter,
-    @Named("found media previews network state") val networkState: MutableLiveData<NetworkState>
+    @FoundMediaPreviewsNetworkState val networkState: MutableLiveData<NetworkState>
 ) : PageKeyedDataSource<Int, MediaPreview>() {
 
     private var page = FIRST_PAGE

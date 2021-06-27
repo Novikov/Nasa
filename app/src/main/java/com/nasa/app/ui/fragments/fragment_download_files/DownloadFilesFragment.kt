@@ -1,33 +1,24 @@
 package com.nasa.app.ui.fragments.fragment_download_files
 
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ListView
 import androidx.fragment.app.DialogFragment
 import com.nasa.app.R
-import com.nasa.app.ui.activity.MainActivity
-import com.nasa.app.ui.fragments.fragment_download_files.di.DownloadFilesComponent
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class DownloadFilesFragment : DialogFragment() {
     private var emptyArgumentsErrorMessage = "Urls can't be empty"
     private var fileStringsUris: ArrayList<String>? = null
     private val filesUris = arrayListOf<Uri>()
 
-    lateinit var downloadFilesComponent:DownloadFilesComponent
-
     @Inject
     lateinit var downloadFilesAdapter: DownloadFilesAdapter
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        downloadFilesComponent = (requireActivity() as MainActivity).activityComponent.getDownloadFilesComponent().create(requireContext())
-        downloadFilesComponent.inject(this)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
