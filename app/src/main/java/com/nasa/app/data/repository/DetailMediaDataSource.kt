@@ -16,13 +16,14 @@ import com.nasa.app.utils.TIMEOUT_ERROR_SUBSTRING
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
+import javax.inject.Named
 
 class DetailMediaDataSource @Inject constructor(
     private val apiService: NasaApiService,
-    @MediaDetailsCompositeDisposable private val compositeDisposable: CompositeDisposable,
+    @Named("Media Details Composite Disposable") private val compositeDisposable: CompositeDisposable,
     private val rawMediaDetailConverter: RawMediaDetailResponseConverter,
     private val rawMediaAssetConverter: RawMediaAssetsConverter,
-    @MediaDetailsNetworkState private val _networkState: MutableLiveData<NetworkState>
+    @Named("Media Details Network State") private val _networkState: MutableLiveData<NetworkState>
 ) {
     val networkState: LiveData<NetworkState>
         get() = _networkState
@@ -31,7 +32,7 @@ class DetailMediaDataSource @Inject constructor(
     val downloadedMediaResponse: LiveData<MediaDetailResponse>
         get() = _downloadedMediaDetailsResponse
 
-    fun getMediaDetail(nasaId: String = "NHQ201907180120") {
+    fun getMediaDetail(nasaId: String) {
         _networkState.postValue(NetworkState.LOADING)
 
         try {

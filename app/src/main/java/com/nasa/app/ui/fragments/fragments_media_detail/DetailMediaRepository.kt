@@ -8,9 +8,8 @@ import javax.inject.Inject
 
 class DetailMediaRepository @Inject constructor(private val detailMediaDataSource: DetailMediaDataSource) {
 
-    fun getMediaDetail(
-    ): LiveData<MediaDetailResponse> {
-        detailMediaDataSource.getMediaDetail()
+    fun getMediaDetail(nasaId: String): LiveData<MediaDetailResponse> {
+        detailMediaDataSource.getMediaDetail(nasaId)
         return detailMediaDataSource.downloadedMediaResponse
     }
 

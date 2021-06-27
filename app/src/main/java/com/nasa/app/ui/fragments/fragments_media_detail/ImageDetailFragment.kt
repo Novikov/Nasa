@@ -14,6 +14,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.navArgs
 import com.google.android.flexbox.FlexboxLayout
 import com.nasa.app.R
 import com.nasa.app.data.model.ContentType
@@ -22,6 +23,7 @@ import com.nasa.app.databinding.FragmentImageDetailBinding
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
 import com.nasa.app.ui.fragments.fragment_download_files.DownloadFilesFragment
+import com.nasa.app.ui.fragments.fragments_media_detail.di.DetailViewModelAssistedFactory
 import com.nasa.app.utils.DOWNLOAD_DIALOG_FRAGMENT_TAG
 import com.nasa.app.utils.EMPTY_STRING
 import com.squareup.picasso.Callback
@@ -32,17 +34,26 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ImageDetailFragment : Fragment() {
+    var activityContract: Activity? = null
     lateinit var nasaId: String
     lateinit var contentType: ContentType
-    var activityContract: Activity? = null
-
-    val viewModel: DetailMediaViewModel by viewModels()
 
     @Inject
     lateinit var picasso: Picasso
 
+    @Inject
+    lateinit var assistedFactory: DetailViewModelAssistedFactory
+
+    val viewModel: DetailMediaViewModel by viewModels {
+        DetailMediaViewModel.Factory(assistedFactory, nasaId)
+    }
+
+    @Inject
+    lateinit var exoPlayerWrapper: ExoPlayerWrapper
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        Log.i(AudioDetailFragment.TAG, "onAttach: ")
         try {
             activityContract = context as Activity
         } catch (e: ClassCastException) {

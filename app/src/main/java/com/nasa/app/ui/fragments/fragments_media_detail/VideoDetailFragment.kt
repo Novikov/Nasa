@@ -14,6 +14,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.navArgs
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerView
@@ -25,6 +26,7 @@ import com.nasa.app.databinding.FragmentVideoDetailBinding
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
 import com.nasa.app.ui.fragments.fragment_download_files.DownloadFilesFragment
+import com.nasa.app.ui.fragments.fragments_media_detail.di.DetailViewModelAssistedFactory
 import com.nasa.app.utils.DOWNLOAD_DIALOG_FRAGMENT_TAG
 import com.nasa.app.utils.EMPTY_STRING
 import com.nasa.app.utils.EXO_MEDIA_PLAYER_INITIAL_TIME
@@ -34,21 +36,26 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class VideoDetailFragment : Fragment() {
-
     var exoMediaPlayerTime: Long? = null
-    lateinit var nasaId: String
-    lateinit var contentType: ContentType
     var activityContract: Activity? = null
     var isExoPlayerPrepared = false
-    
-    val viewModel: DetailMediaViewModel by viewModels()
+
+    lateinit var nasaId: String
+    lateinit var contentType: ContentType
+
+    @Inject
+    lateinit var assistedFactory: DetailViewModelAssistedFactory
+
+    private val viewModel: DetailMediaViewModel by viewModels {
+        DetailMediaViewModel.Factory(assistedFactory, nasaId)
+    }
 
     @Inject
     lateinit var exoPlayerWrapper: ExoPlayerWrapper
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.i(TAG, "onAttach: ")
+        Log.i(AudioDetailFragment.TAG, "onAttach: ")
         try {
             activityContract = context as Activity
         } catch (e: ClassCastException) {

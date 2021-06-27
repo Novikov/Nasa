@@ -21,19 +21,19 @@ import dagger.hilt.components.SingletonComponent
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Named
 
-@InstallIn(ViewModelComponent::class)
+@InstallIn(FragmentComponent::class)
 @Module
 class DetailModule {
 
-    @ViewModelScoped
-    @MediaDetailsCompositeDisposable
+    @FragmentScoped
+    @Named("Media Details Composite Disposable")
     @Provides
     fun providesCompositeDisposable(): CompositeDisposable {
         return CompositeDisposable()
     }
 
-    @ViewModelScoped
-    @MediaDetailsNetworkState
+    @FragmentScoped
+    @Named("Media Details Network State")
     @Provides
     fun provideDetailNetworkState(): MutableLiveData<NetworkState> {
         return MutableLiveData<NetworkState>()

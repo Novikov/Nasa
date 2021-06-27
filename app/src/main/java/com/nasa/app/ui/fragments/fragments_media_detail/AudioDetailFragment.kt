@@ -13,6 +13,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerView
@@ -24,6 +26,7 @@ import com.nasa.app.databinding.FragmentAudioDetailBinding
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
 import com.nasa.app.ui.fragments.fragment_download_files.DownloadFilesFragment
+import com.nasa.app.ui.fragments.fragments_media_detail.di.DetailViewModelAssistedFactory
 import com.nasa.app.utils.DOWNLOAD_DIALOG_FRAGMENT_TAG
 import com.nasa.app.utils.EMPTY_STRING
 import com.nasa.app.utils.EXO_MEDIA_PLAYER_INITIAL_TIME
@@ -33,13 +36,19 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class AudioDetailFragment : Fragment() {
-    lateinit var nasaId: String
-    lateinit var contentType: ContentType
     var exoMediaPlayerTime: Long? = null
     var activityContract: Activity? = null
     var isExoPlayerPrepared = false
 
-    val viewModel: DetailMediaViewModel by viewModels()
+    lateinit var nasaId: String
+    lateinit var contentType: ContentType
+
+    @Inject
+    lateinit var assistedFactory: DetailViewModelAssistedFactory
+
+    private val viewModel: DetailMediaViewModel by viewModels {
+        DetailMediaViewModel.Factory(assistedFactory, nasaId)
+    }
 
     @Inject
     lateinit var exoPlayerWrapper: ExoPlayerWrapper
@@ -60,7 +69,7 @@ class AudioDetailFragment : Fragment() {
             contentType = args.contentType
 
         } else {
-            throw Exception("Fragment arguments can't be null")
+            throw Exception("arguments can't be null")
         }
     }
 
