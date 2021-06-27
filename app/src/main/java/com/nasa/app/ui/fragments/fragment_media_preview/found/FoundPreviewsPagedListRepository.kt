@@ -9,7 +9,6 @@ import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.data.repository.found_media_previews.FoundPreviewsMediaDataSource
 import com.nasa.app.data.repository.found_media_previews.FoundPreviewsMediaDataSourceFactory
 import com.nasa.app.utils.POST_PER_PAGE
-import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
 
 

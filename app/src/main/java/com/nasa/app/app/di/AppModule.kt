@@ -1,4 +1,4 @@
-package com.nasa.app.di
+package com.nasa.app.app.di
 
 import com.google.gson.GsonBuilder
 import com.nasa.app.data.api.NasaApiService

@@ -1,12 +1,11 @@
 package com.nasa.app.ui.fragments.fragment_download_files
 
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ListView
 import androidx.fragment.app.DialogFragment
 import com.nasa.app.R
 import dagger.hilt.android.AndroidEntryPoint

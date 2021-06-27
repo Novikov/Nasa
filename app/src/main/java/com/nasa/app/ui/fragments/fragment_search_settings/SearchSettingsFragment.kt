@@ -11,17 +11,10 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.slider.RangeSlider
-import com.nasa.app.BaseApplication
 import com.nasa.app.R
 import com.nasa.app.ui.activity.Activity
-import com.nasa.app.ui.activity.MainActivity
 import com.nasa.app.utils.SearchParams
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.android.components.ActivityComponent
-import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 
 @AndroidEntryPoint

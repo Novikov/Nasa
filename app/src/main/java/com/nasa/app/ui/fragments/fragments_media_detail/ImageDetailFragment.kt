@@ -13,8 +13,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.navArgs
 import com.google.android.flexbox.FlexboxLayout
 import com.nasa.app.R
 import com.nasa.app.data.model.ContentType
@@ -29,7 +27,6 @@ import com.nasa.app.utils.EMPTY_STRING
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.EntryPointAccessors
 import javax.inject.Inject
 
 @AndroidEntryPoint

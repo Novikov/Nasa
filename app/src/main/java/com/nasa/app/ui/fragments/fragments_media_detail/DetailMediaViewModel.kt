@@ -5,11 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.nasa.app.data.model.media_detail.MediaDetailResponse
 import com.nasa.app.data.repository.NetworkState
-import com.nasa.app.ui.fragments.fragments_media_detail.di.MediaDetailsCompositeDisposable
 import com.nasa.app.ui.fragments.fragments_media_detail.di.DetailViewModelAssistedFactory
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Named
 

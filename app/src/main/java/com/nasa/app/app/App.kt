@@ -1,7 +1,7 @@
-package com.nasa.app
+package com.nasa.app.app
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class BaseApplication : Application()
+class App : Application()
