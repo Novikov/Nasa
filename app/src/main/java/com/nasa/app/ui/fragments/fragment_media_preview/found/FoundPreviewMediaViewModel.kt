@@ -5,16 +5,16 @@ import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
 import com.nasa.app.data.model.media_preview.MediaPreview
 import com.nasa.app.data.repository.NetworkState
-import com.nasa.app.ui.fragments.di.FragmentScope
+import com.nasa.app.ui.fragments.fragment_media_preview.found.di.FoundMediaPreviewsCompositeDisposable
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
-import javax.inject.Named
 
-@FragmentScope
+@HiltViewModel
 class FoundPreviewMediaViewModel @Inject constructor(
-    private val mediaRepositoryFound: FoundPreviewsPagedListRepository,
-    @Named("found media previews composite disposable") private val compositeDisposable: CompositeDisposable
-) : ViewModel() {
+     val mediaRepositoryFound: FoundPreviewsPagedListRepository,
+    @FoundMediaPreviewsCompositeDisposable val compositeDisposable: CompositeDisposable
+) : ViewModel(){
 
     val foundMediaPreviews: LiveData<PagedList<MediaPreview>> by lazy {
         mediaRepositoryFound.fetchLiveMediaPreviewPagedList()

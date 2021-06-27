@@ -21,7 +21,6 @@ import com.nasa.app.R
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.model.media_preview.MediaPreview
 import com.nasa.app.data.repository.NetworkState
-import com.nasa.app.ui.fragments.fragment_media_preview.initial.InitialPreviewMediaFragmentDirections
 import kotlinx.android.synthetic.main.image_media_preview_item.view.date_created_text_view
 import kotlinx.android.synthetic.main.image_media_preview_item.view.description_text_view
 import kotlinx.android.synthetic.main.image_media_preview_item.view.media_preview_recycler_view_image

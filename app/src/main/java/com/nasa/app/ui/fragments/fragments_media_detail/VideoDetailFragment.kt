@@ -12,7 +12,7 @@ import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.viewModels
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerView
@@ -21,37 +21,38 @@ import com.nasa.app.R
 import com.nasa.app.data.model.ContentType
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.databinding.FragmentVideoDetailBinding
-import com.nasa.app.di.view_models.ViewModelProviderFactory
 import com.nasa.app.ui.activity.Activity
 import com.nasa.app.ui.activity.MainActivity
 import com.nasa.app.ui.fragments.fragment_download_files.DownloadFilesFragment
-import com.nasa.app.ui.fragments.fragments_media_detail.di.DetailComponent
+import com.nasa.app.ui.fragments.fragments_media_detail.di.DetailViewModelAssistedFactory
 import com.nasa.app.utils.DOWNLOAD_DIALOG_FRAGMENT_TAG
 import com.nasa.app.utils.EMPTY_STRING
 import com.nasa.app.utils.EXO_MEDIA_PLAYER_INITIAL_TIME
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class VideoDetailFragment : Fragment() {
-
-    private lateinit var viewModel: DetailMediaViewModel
     var exoMediaPlayerTime: Long? = null
-    lateinit var nasaId: String
-    lateinit var contentType: ContentType
     var activityContract: Activity? = null
     var isExoPlayerPrepared = false
 
-    lateinit var detailComponent:DetailComponent
+    lateinit var nasaId: String
+    lateinit var contentType: ContentType
+
+    @Inject
+    lateinit var assistedFactory: DetailViewModelAssistedFactory
+
+    private val viewModel: DetailMediaViewModel by viewModels {
+        DetailMediaViewModel.Factory(assistedFactory, nasaId)
+    }
 
     @Inject
     lateinit var exoPlayerWrapper: ExoPlayerWrapper
-    @Inject
-    lateinit var detailMediaRepository: DetailMediaRepository
-    @Inject
-    lateinit var providerFactory: ViewModelProviderFactory
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.i(TAG, "onAttach: ")
+        Log.i(AudioDetailFragment.TAG, "onAttach: ")
         try {
             activityContract = context as Activity
         } catch (e: ClassCastException) {
@@ -67,17 +68,12 @@ class VideoDetailFragment : Fragment() {
         } else {
             throw Exception("arguments can't be null")
         }
-
-        detailComponent =  (requireActivity() as MainActivity).activityComponent.getDetailComponent().create(nasaId, requireContext())
-        detailComponent.inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(TAG, "onCreate: ")
         exoMediaPlayerTime = savedInstanceState?.getLong(EXO_MEDIA_PLAYER_TIME)
-        viewModel =
-            ViewModelProviders.of(this, providerFactory).get(DetailMediaViewModel::class.java)
     }
 
     override fun onCreateView(

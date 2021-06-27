@@ -8,11 +8,10 @@ import com.nasa.app.data.model.media_preview.MediaPreview
 import com.nasa.app.data.repository.NetworkState
 import com.nasa.app.data.repository.initial_media_previews.InitialPreviewsMediaDataSource
 import com.nasa.app.data.repository.initial_media_previews.InitialPreviewsMediaDataSourceFactory
-import com.nasa.app.ui.fragments.di.FragmentScope
 import com.nasa.app.utils.POST_PER_PAGE
 import javax.inject.Inject
 
-@FragmentScope
+
 class InitialPreviewsPagedListRepository @Inject constructor(
     private val initialPreviewsDataSourceFactory: InitialPreviewsMediaDataSourceFactory
 ) {

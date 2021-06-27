@@ -10,10 +10,11 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.nasa.app.R
+import dagger.hilt.android.qualifiers.ActivityContext
 import javax.inject.Inject
 
 class DownloadFilesAdapter @Inject constructor(
-    val context: Context,
+    @ActivityContext private val context: Context,
 ) : BaseAdapter() {
 
     var dataSource: List<Uri> = listOf()

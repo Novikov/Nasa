@@ -3,19 +3,14 @@ package com.nasa.app.ui.activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
-import com.nasa.app.BaseApplication
 import com.nasa.app.R
-import com.nasa.app.ui.activity.di.ActivityComponent
 import com.nasa.app.ui.fragments.fragment_media_preview.initial.InitialPreviewMediaFragmentDirections
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), Activity {
 
-    lateinit var activityComponent:ActivityComponent
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        activityComponent = (application as BaseApplication).appComponent.getActivityComponent().create()
-        activityComponent.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }

@@ -3,7 +3,6 @@ package com.nasa.app.data.model.media_detail.raw_media_detail
 import android.util.Log
 import com.nasa.app.data.model.media_detail.MediaDetail
 import com.nasa.app.data.model.media_detail.MediaDetailResponse
-import com.nasa.app.data.model.media_preview.raw_media_preview.RawMediaPreviewResponseConverter
 import com.nasa.app.utils.EMPTY_STRING
 import java.text.ParseException
 import java.text.SimpleDateFormat
