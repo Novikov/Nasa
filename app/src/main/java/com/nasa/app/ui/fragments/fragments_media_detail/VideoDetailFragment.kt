@@ -40,15 +40,11 @@ class VideoDetailFragment : Fragment() {
     lateinit var contentType: ContentType
     var activityContract: Activity? = null
     var isExoPlayerPrepared = false
-
-
+    
     val viewModel: DetailMediaViewModel by viewModels()
 
     @Inject
     lateinit var exoPlayerWrapper: ExoPlayerWrapper
-
-    @Inject
-    lateinit var detailMediaRepository: DetailMediaRepository
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

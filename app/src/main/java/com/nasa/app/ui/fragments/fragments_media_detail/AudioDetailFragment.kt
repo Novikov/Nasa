@@ -44,10 +44,6 @@ class AudioDetailFragment : Fragment() {
     @Inject
     lateinit var exoPlayerWrapper: ExoPlayerWrapper
 
-    @Inject
-    lateinit var detailMediaRepository: DetailMediaRepository
-
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         Log.i(TAG, "onAttach: ")

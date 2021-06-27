@@ -4,7 +4,6 @@ import android.net.Uri
 import com.google.android.exoplayer2.*
 import javax.inject.Inject
 
-//@FragmentScope
 class ExoPlayerWrapper @Inject constructor(private val exoPlayer: ExoPlayer) {
 
     fun playPlayer(uri: Uri, time: Long) {

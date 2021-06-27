@@ -6,7 +6,6 @@ import com.nasa.app.data.repository.DetailMediaDataSource
 import com.nasa.app.data.repository.NetworkState
 import javax.inject.Inject
 
-//@FragmentScope
 class DetailMediaRepository @Inject constructor(private val detailMediaDataSource: DetailMediaDataSource) {
 
     fun getMediaDetail(

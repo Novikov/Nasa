@@ -39,9 +39,6 @@ class ImageDetailFragment : Fragment() {
     val viewModel: DetailMediaViewModel by viewModels()
 
     @Inject
-    lateinit var detailMediaRepository: DetailMediaRepository
-
-    @Inject
     lateinit var picasso: Picasso
 
     override fun onAttach(context: Context) {
